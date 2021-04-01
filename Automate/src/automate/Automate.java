@@ -25,7 +25,84 @@ public class Automate {
 		this.nbrEtats = nbrEtat;
 	}
 
+	//Affichage automate
+	public void afficherAutomate() {
+		System.out.println("Automate");
+		System.out.print("  - Alphabet { ");
+		for(char alpha : alphabet) {
+			System.out.print(alpha+ " ");
+		}		
+		System.out.println("}");
+		System.out.print("  - Etats Q = { ");
+		for(int i=0; i<nbrEtats; i++) { System.out.print(i +" "); }
+		System.out.println("}");
+		System.out.print("  - Etats I = { ");
+		affichertab(etatInit);
+		System.out.println("}");
+		System.out.print("  - Etats T = { ");
+		affichertab(etatTerm);
+		System.out.println("}");
+		tableTransitionAutomate();
+	}
 	
+	// Fonction pour afficher un tableau d'entier
+	public void affichertab(final int[] tab) {
+		if (tab != null) {
+			for(int i=0; i<tab.length; i++) {
+				System.out.print(tab[i] +" ");
+			}
+		}
+	}
+	
+	//Fonction pour afficher une tableau de transition
+	public void tableTransitionAutomate() {
+		if (etats != null) {
+			// Affichage entete
+			System.out.println("\n TABLE DE TRANSITION ");
+			System.out.print("   |");
+			// Affichage de l'alphabet que l'automate reconnait
+			for (char c : alphabet) {
+				for(int i=0; i<nbrEtats-1; i++) { System.out.print(" ");}
+				System.out.print( c);
+				for(int i=0; i<nbrEtats; i++) { System.out.print(" ");}
+				System.out.print("|");
+			}
+			System.out.println();
+			ligneSepration();
+			int espace = nbrEtats*2; 
+			
+			//Affichage corps : Nometat | etatlettre a | ... 
+			for(int i=0; i<nbrEtats; i++) {
+				System.out.print(" " + etats[i].getNomEtat()+" |");
+				for(int j=0; j<alphabet.length; j++) {
+					for(int x=0; x < etats[i].getNbrTrans(); x++) {
+						if (etats[i].getLettreDeTransitionIndex(x) == alphabet[j]) {
+							System.out.print(" " + etats[i].getEtatFinalDeTransitionIndex(x));
+							espace -= 2; 
+						}
+					}
+					for(int k = 0; k < espace; k++) {
+						System.out.print(" ");
+					}
+					System.out.print("|");
+					espace = nbrEtats*2;
+				}
+				System.out.println();
+				ligneSepration();
+			}			
+		}
+	}
+	// Fonction pour afficher une separation dans la table de transition
+	public void ligneSepration() {
+		System.out.print("---|");
+		for (int i = 0; i < alphabet.length; i++) {
+			for(int j = 0; j < nbrEtats; j++) {
+				System.out.print("--");
+			}
+			System.out.print("|");
+		}
+		System.out.println();
+	}
 	
 	
 	
