@@ -200,7 +200,7 @@ public class Automate {
 
 	}
 }
-
+/*
 public boolean est_complet(Automate a){
 	for (int i = 0; i<etats[nbrEtats] ; i++) {
 		if(nbrTransition >= alphabet.length()){
@@ -208,5 +208,5 @@ public boolean est_complet(Automate a){
 		}
 		return 0;
 	}
-
 }
+*/
