@@ -78,8 +78,8 @@ public class Automate {
 				System.out.print(" " + etats.get(i).getNomEtat()+" |");
 				for(int j=0; j<alphabet.length; j++) {
 					for(int x=0; x < etats.get(i).getNbrTrans(); x++) {
-						if (etats.get(i).getLettreDeTransitionIndex(x) == alphabet[j]) {
-							System.out.print(" " + etats.get(i).getEtatFinalDeTransitionIndex(x));
+						if (etats.get(i).getLettre(x) == alphabet[j]) {
+							System.out.print(" " + etats.get(i).getEtatFinal(x));
 							espace -= 2; 
 						}
 					}
@@ -208,14 +208,25 @@ public class Automate {
 			}
 		}
 	}
-		
+	
+	
 	
 	// Completion d'un Automate Finis Complet et Deterministe
 	public void completion(final Automate automate) {
 		// Verification que l'automate est bien synchrone et deterministe pour pouvoir le completer
 		//if(est_un_automate_deterministe(automate) && !est_un_automate_asynchrone(automate)) {
-			 
+		for (int i = 0; i < automate.etats.size() ; i++) {
+			// Si le nombre de lettre = nombre de transition alors l'etat est complet
+			if(automate.etats.get(i).getNbrTrans() != automate.alphabet.length) {
+				for (int j = 0; j < automate.alphabet.length; j++) {
+					if(automate.etats.get(i).getLettre(j) != automate.alphabet[j]) {
+						automate.etats.set(j, new Transition(i, automate.alphabet[j], "P"));  // L'etat Poubelle ???
+					}
+				}
+			}	
 		}
 	}
+}
+
 	
 
