@@ -36,7 +36,7 @@ public class Automate {
 		}		
 		System.out.println("}");
 		System.out.print("  - Etats Q = { ");
-		for(int i=0; i<nbrEtats; i++) { System.out.print(i +" "); }
+		for(int i=0; i<nbrEtats; i++) {  System.out.print(etats.get(i).getNomEtat() + " "); }
 		System.out.println("}");
 		System.out.print("  - Etats I = { ");
 		affichertab(etatInit);
@@ -59,9 +59,11 @@ public class Automate {
 	//Fonction pour afficher une tableau de transition
 	public void tableTransitionAutomate() {
 		if (etats != null) {
+			
 			// Affichage entete
 			System.out.println("\n TABLE DE TRANSITION ");
 			System.out.print("   |");
+			
 			// Affichage de l'alphabet que l'automate reconnait
 			for (char c : alphabet) {
 				for(int i=0; i<nbrEtats-1; i++) { System.out.print(" ");}
@@ -79,7 +81,8 @@ public class Automate {
 				for(int j=0; j<alphabet.length; j++) {
 					for(int x=0; x < etats.get(i).getNbrTrans(); x++) {
 						if (etats.get(i).getLettre(x) == alphabet[j]) {
-							System.out.print(" " + etats.get(i).getEtatFinal(x));
+							System.out.print(" ");
+							etats.get(i).afficherEtatSortie(x);
 							espace -= 2; 
 						}
 					}
@@ -201,6 +204,13 @@ public class Automate {
 				}
 				// Pour le dernier etats on ajout ces transitions
 				etats.add(numeroEtatEntree, new Etat(numeroEtatEntree, tableauTransitionEtati, j));
+				
+				if(nbrTransition < nbrEtats) {
+					for (int i = nbrTransition; i <= nbrEtats ; i++) {
+						etats.add(new Etat(i-1));					
+					}
+				}
+				
 				reader.close();
 
 			} catch (IOException e) {
@@ -209,21 +219,38 @@ public class Automate {
 		}
 	}
 	
-	
+	public boolean est_un_automate_deterministe(final Automate a) {
+		return true; 
+	}
+	public boolean est_un_automate_asynchrone(final Automate a) {
+		return false; 
+	}
+	public boolean est_un_automate_complet(final Automate a) {
+		return false; 
+	}
 	
 	// Completion d'un Automate Finis Complet et Deterministe
 	public void completion(final Automate automate) {
 		// Verification que l'automate est bien synchrone et deterministe pour pouvoir le completer
-		//if(est_un_automate_deterministe(automate) && !est_un_automate_asynchrone(automate)) {
-		for (int i = 0; i < automate.etats.size() ; i++) {
-			// Si le nombre de lettre = nombre de transition alors l'etat est complet
-			if(automate.etats.get(i).getNbrTrans() != automate.alphabet.length) {
-				for (int j = 0; j < automate.alphabet.length; j++) {
-					if(automate.etats.get(i).getLettre(j) != automate.alphabet[j]) {
-						//automate.etats.set(j, new Transition(i, automate.alphabet[j], "P"));  // L'etat Poubelle ???
-					}
+		if(est_un_automate_deterministe(automate) && !est_un_automate_asynchrone(automate)) {
+			if (!est_un_automate_complet(automate)) {
+				for (int i = 0; i < automate.etats.size() ; i++) {
+					// Si le nombre de lettre = nombre de transition alors l'etat est complet
+					if(automate.etats.get(i).getNbrTrans() != automate.alphabet.length) {
+						for (int j = 0; j < automate.alphabet.length; j++) {
+							System.out.println(etats.get(i).getNomEtat() );
+							if (automate.etats.get(i).getNbrTrans() > j) {
+								if(automate.etats.get(i).getLettre(j) != automate.alphabet[j]) {
+									automate.etats.get(i).ajoutTransition( i, automate.alphabet[j], -1);
+									afficherAutomate();
+								}
+							}else {
+								automate.etats.get(i).ajoutTransition(i, automate.alphabet[j], -1);
+							}
+						}
+					}	
 				}
-			}	
+			}
 		}
 	}
 }
