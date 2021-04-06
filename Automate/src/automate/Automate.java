@@ -82,7 +82,11 @@ public class Automate {
 					for(int x=0; x < etats.get(i).getNbrTrans(); x++) {
 						if (etats.get(i).getLettre(x) == alphabet[j]) {
 							System.out.print(" ");
-							etats.get(i).afficherEtatSortie(x);
+							if(etats.get(i).getEtatFinal(x).contains(-1)) {
+								System.out.print("P");
+							}else {
+								etats.get(i).afficherEtatSortie(x);
+							} 							
 							espace -= 2; 
 						}
 					}
