@@ -77,7 +77,11 @@ public class Automate {
 			
 			//Affichage corps : Nometat | etatlettre a | ... 
 			for(int i=0; i<nbrEtats; i++) {
-				System.out.print(" " + etats.get(i).getNomEtat()+" |");
+				if(etats.get(i).getNomEtat() == -1) {
+					System.out.print(" P |");
+				}else {
+					System.out.print(" " + etats.get(i).getNomEtat()+" |");
+				}
 				for(int j=0; j<alphabet.length; j++) {
 					for(int x=0; x < etats.get(i).getNbrTrans(); x++) {
 						if (etats.get(i).getLettre(x) == alphabet[j]) {
@@ -239,14 +243,13 @@ public class Automate {
 		if(est_un_automate_deterministe(automate) && !est_un_automate_asynchrone(automate)) {
 			if (!est_un_automate_complet(automate)) {
 				for (int i = 0; i < automate.etats.size() ; i++) {
-					// Si le nombre de lettre = nombre de transition alors l'etat est complet
+					// Si le nombre de lettre = nombre de transition alors l'etat est complet sinon 
 					if(automate.etats.get(i).getNbrTrans() != automate.alphabet.length) {
 						for (int j = 0; j < automate.alphabet.length; j++) {
-							System.out.println(etats.get(i).getNomEtat() );
+							// Si le nombre de Transition est supérieur alors 
 							if (automate.etats.get(i).getNbrTrans() > j) {
 								if(automate.etats.get(i).getLettre(j) != automate.alphabet[j]) {
 									automate.etats.get(i).ajoutTransition( i, automate.alphabet[j], -1);
-									afficherAutomate();
 								}
 							}else {
 								automate.etats.get(i).ajoutTransition(i, automate.alphabet[j], -1);
@@ -254,6 +257,13 @@ public class Automate {
 						}
 					}	
 				}
+				// Ajout de l'état poubelle 
+				automate.etats.add(new Etat(-1));
+				nbrEtats++;
+				for (int i = 0; i < alphabet.length; i++) {
+					automate.etats.get(nbrEtats-1).ajoutTransition(-1, automate.alphabet[i], -1);
+				}
+				 
 			}
 		}
 	}
