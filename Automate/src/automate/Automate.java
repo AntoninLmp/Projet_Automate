@@ -220,7 +220,7 @@ public class Automate {
 			if(automate.etats.get(i).getNbrTrans() != automate.alphabet.length) {
 				for (int j = 0; j < automate.alphabet.length; j++) {
 					if(automate.etats.get(i).getLettre(j) != automate.alphabet[j]) {
-						automate.etats.set(j, new Transition(i, automate.alphabet[j], "P"));  // L'etat Poubelle ???
+						//automate.etats.set(j, new Transition(i, automate.alphabet[j], "P"));  // L'etat Poubelle ???
 					}
 				}
 			}	

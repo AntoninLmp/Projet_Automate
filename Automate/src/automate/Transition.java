@@ -1,28 +1,39 @@
 package automate;
 
+import java.util.*;
+
 public class Transition{
-	private int etatDepart; 
+	private ArrayList<Integer> etatDepart; 
 	private char lettre; 
-	private int etatSortie; 
+	private ArrayList<Integer> etatSortie; 
 	
 	// Constructeurs
-	public Transition(int eD, char let, int eS) {
-		etatDepart = eD; 
+	public Transition(final ArrayList<Integer> eD, char let, final ArrayList<Integer> eS) {
+		etatDepart = new ArrayList<Integer>(); 
+		etatSortie = new ArrayList<Integer>();
 		lettre = let; 
-		etatSortie = eS;
+		etatDepart.addAll(eD); 
+		etatSortie.addAll(eS);
+	}
+	public Transition(final int eD, char let, final int eS) {
+		etatDepart = new ArrayList<Integer>(); 
+		etatSortie = new ArrayList<Integer>();
+		lettre = let; 
+		etatDepart.add(eD); 
+		etatSortie.add(eS);
 	}
 	public Transition copie() {
 		return new Transition(etatDepart,lettre, etatSortie);
 	}
 
 	//Getters et setters
-	public int getEtatDepart() { return etatDepart; }
+	public ArrayList<Integer> getEtatDepart() { return etatDepart; }
 	public char getLettre() { return lettre; }
-	public int getEtatSortie() { return etatSortie; }
+	public ArrayList<Integer> getEtatSortie() { return etatSortie; }
 	
-	public void setEtatDepart(int etatDepart) { this.etatDepart = etatDepart; }
+	public void setEtatDepart(ArrayList<Integer> etatD) { this.etatDepart.addAll(etatD); }
 	public void setLettre(char lettre) { this.lettre = lettre; }
-	public void setEtatSortie(int etatSortie) { this.etatSortie = etatSortie; }
+	public void setEtatSortie(ArrayList<Integer> etatS) { this.etatSortie.addAll(etatS); }
 	
 	public void afficherTransition() {
 		System.out.print(this.toString());

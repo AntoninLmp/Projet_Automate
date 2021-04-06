@@ -27,9 +27,9 @@ public class Etat extends Automate {
 	
 	public int getNomEtat() { 	return numeroEtat; }
 	public int getNbrTrans() { 	return nbrTrans; }
-	public int getEtatDepart(final int index) {  	return transition.get(index).getEtatDepart(); }
+	public ArrayList<Integer> getEtatDepart(final int index) {  	return transition.get(index).getEtatDepart(); }
 	public char getLettre(final int index) { 		return transition.get(index).getLettre(); }
-	public int getEtatFinal(final int index) {		return transition.get(index).getEtatSortie(); }
+	public ArrayList<Integer> getEtatFinal(final int index) {		return transition.get(index).getEtatSortie(); }
 	
 	public void afficherEtat() {
 		System.out.print("( "+numeroEtat+" ), { ");
