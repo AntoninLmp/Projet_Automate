@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-
 public class Automate {
 	static public final int MAX = 26; // On acte qu'un etat ne peut pas avoir plus de 26 transition 
 	// Les attributs
@@ -227,41 +226,41 @@ public class Automate {
 		}
 	}
 	
-	public boolean est_un_automate_deterministe(final Automate a) {
+	public boolean est_un_automate_deterministe() {
 		return true; 
 	}
-	public boolean est_un_automate_asynchrone(final Automate a) {
+	public boolean est_un_automate_asynchrone() {
 		return false; 
 	}
-	public boolean est_un_automate_complet(final Automate a) {
-		return false; 
+	public boolean est_un_automate_complet() {
+		return false;
 	}
 	
 	// Completion d'un Automate Finis Complet et Deterministe
-	public void completion(final Automate automate) {
+	public void completion() {
 		// Verification que l'automate est bien synchrone et deterministe pour pouvoir le completer
-		if(est_un_automate_deterministe(automate) && !est_un_automate_asynchrone(automate)) {
-			if (!est_un_automate_complet(automate)) {
-				for (int i = 0; i < automate.etats.size() ; i++) {
+		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
+			if (!this.est_un_automate_complet()) {
+				for (int i = 0; i < etats.size() ; i++) {
 					// Si le nombre de lettre = nombre de transition alors l'etat est complet sinon 
-					if(automate.etats.get(i).getNbrTrans() != automate.alphabet.length) {
-						for (int j = 0; j < automate.alphabet.length; j++) {
+					if(etats.get(i).getNbrTrans() != alphabet.length) {
+						for (int j = 0; j < alphabet.length; j++) {
 							// Si le nombre de Transition est supérieur alors 
-							if (automate.etats.get(i).getNbrTrans() > j) {
-								if(automate.etats.get(i).getLettre(j) != automate.alphabet[j]) {
-									automate.etats.get(i).ajoutTransition( i, automate.alphabet[j], -1);
+							if (etats.get(i).getNbrTrans() > j) {
+								if(etats.get(i).getLettre(j) != alphabet[j]) {
+									etats.get(i).ajoutTransition( i, alphabet[j], -1);
 								}
 							}else {
-								automate.etats.get(i).ajoutTransition(i, automate.alphabet[j], -1);
+								etats.get(i).ajoutTransition(i, alphabet[j], -1);
 							}
 						}
 					}	
 				}
 				// Ajout de l'état poubelle 
-				automate.etats.add(new Etat(-1));
+				etats.add(new Etat(-1));
 				nbrEtats++;
 				for (int i = 0; i < alphabet.length; i++) {
-					automate.etats.get(nbrEtats-1).ajoutTransition(-1, automate.alphabet[i], -1);
+					etats.get(nbrEtats-1).ajoutTransition(-1, alphabet[i], -1);
 				}
 				 
 			}
