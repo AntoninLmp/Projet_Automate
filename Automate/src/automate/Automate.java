@@ -125,7 +125,7 @@ public class Automate {
 		File fichier = new File(NomFichier);
 		// On regarde si le fichier n'existe pas
 		if (!fichier.exists()) {
-			System.out.println("Le fichier n'existe pas, veuillez réessayer !");	
+			System.out.println("Le fichier n'existe pas, veuillez rï¿½essayer !");	
 		} 
 		// Si il existe on peut travailler
 		else {
@@ -202,7 +202,7 @@ public class Automate {
 						etats.add(new Etat(numeroEtatEntree-1,copieArrayList, j)); 
 						tableauTransitionEtati.clear();
 						etatActuelle++; // On passe a un etat N+1
-						j = 0;// On repart à la premier case du tableau 
+						j = 0;// On repart ï¿½ la premier case du tableau 
 					}
 					
 					tableauTransitionEtati.add(t);
@@ -230,9 +230,21 @@ public class Automate {
 	public boolean est_un_automate_deterministe(final Automate a) {
 		return true; 
 	}
-	public boolean est_un_automate_asynchrone(final Automate a) {
+	public boolean est_un_automate_asynchrone() {
+		for(int i=0 ; i < etats.size() ; i++) {
+			for(int j=0 ; j < etats.get(i).getNbrTrans() ; j++) {
+				if(etats.get(i).getTransition().get(j) != null) { //if there is transition
+					if(etats.get(i).getTransition().get(j).getLettre() == '*') {
+						etats.get(i).getTransition().get(j).afficherTransition();
+						return true;
+					}
+				}
+			}
+		}
 		return false; 
 	}
+	
+	
 	public boolean est_un_automate_complet(final Automate a) {
 		return false; 
 	}
@@ -246,7 +258,7 @@ public class Automate {
 					// Si le nombre de lettre = nombre de transition alors l'etat est complet sinon 
 					if(automate.etats.get(i).getNbrTrans() != automate.alphabet.length) {
 						for (int j = 0; j < automate.alphabet.length; j++) {
-							// Si le nombre de Transition est supérieur alors 
+							// Si le nombre de Transition est supï¿½rieur alors 
 							if (automate.etats.get(i).getNbrTrans() > j) {
 								if(automate.etats.get(i).getLettre(j) != automate.alphabet[j]) {
 									automate.etats.get(i).ajoutTransition( i, automate.alphabet[j], -1);
@@ -257,7 +269,7 @@ public class Automate {
 						}
 					}	
 				}
-				// Ajout de l'état poubelle 
+				// Ajout de l'ï¿½tat poubelle 
 				automate.etats.add(new Etat(-1));
 				nbrEtats++;
 				for (int i = 0; i < alphabet.length; i++) {
