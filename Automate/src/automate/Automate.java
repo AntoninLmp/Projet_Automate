@@ -61,7 +61,7 @@ public class Automate {
 			
 			// Affichage entete
 			System.out.println("\n TABLE DE TRANSITION ");
-			System.out.print("   |");
+			System.out.print("    |");
 			
 			// Affichage de l'alphabet que l'automate reconnait
 			for (char c : alphabet) {
@@ -74,8 +74,25 @@ public class Automate {
 			ligneSepration();
 			int espace = nbrEtats*2; 
 			
-			//Affichage corps : Nometat | etatlettre a | ... 
+			//Affichage corps : T/NT Nometat | etatlettre a | ... 
 			for(int i=0; i<nbrEtats; i++) {
+				// Affichage de E pour entrée et S pour sortie
+				boolean initOUterm = false;
+				for (int k = 0; k < etatInit.size(); k++) {
+					if (etatInit.get(k) == i) {
+						System.out.print("E");
+						initOUterm = true; 
+					}
+				}
+				for (int k = 0; k < etatTerm.size(); k++) {
+					if (etatTerm.get(k) == i) {
+						System.out.print("S");
+						initOUterm = true; 
+					}
+				}
+				if(initOUterm == false) {
+					System.out.print(" ");
+				}
 				if(etats.get(i).getNomEtat() == -1) {
 					System.out.print(" P |");
 				}else {
@@ -106,7 +123,7 @@ public class Automate {
 	}
 	// Fonction pour afficher une separation dans la table de transition
 	public void ligneSepration() {
-		System.out.print("---|");
+		System.out.print("----|");
 		for (int i = 0; i < alphabet.length; i++) {
 			for(int j = 0; j < nbrEtats; j++) {
 				System.out.print("--");
