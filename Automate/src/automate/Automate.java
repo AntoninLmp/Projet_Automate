@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Automate {
 	static public final int MAX = 26; // On acte qu'un etat ne peut pas avoir plus de 26 transition 
@@ -61,7 +62,7 @@ public class Automate {
 			
 			// Affichage entete
 			System.out.println("\n TABLE DE TRANSITION ");
-			System.out.print("    |");
+			System.out.print("     |");
 			
 			// Affichage de l'alphabet que l'automate reconnait
 			for (char c : alphabet) {
@@ -77,22 +78,24 @@ public class Automate {
 			//Affichage corps : T/NT Nometat | etatlettre a | ... 
 			for(int i=0; i<nbrEtats; i++) {
 				// Affichage de E pour entrée et S pour sortie
-				boolean initOUterm = false;
+				boolean init = false, term = false;
 				for (int k = 0; k < etatInit.size(); k++) {
 					if (etatInit.get(k) == i) {
 						System.out.print("E");
-						initOUterm = true; 
+						init= true; 
 					}
 				}
 				for (int k = 0; k < etatTerm.size(); k++) {
 					if (etatTerm.get(k) == i) {
 						System.out.print("S");
-						initOUterm = true; 
+						term = true; 
 					}
 				}
-				if(initOUterm == false) {
+				if (init == false && term == false) {
+					System.out.print("  ");
+				}else if(init == false || term == false) {
 					System.out.print(" ");
-				}
+				} 
 				if(etats.get(i).getNomEtat() == -1) {
 					System.out.print(" P |");
 				}else {
@@ -123,7 +126,7 @@ public class Automate {
 	}
 	// Fonction pour afficher une separation dans la table de transition
 	public void ligneSepration() {
-		System.out.print("----|");
+		System.out.print("-----|");
 		for (int i = 0; i < alphabet.length; i++) {
 			for(int j = 0; j < nbrEtats; j++) {
 				System.out.print("--");
@@ -250,7 +253,7 @@ public class Automate {
 		return false; 
 	}
 	public boolean est_un_automate_complet() {
-		return false;
+		return true;
 	}
 	
 	// Completion d'un Automate Finis Complet et Deterministe
@@ -283,6 +286,47 @@ public class Automate {
 			}
 		}
 	}
+	
+	
+	//Minimisation d'un automate 
+	public void minimisation() {
+		// Pour minimiser un automate il doit être déterministe et complet
+		if(this.est_un_automate_complet() && this.est_un_automate_deterministe()) {
+			System.out.println("\n   - MINIMISATION -");
+			
+			// 1 Séparation état T et NT
+			// Vérification si T ou NT n'est pas isolé
+			boolean Tisole = false, NTisole = false; 
+			if(etatTerm.size() == 1) {
+				System.out.println("L'etat T (terminal) est isolé");
+				Tisole = true;
+			}else if (etatTerm.size() == nbrEtats-1) {
+				System.out.println("L'etat NT (non terminal) est isolé");
+				NTisole = true; 
+			}
+			
+			// 2 Minimisation 
+			if (!NTisole) {
+				ArrayList<ArrayList<Integer>> tabMinNT = new ArrayList<>(); 
+				for (int i = 0; i < (nbrEtats - etatTerm.size()); i++) {
+					tabMinNT.add(new ArrayList<>());
+				}
+			}else if (!Tisole){
+				ArrayList<ArrayList<Integer>> tabMinT = new ArrayList<>();
+				int [][] tab = new Integer(nbrEtats, 5); 
+				for (int i = 0; i < etatTerm.size(); i++) {
+					tabMinT.add(new ArrayList<>()); 
+					for (int j = 0; j < alphabet.length; j++) {
+						
+					}
+				}
+			}
+			// 3 Vérification si 2 états ou plus peuvent se rassembler ou pas  
+		}
+	}
+
+	
+	
 }
 
 	
