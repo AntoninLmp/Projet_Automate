@@ -252,7 +252,7 @@ public class Automate {
 	// Completion d'un Automate Finis Complet et Deterministe
 	public void completion(final Automate automate) {
 		// Verification que l'automate est bien synchrone et deterministe pour pouvoir le completer
-		if(est_un_automate_deterministe(automate) && !est_un_automate_asynchrone(automate)) {
+		if(est_un_automate_deterministe(automate) && !est_un_automate_asynchrone()) {
 			if (!est_un_automate_complet(automate)) {
 				for (int i = 0; i < automate.etats.size() ; i++) {
 					// Si le nombre de lettre = nombre de transition alors l'etat est complet sinon 
