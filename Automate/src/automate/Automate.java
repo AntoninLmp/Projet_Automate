@@ -200,6 +200,38 @@ public class Automate {
 
 	}
 }
+
+public boolean est_un_automate_complet() {
+		// Verif synchrone et déterministe
+		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
+			boolean bool = true;
+			System.out.println("nbr etats : "+ nbrEtats);
+			for (int a = 0; a < nbrEtats; a++) {
+				if(bool == true) {
+					System.out.println("L'Automate n'est pas complet car : ");
+				}
+				bool = false;
+				int b =0;
+				System.out.print("	Etat "+etats.get(a).getNomEtat()+" :");
+				for (char lettre : alphabet) {
+					/*Si b est supérieur au nombres d'états sachant que les états sont triés
+					 * ou si l'état ne possède aucune transition */
+					if (b > etats.get(a).getNbrTrans() || etats.get(a).getNbrTrans() == 0) {
+						System.out.print(" en " + lettre );
+					}else if (etats.get(a).getLettre(b) > lettre) {
+						System.out.print(" en " +lettre );
+					}else if(etats.get(a).getLettre(b) == lettre) { // La lettre est présente
+						b++; //On augmente que si on a dépasser la p
+					}
+				}
+				//Saut de ligne entre chaque état
+				System.out.println("");
+			}
+			return bool;
+		}
+		return false;
+	}
+
 /*
 public boolean est_complet(Automate a){
 	for (int i = 0; i<etats[nbrEtats] ; i++) {
