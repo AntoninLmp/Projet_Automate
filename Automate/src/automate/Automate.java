@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
+
 
 public class Automate {
 	static public final int MAX = 26; // On acte qu'un etat ne peut pas avoir plus de 26 transition 
@@ -312,14 +312,49 @@ public class Automate {
 					tabMinNT.add(new ArrayList<>());
 				}
 			}else if (!Tisole){
+				ArrayList<Integer> copieEtatT = new ArrayList<>();
+				copieEtatT.addAll(etatTerm); 
 				ArrayList<ArrayList<Integer>> tabMinT = new ArrayList<>();
-				int [][] tab = new Integer(nbrEtats, 5); 
+				
+				// Etat T OU NT
+				ArrayList<String> tab = new ArrayList<>();
 				for (int i = 0; i < etatTerm.size(); i++) {
 					tabMinT.add(new ArrayList<>()); 
+					tabMinT.get(i).add(etatTerm.get(i)); 
+					boolean premAjout = true; 
 					for (int j = 0; j < alphabet.length; j++) {
-						
+						// Est-ce que l'etat est Terminal 
+						if(etats.get(i).getNomEtat() == tabMinT.get(i).get(0)) {
+							if(etatTerm.contains(etats.get(i).getEtatFinal(j).get(0))){
+								// Si etat T : 1 et pour NT : 0
+								tabMinT.get(i).add(1);
+								
+								if(premAjout) {
+									tab.add("1");
+									premAjout = false; 
+								}else {
+									tab.set(i, tab.get(i).concat("1"));
+								}
+							}else {
+								tabMinT.get(i).add(0);
+								if(premAjout) {
+									tab.add("0");
+									premAjout = false; 
+								}else {
+									tab.set(i, tab.get(i).concat("0"));
+								}
+							}
+						}
 					}
+					System.out.println(tabMinT + " " + tab);
 				}
+				// Vérification si un état s'isole ou non
+				for (int i = 0; i < alphabet.length; i++) {
+					
+				}
+				
+				
+				
 			}
 			// 3 Vérification si 2 états ou plus peuvent se rassembler ou pas  
 		}
