@@ -15,8 +15,8 @@ public class Automate {
 	private ArrayList<Etat> etats;
 	private int nbrEtats;
 
-	private ArrayList<Integer> etatInit;
-	private ArrayList<Integer> etatTerm;
+	private ArrayList<ArrayList<Integer>> etatInit;
+	private ArrayList<ArrayList<Integer>> etatTerm;
 
 	// Constructeur par defaut
 	public Automate() {
@@ -48,10 +48,16 @@ public class Automate {
 	}
 	
 	// Fonction pour afficher un tableau d'entier
-	public void affichertab(final ArrayList<Integer> tab) {
+	public void affichertab(final ArrayList<ArrayList<Integer>> tab) {
 		if (tab != null) {
 			for(int i=0; i<tab.size(); i++) {
-				System.out.print(tab.get(i) +" ");
+				for (int j = 0; j < tab.get(i).size(); j++) {
+					if (j > 0) {
+						System.out.print(".");
+					}
+					System.out.print(tab.get(i));
+				}
+				System.out.print(" ");
 			}
 		}
 	}
@@ -62,7 +68,7 @@ public class Automate {
 			
 			// Affichage entete
 			System.out.println("\n TABLE DE TRANSITION ");
-			System.out.print("   |");
+			System.out.print("     |");
 			
 			// Affichage de l'alphabet que l'automate reconnait
 			for (char c : alphabet) {
@@ -75,13 +81,36 @@ public class Automate {
 			ligneSepration();
 			int espace = nbrEtats*2; 
 			
-			//Affichage corps : Nometat | etatlettre a | ... 
+			//Affichage corps : T/NT Nometat | etatlettre a | ... 
 			for(int i=0; i<nbrEtats; i++) {
-				if(etats.get(i).getNomEtat() == -1) {
+				// Affichage de E pour entrée et S pour sortie
+				boolean init = false, term = false;
+				for (int k = 0; k < etatInit.size(); k++) {
+					if (comparaisonEtat(etatInit.get(k), etats.get(i).getNomEtat())) {
+						System.out.print("E");
+						init= true; 
+					}
+				}
+				for (int k = 0; k < etatTerm.size(); k++) {
+					if (comparaisonEtat(etatTerm.get(k), etats.get(i).getNomEtat())) {
+						System.out.print("S");
+						term = true; 
+					}
+				}
+				if (init == false && term == false) {
+					System.out.print("  ");
+				}else if(init == false || term == false) {
+					System.out.print(" ");
+				} 
+				if(etats.get(i).getNomEtat().get(0) == -1) {
 					System.out.print(" P |");
 				}else {
-					System.out.print(" " + etats.get(i).getNomEtat()+" |");
+					System.out.print(" ");
+					etats.get(i).affichageNomEtat();
+					System.out.print(" |");
 				}
+				
+				// Affichage des transitions
 				for(int j=0; j<alphabet.length; j++) {
 					for(int x=0; x < etats.get(i).getNbrTrans(); x++) {
 						if (etats.get(i).getLettre(x) == alphabet[j]) {
@@ -105,9 +134,27 @@ public class Automate {
 			}			
 		}
 	}
+	
+	public boolean comparaisonEtat(final ArrayList<Integer> etatAutomate, final ArrayList<Integer> etatComparer) {
+		if(etatComparer != null && etatAutomate != null) {
+			if(etatAutomate.size() == etatComparer.size()) {
+				for (int i = 0; i < etatAutomate.size(); i++) {
+					if(etatAutomate.get(i) != etatComparer.get(i)) {
+						return false; 
+					}
+				}
+			}else {
+				return false; 
+			}
+			return true; 
+		}
+		return false; 
+	}
+	
+	
 	// Fonction pour afficher une separation dans la table de transition
 	public void ligneSepration() {
-		System.out.print("---|");
+		System.out.print("-----|");
 		for (int i = 0; i < alphabet.length; i++) {
 			for(int j = 0; j < nbrEtats; j++) {
 				System.out.print("--");
@@ -152,11 +199,12 @@ public class Automate {
 				// Nombre d'etat initiaux
 				char nbr = (char) reader.read();
 				int nombreEtatInit = Character.getNumericValue(nbr);
-				etatInit = new ArrayList<Integer>(); 
+				etatInit = new ArrayList<>(); 
 				for (int i = 0; i < nombreEtatInit; i++) {
 					nbr = (char) reader.read(); // A cause du caractere espace
 					nbr = (char) reader.read();
-					etatInit.add(Character.getNumericValue(nbr));
+					etatInit.add(new ArrayList<>()); 
+					etatInit.get(i).add(Character.getNumericValue(nbr));
 					//System.out.println("etat = " + etatInit[i] + " ");// A SUPPRIMER
 				} 
 				
@@ -164,11 +212,12 @@ public class Automate {
 				Lines = reader.readLine();
 				nbr = (char) reader.read();
 				nombreEtatInit = Character.getNumericValue(nbr);
-				etatTerm = new ArrayList<Integer>(); 
+				etatTerm = new ArrayList<>(); 
 				for (int i = 0; i < nombreEtatInit; i++) {
 					nbr = (char) reader.read(); // A cause du caractere espace
 					nbr = (char) reader.read();
-					etatTerm.add(Character.getNumericValue(nbr));
+					etatTerm.add(new ArrayList<>()); 
+					etatTerm.get(i).add(Character.getNumericValue(nbr));
 					//System.out.println("etat = " + etatTerm[i] + " ");// A SUPPRIMER
 				}
 				Lines = reader.readLine(); // On finit la ligne
@@ -227,46 +276,123 @@ public class Automate {
 		}
 	}
 	
-	public boolean est_un_automate_deterministe(final Automate a) {
+	public boolean est_un_automate_deterministe() {
 		return true; 
 	}
-	public boolean est_un_automate_asynchrone(final Automate a) {
+	public boolean est_un_automate_asynchrone() {
 		return false; 
 	}
-	public boolean est_un_automate_complet(final Automate a) {
-		return false; 
+	public boolean est_un_automate_complet() {
+		return true;
 	}
 	
 	// Completion d'un Automate Finis Complet et Deterministe
-	public void completion(final Automate automate) {
+	public void completion() {
 		// Verification que l'automate est bien synchrone et deterministe pour pouvoir le completer
-		if(est_un_automate_deterministe(automate) && !est_un_automate_asynchrone(automate)) {
-			if (!est_un_automate_complet(automate)) {
-				for (int i = 0; i < automate.etats.size() ; i++) {
+		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
+			if (!this.est_un_automate_complet()) {
+				for (int i = 0; i < etats.size() ; i++) {
 					// Si le nombre de lettre = nombre de transition alors l'etat est complet sinon 
-					if(automate.etats.get(i).getNbrTrans() != automate.alphabet.length) {
-						for (int j = 0; j < automate.alphabet.length; j++) {
+					if(etats.get(i).getNbrTrans() != alphabet.length) {
+						for (int j = 0; j < alphabet.length; j++) {
 							// Si le nombre de Transition est supérieur alors 
-							if (automate.etats.get(i).getNbrTrans() > j) {
-								if(automate.etats.get(i).getLettre(j) != automate.alphabet[j]) {
-									automate.etats.get(i).ajoutTransition( i, automate.alphabet[j], -1);
+							if (etats.get(i).getNbrTrans() > j) {
+								if(etats.get(i).getLettre(j) != alphabet[j]) {
+									etats.get(i).ajoutTransition( i, alphabet[j], -1);
 								}
 							}else {
-								automate.etats.get(i).ajoutTransition(i, automate.alphabet[j], -1);
+								etats.get(i).ajoutTransition(i, alphabet[j], -1);
 							}
 						}
 					}	
 				}
 				// Ajout de l'état poubelle 
-				automate.etats.add(new Etat(-1));
+				etats.add(new Etat(-1));
 				nbrEtats++;
 				for (int i = 0; i < alphabet.length; i++) {
-					automate.etats.get(nbrEtats-1).ajoutTransition(-1, automate.alphabet[i], -1);
+					etats.get(nbrEtats-1).ajoutTransition(-1, alphabet[i], -1);
 				}
 				 
 			}
 		}
 	}
+	
+	
+	//Minimisation d'un automate 
+	public void minimisation() {
+		// Pour minimiser un automate il doit être déterministe et complet
+		if(this.est_un_automate_complet() && this.est_un_automate_deterministe()) {
+			System.out.println("\n   - MINIMISATION -");
+			
+			// 1 Séparation état T et NT
+			// Vérification si T ou NT n'est pas isolé
+			boolean Tisole = false, NTisole = false; 
+			if(etatTerm.size() == 1) {
+				System.out.println("L'etat T (terminal) est isolé");
+				Tisole = true;
+			}else if (etatTerm.size() == nbrEtats-1) {
+				System.out.println("L'etat NT (non terminal) est isolé");
+				NTisole = true; 
+			}
+			
+			// 2 Minimisation 
+			if (!NTisole) {
+				ArrayList<ArrayList<Integer>> tabMinNT = new ArrayList<>(); 
+				for (int i = 0; i < (nbrEtats - etatTerm.size()); i++) {
+					tabMinNT.add(new ArrayList<>());
+				}
+			}else if (!Tisole){
+				ArrayList<ArrayList<Integer>> copieEtatT = new ArrayList<>();
+				copieEtatT.addAll(etatTerm); 
+				ArrayList<ArrayList<Integer>> tabMinT = new ArrayList<>();
+				
+				// Etat T OU NT
+				
+				//ArrayList<String> tab = new ArrayList<>();
+				for (int i = 0; i < etatTerm.size(); i++) {
+					tabMinT.add(new ArrayList<>()); 
+					/*tabMinT.get(i).add(etatTerm.get(i).); 
+					boolean premAjout = true; 
+					for (int j = 0; j < alphabet.length; j++) {
+						// Est-ce que l'etat est Terminal 
+						if(etats.get(i).getNomEtat() == tabMinT.get(i).get(0)) {
+							if(etatTerm.contains(etats.get(i).getEtatFinal(j).get(0))){
+								// Si etat T : 1 et pour NT : 0
+								tabMinT.get(i).add(1);
+								
+								if(premAjout) {
+									tab.add("1");
+									premAjout = false; 
+								}else {
+									tab.set(i, tab.get(i).concat("1"));
+								}
+							}else {
+								tabMinT.get(i).add(0);
+								if(premAjout) {
+									tab.add("0");
+									premAjout = false; 
+								}else {
+									tab.set(i, tab.get(i).concat("0"));
+								}
+							}
+						}
+					}
+					System.out.println(tabMinT + " " + tab);*/
+				}
+				// Vérification si un état s'isole ou non
+				for (int i = 0; i < alphabet.length; i++) {
+					
+				}
+				
+				
+				
+			}
+			// 3 Vérification si 2 états ou plus peuvent se rassembler ou pas  
+		}
+	}
+
+	
+	
 }
 
 	
