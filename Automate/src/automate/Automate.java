@@ -26,6 +26,7 @@ public class Automate {
 		etats = new ArrayList<Etat>();
 		this.nbrEtats = nbrEtat;
 	}
+	
 
 	//Affichage automate
 	public void afficherAutomate() {
@@ -400,10 +401,23 @@ public class Automate {
 			// 3 V�rification si 2 �tats ou plus peuvent se rassembler ou pas  
 		}
 	}
+	public void fusion_entree(){
+		if (etatInit.size() > 1) {
+			int i=0;
+			while(etatInit.size()>1){
+				etats.get(etatInit.get(i).get(0)).fusion(etats.get(etatInit.get(i+1).get(0)));
+				etatInit.get(i).addAll(etatInit.get(i+1));//1+2->1,2
+				etats.remove(etatInit.get(i+1).get(0).intValue());
+				nbrEtats--;
+				etatInit.remove(i+1);
+			}
+		}
+	}
 
-	
-	
+	public void determinisation_et_completion_asynchrone(){
+		//si plusieurs entree -> fusion des entrees
+		fusion_entree();
+	}	
 }
-
 	
 
