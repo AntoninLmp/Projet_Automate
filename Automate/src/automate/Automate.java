@@ -312,7 +312,6 @@ public class Automate {
 				for (int i = 0; i < alphabet.length; i++) {
 					etats.get(nbrEtats-1).ajoutTransition(-1, alphabet[i], -1);
 				}
-				 
 			}
 		}
 	}
@@ -324,41 +323,109 @@ public class Automate {
 		if(this.est_un_automate_complet() && this.est_un_automate_deterministe()) {
 			System.out.println("\n   - MINIMISATION -");
 			
-			// 1 Séparation état T et NT
+			// Création du tableau des etats final minimal
+			ArrayList<Etat> autoMinimiser = new ArrayList<>(); 
+			
+			// ETAPE 1 : SEPARATION ETAT T et NT
 			// Vérification si T ou NT n'est pas isolé
 			boolean Tisole = false, NTisole = false; 
 			if(etatTerm.size() == 1) {
-				System.out.println("L'etat T (terminal) est isolé");
 				Tisole = true;
+				System.out.println("L'etat T (terminal) est isolé");
+				for(int i=0; i<etats.size(); i++) {
+					if(comparaisonEtat(etats.get(i).getNomEtat(), etatTerm.get(i))) {
+						autoMinimiser.add(etats.get(i));
+					}
+				}
 			}else if (etatTerm.size() == nbrEtats-1) {
-				System.out.println("L'etat NT (non terminal) est isolé");
 				NTisole = true; 
+				System.out.println("L'etat NT (non terminal) est isolé");
+				boolean present; 
+				for(int i=0; i<etats.size(); i++) {
+					// On cherche l'etat qui n'est pas dans le tableau des etats terminaux
+					present = false; 
+					for (int j = 0; j < etatTerm.size(); j++) {
+						if(comparaisonEtat(etats.get(i).getNomEtat(), etatTerm.get(j))) {
+							present = true;
+							break; 
+						}
+					}
+					if(present == false) {
+						autoMinimiser.add(etats.get(i));
+					}
+				}
 			}
 			
-			// 2 Minimisation 
+			// ETAPE 2 Minimisation 
 			if (!NTisole) {
-				ArrayList<ArrayList<Integer>> tabMinNT = new ArrayList<>(); 
 				for (int i = 0; i < (nbrEtats - etatTerm.size()); i++) {
-					tabMinNT.add(new ArrayList<>());
+					
 				}
 			}else if (!Tisole){
-				ArrayList<ArrayList<Integer>> copieEtatT = new ArrayList<>();
-				copieEtatT.addAll(etatTerm); 
-				ArrayList<ArrayList<Integer>> tabMinT = new ArrayList<>();
-				
+				ArrayList<ArrayList<Integer>> copieTransitionEtat = new ArrayList<>();
+				copieTransitionEtat.addAll(etatTerm); 
+				System.out.println(copieTransitionEtat);
 				// Etat T OU NT
+				int i = 0;
+				boolean present;
+				while (i < etatTerm.size()) {
+					present = false;
+					//On cherche a etudier uniquement les etats Terminaux
+					for (int j = 0; j < etatTerm.size(); j++) {
+						if(comparaisonEtat(etats.get(i).getNomEtat(), etatTerm.get(j))) {
+							present = true;
+							break; 
+						}
+					}
+					if(present == true) {
+						boolean premAjout = true, terminal; 
+						for (int j = 0; j < alphabet.length; j++) {
+							terminal = false; 
+							// On cherche à savoir si l'état est terminale
+							for (int k = 0; k < etatTerm.size(); k++) {
+								System.out.println(etats.get(i).getEtatFinal(j) + "  " + etatTerm.get(k));
+								if(comparaisonEtat(etats.get(i).getEtatFinal(j), etatTerm.get(k))) {
+									terminal = true;
+									break; 
+								}
+							}
+							if (terminal == true) {
+								// Si etat T : 1 et pour NT : 0
+								if(premAjout) {
+									copieTransitionEtat.get(i).set(j, 1);
+									premAjout = false; 
+								}else {
+									copieTransitionEtat.get(i).add(1);
+								}
+							}else {
+								
+								if(premAjout) {
+									copieTransitionEtat.get(i).set(j, 0);
+									premAjout = false; 
+								}else {
+									copieTransitionEtat.get(i).add(0);
+								}
+							}
+						}
+						i++; 
+						System.out.println(copieTransitionEtat);
+					}
+					
+				}
 				
-				//ArrayList<String> tab = new ArrayList<>();
+				
+				
+				/*
 				for (int i = 0; i < etatTerm.size(); i++) {
-					tabMinT.add(new ArrayList<>()); 
-					/*tabMinT.get(i).add(etatTerm.get(i).); 
+					copieTransitionEtat.add(new ArrayList<>()); 
+					//copieTransitionEtat.get(i).add(etatTerm.get(i)); 
 					boolean premAjout = true; 
 					for (int j = 0; j < alphabet.length; j++) {
 						// Est-ce que l'etat est Terminal 
-						if(etats.get(i).getNomEtat() == tabMinT.get(i).get(0)) {
+						if(etats.get(i).getNomEtat() == copieTransitionEtat.get(i)) {
 							if(etatTerm.contains(etats.get(i).getEtatFinal(j).get(0))){
 								// Si etat T : 1 et pour NT : 0
-								tabMinT.get(i).add(1);
+								copieTransitionEtat.get(i).add(1);
 								
 								if(premAjout) {
 									tab.add("1");
@@ -367,7 +434,7 @@ public class Automate {
 									tab.set(i, tab.get(i).concat("1"));
 								}
 							}else {
-								tabMinT.get(i).add(0);
+								copieTransitionEtat.get(i).add(0);
 								if(premAjout) {
 									tab.add("0");
 									premAjout = false; 
@@ -377,17 +444,20 @@ public class Automate {
 							}
 						}
 					}
-					System.out.println(tabMinT + " " + tab);*/
+					System.out.println(copieTransitionEtat + " " + tab);
 				}
 				// Vérification si un état s'isole ou non
 				for (int i = 0; i < alphabet.length; i++) {
 					
 				}
-				
-				
+				*/
 				
 			}
 			// 3 Vérification si 2 états ou plus peuvent se rassembler ou pas  
+			
+			
+			
+			//PENSER A FAIRE nbrEtat == autoMiniser.size
 		}
 	}
 
