@@ -83,7 +83,7 @@ public class Automate {
 			
 			//Affichage corps : T/NT Nometat | etatlettre a | ... 
 			for(int i=0; i<nbrEtats; i++) {
-				// Affichage de E pour entrée et S pour sortie
+				// Affichage de E pour entrï¿½e et S pour sortie
 				boolean init = false, term = false;
 				for (int k = 0; k < etatInit.size(); k++) {
 					if (comparaisonEtat(etatInit.get(k), etats.get(i).getNomEtat())) {
@@ -172,7 +172,7 @@ public class Automate {
 		File fichier = new File(NomFichier);
 		// On regarde si le fichier n'existe pas
 		if (!fichier.exists()) {
-			System.out.println("Le fichier n'existe pas, veuillez réessayer !");	
+			System.out.println("Le fichier n'existe pas, veuillez rï¿½essayer !");	
 		} 
 		// Si il existe on peut travailler
 		else {
@@ -251,7 +251,7 @@ public class Automate {
 						etats.add(new Etat(numeroEtatEntree-1,copieArrayList, j)); 
 						tableauTransitionEtati.clear();
 						etatActuelle++; // On passe a un etat N+1
-						j = 0;// On repart à la premier case du tableau 
+						j = 0;// On repart ï¿½ la premier case du tableau 
 					}
 					
 					tableauTransitionEtati.add(t);
@@ -280,7 +280,17 @@ public class Automate {
 		return true; 
 	}
 	public boolean est_un_automate_asynchrone() {
-		return false; 
+		for(int i=0 ; i < etats.size() ; i++) {
+			for(int j=0 ; j < etats.get(i).getNbrTrans() ; j++) {
+				if(etats.get(i).getTransition().get(j) != null) { //if there is transition
+					if(etats.get(i).getTransition().get(j).getLettre() == '*') {
+						etats.get(i).getTransition().get(j).afficherTransition();
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	public boolean est_un_automate_complet() {
 		return true;
@@ -295,7 +305,7 @@ public class Automate {
 					// Si le nombre de lettre = nombre de transition alors l'etat est complet sinon 
 					if(etats.get(i).getNbrTrans() != alphabet.length) {
 						for (int j = 0; j < alphabet.length; j++) {
-							// Si le nombre de Transition est supérieur alors 
+							// Si le nombre de Transition est supï¿½rieur alors 
 							if (etats.get(i).getNbrTrans() > j) {
 								if(etats.get(i).getLettre(j) != alphabet[j]) {
 									etats.get(i).ajoutTransition( i, alphabet[j], -1);
@@ -306,7 +316,7 @@ public class Automate {
 						}
 					}	
 				}
-				// Ajout de l'état poubelle 
+				// Ajout de l'ï¿½tat poubelle 
 				etats.add(new Etat(-1));
 				nbrEtats++;
 				for (int i = 0; i < alphabet.length; i++) {
@@ -320,18 +330,18 @@ public class Automate {
 	
 	//Minimisation d'un automate 
 	public void minimisation() {
-		// Pour minimiser un automate il doit être déterministe et complet
+		// Pour minimiser un automate il doit ï¿½tre dï¿½terministe et complet
 		if(this.est_un_automate_complet() && this.est_un_automate_deterministe()) {
 			System.out.println("\n   - MINIMISATION -");
 			
-			// 1 Séparation état T et NT
-			// Vérification si T ou NT n'est pas isolé
+			// 1 Sï¿½paration ï¿½tat T et NT
+			// Vï¿½rification si T ou NT n'est pas isolï¿½
 			boolean Tisole = false, NTisole = false; 
 			if(etatTerm.size() == 1) {
-				System.out.println("L'etat T (terminal) est isolé");
+				System.out.println("L'etat T (terminal) est isolï¿½");
 				Tisole = true;
 			}else if (etatTerm.size() == nbrEtats-1) {
-				System.out.println("L'etat NT (non terminal) est isolé");
+				System.out.println("L'etat NT (non terminal) est isolï¿½");
 				NTisole = true; 
 			}
 			
@@ -379,7 +389,7 @@ public class Automate {
 					}
 					System.out.println(tabMinT + " " + tab);*/
 				}
-				// Vérification si un état s'isole ou non
+				// Vï¿½rification si un ï¿½tat s'isole ou non
 				for (int i = 0; i < alphabet.length; i++) {
 					
 				}
@@ -387,7 +397,7 @@ public class Automate {
 				
 				
 			}
-			// 3 Vérification si 2 états ou plus peuvent se rassembler ou pas  
+			// 3 Vï¿½rification si 2 ï¿½tats ou plus peuvent se rassembler ou pas  
 		}
 	}
 

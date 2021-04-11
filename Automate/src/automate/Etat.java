@@ -47,6 +47,10 @@ public class Etat extends Automate {
 	public char getLettre(final int index) { 		return transition.get(index).getLettre(); }
 	public ArrayList<Integer> getEtatFinal(final int index) {		return transition.get(index).getEtatSortie(); }
 	
+	public ArrayList<Transition> getTransition() {
+		return copie().transition;
+	}
+	
 	public void afficherEtat() {
 		System.out.print("( "+numeroEtat+" ), { ");
 		for(int i = 0; i < nbrTrans; i++) {
