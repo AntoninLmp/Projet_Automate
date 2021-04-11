@@ -44,7 +44,24 @@ public class Transition implements Comparable<Transition>{
 		return "(" + etatDepart + lettre + etatSortie + ")"; 
 	}
 	
-	public void afficherTransition(final ArrayList<Integer> etat) {
+	
+	
+	@Override
+	public int compareTo(Transition t) {
+		return this.lettre - t.lettre; 
+	}
+	
+	
+	// AFFICHAGE
+	
+	public void afficherEtatDepart() {
+		afficherArrayListNom(etatDepart);
+	}
+	public void afficherEtatSortie() {
+		afficherArrayListNom(etatSortie);
+	}
+	
+	public void afficherArrayListNom(final ArrayList<Integer> etat) {
 		if(this != null) {
 			for (int i = 0; i < etat.size(); i++) {
 				System.out.print(etat.get(i));
@@ -54,11 +71,10 @@ public class Transition implements Comparable<Transition>{
 			}
 		}
 	}
-	
-	@Override
-	public int compareTo(Transition t) {
-		return this.lettre - t.lettre; 
+	public void affichageTransition() {
+		afficherArrayListNom(etatDepart);
+		System.out.print(lettre);
+		afficherArrayListNom(etatSortie);
 	}
-	
 	
 }

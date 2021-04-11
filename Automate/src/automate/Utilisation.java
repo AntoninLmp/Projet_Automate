@@ -6,7 +6,7 @@ public class Utilisation {
 		Automate a1 = new Automate();	
 		a1.lire_automate_fichier("src/Fichier/A6-3.txt");
 		a1.afficherAutomate();
-		//a1.completion();
+		a1.completion();
 		//a1.afficherAutomate();
 		a1.minimisation();
 	}
