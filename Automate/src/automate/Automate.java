@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 
 public class Automate {
@@ -38,7 +37,7 @@ public class Automate {
 		}		
 		System.out.println("}");
 		System.out.print("  - Etats Q = { ");
-		for(int i=0; i<nbrEtats; i++) {  System.out.print(etats.get(i).getNomEtat() + " "); }
+		for(int i=0; i<etats.size(); i++) {  System.out.print(etats.get(i).getNomEtat() + " "); }
 		System.out.println("}");
 		System.out.print("  - Etats I = { ");
 		affichertab(etatInit);
@@ -178,7 +177,7 @@ public class Automate {
 				Lines = reader.readLine();
 				nbrEtats = Integer.parseInt(Lines);
 				if (this.etats == null) {
-					this.etats = new ArrayList<Etat>(); 
+					this.etats = new ArrayList<Etat>();
 				}
 				
 				// Nombre d'etat initiaux
@@ -244,6 +243,11 @@ public class Automate {
 					//Fin de la ligne
 					Lines = reader.readLine(); 
 				}
+				if (etats.size() != nbrEtats) {
+					for (int i = etats.size()+1; i < nbrEtats; i++) {
+						etats.add(new Etat(i)); 
+					}
+				}
 				// Pour le dernier etats on ajout ces transitions
 				etats.add(numeroEtatEntree, new Etat(numeroEtatEntree, tableauTransitionEtati, j));
 				
@@ -268,7 +272,34 @@ public class Automate {
 		return false; 
 	}
 	public boolean est_un_automate_complet() {
-		return true;
+		// Verif synchrone et déterministe
+		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
+			System.out.println("nbr etats : "+ nbrEtats);
+			boolean bool = true; 
+			for (int a = 0; a < nbrEtats; a++) {
+				int b =0;
+				if(etats.get(a).getNbrTrans() != alphabet.length) {
+					System.out.println("L'Automate n'est pas complet car : ");
+					System.out.print("	Etat "+etats.get(a).getNomEtat()+" :");
+					for (char lettre : alphabet) {
+						/*Si b est supérieur au nombres d'états sachant que les états sont triés
+						 * ou si l'état ne possède aucune transition */
+						if (b > etats.get(a).getNbrTrans() || etats.get(a).getNbrTrans() == 0) {
+							System.out.print(" en " + lettre );
+						}else if (etats.get(a).getLettre(b) > lettre) {
+							System.out.print(" en " +lettre );
+						}else if(etats.get(a).getLettre(b) == lettre) { // La lettre est présente
+							b++; //On augmente que si on a dépasser la p
+						}
+						bool = false; 
+					}
+					//Saut de ligne entre chaque état
+					System.out.println("");
+				}
+			}
+			return bool;
+		}
+		return false; 
 	}
 	
 	// Completion d'un Automate Finis Complet et Deterministe
@@ -352,14 +383,12 @@ public class Automate {
 							present = true;
 							break; 
 						}
-					}
-					if(present == false) {
+					}if(present == false) {
 						autoMinimiser.add(etats.get(i).copie());
 						break; // Lorsqu'on l'a trouvé pas besoin de continuer 
 					}
 				}
 			}
-			autoMinimiser.get(0).affichageEtat(); //A SUPPRIMER
 			// ETAPE 2 Minimisation 
 			if (!NTisole) {
 				for (int i = 0; i < (nbrEtats - etatTerm.size()); i++) {
@@ -368,6 +397,7 @@ public class Automate {
 			}if (!Tisole){
 				// CREATION COPIE
 				ArrayList<ArrayList<Integer>> copieTransitionEtat = new ArrayList<>();
+				int indexCopie = 0; 
 				for (int i = 0; i < etatTerm.size(); i++) {
 					copieTransitionEtat.add(new ArrayList<>(etatTerm.get(i)));
 				} 
@@ -376,7 +406,7 @@ public class Automate {
 				while (compteur < taille) {
 					int i = 0;
 					boolean present;
-					while (i < etatTerm.size()) {
+					while (i <= etatTerm.size()) {
 						present = false;
 						//On cherche a etudier uniquement les etats Terminaux
 						for (int j = 0; j < etatTerm.size(); j++) {
@@ -385,6 +415,8 @@ public class Automate {
 								break; 
 							}
 						}
+						System.out.println("etude de l'etat " + etats.get(i).getNomEtat());
+						// Si il est terminal 
 						if(present == true) {
 							boolean premAjout = true, terminal; 
 							for (int j = 0; j < alphabet.length; j++) {
@@ -400,22 +432,25 @@ public class Automate {
 								if (terminal == true) {
 									// Si etat T : 1 et pour NT : 0
 									if(premAjout) {
-										copieTransitionEtat.get(i).set(j, 1);
+										copieTransitionEtat.get(indexCopie).set(j, 1);
 										premAjout = false; 
 									}else {
-										copieTransitionEtat.get(i).add(1);
+										copieTransitionEtat.get(indexCopie).add(1);
 									}
 								}else {
 									
 									if(premAjout) {
-										copieTransitionEtat.get(i).set(j, 0);
+										copieTransitionEtat.get(indexCopie).set(j, 0);
 										premAjout = false; 
 									}else {
-										copieTransitionEtat.get(i).add(0);
+										copieTransitionEtat.get(indexCopie).add(0);
 									}
 								}
 							}
+							indexCopie++;
 							System.out.println(copieTransitionEtat);
+						}else {
+							System.err.println("L'etat "+ etats.get(i).getNomEtat() + " n'est pas terminal");
 						}
 						i++;
 					}
@@ -437,7 +472,7 @@ public class Automate {
 							if(etatTerm.size() > 1) {
 								int j2=0; 
 								// On cherche on se trouve l'etat a supprimer
-								while (etatTerm.get(j2).equals(autoMinimiser.get(autoMinimiser.size()-1).getNomEtat()) == false) {
+								while (j2 < etatTerm.size()-1 && etatTerm.get(j2).equals(autoMinimiser.get(autoMinimiser.size()-1).getNomEtat()) == false ) {
 									j2++; 
 								}
 								etatTerm.remove(j2);
@@ -457,10 +492,6 @@ public class Automate {
 				}
 				
 			}
-			  
-			
-			
-			
 			//PENSER A FAIRE nbrEtat == autoMiniser.size
 		}else {
 			System.out.println("L'automate ne peut pas etre minimiser car il n'est pas compleyt et/ou deterministe");
