@@ -413,11 +413,6 @@ public class Automate {
 			}
 		}
 	}
-
-	public void determinisation_et_completion_asynchrone(){
-		//si plusieurs entree -> fusion des entrees
-		fusion_entree();
-	}	
 }
 	
 
