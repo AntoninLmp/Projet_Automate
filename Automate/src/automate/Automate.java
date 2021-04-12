@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 
 public class Automate {
-	static public final int MAX = 26; // On acte qu'un etat ne peut pas avoir plus de 26 transition 
+	static public final int MAX = 26; // On acte qu'un etat ne peut pas avoir plus de 26 transition
 	// Les attributs
 	private char[] alphabet; // L'alphabet ne changera pas
 	private ArrayList<Etat> etats;
@@ -33,7 +33,7 @@ public class Automate {
 		System.out.print("  - Alphabet { ");
 		for(char alpha : alphabet) {
 			System.out.print(alpha+ " ");
-		}		
+		}
 		System.out.println("}");
 		System.out.print("  - Etats Q = { ");
 		for(int i=0; i<nbrEtats; i++) {  System.out.print(etats.get(i).getNomEtat() + " "); }
@@ -46,7 +46,7 @@ public class Automate {
 		System.out.println("}");
 		tableTransitionAutomate();
 	}
-	
+
 	// Fonction pour afficher un tableau d'entier
 	public void affichertab(final ArrayList<ArrayList<Integer>> tab) {
 		if (tab != null) {
@@ -61,7 +61,7 @@ public class Automate {
 			}
 		}
 	}
-	
+
 	//Fonction pour afficher une tableau de transition
 	public void tableTransitionAutomate() {
 		if (etats != null) {
@@ -79,6 +79,7 @@ public class Automate {
 			}
 			System.out.println();
 			ligneSepration();
+
 			int espace = nbrEtats*2; 
 			
 			//Affichage corps : T/NT Nometat | etatlettre a | ... 
@@ -120,7 +121,7 @@ public class Automate {
 							}else {
 								etats.get(i).afficherEtatSortie(x);
 							} 							
-							espace -= 2; 
+							espace -= 2;
 						}
 					}
 					for(int k = 0; k < espace; k++) {
@@ -131,7 +132,7 @@ public class Automate {
 				}
 				System.out.println();
 				ligneSepration();
-			}			
+			}
 		}
 	}
 	
@@ -163,23 +164,21 @@ public class Automate {
 		}
 		System.out.println();
 	}
-	
-	
-	
+
 	public void lire_automate_fichier(String NomFichier) {
 
 		// ouverture du fichier
 		File fichier = new File(NomFichier);
 		// On regarde si le fichier n'existe pas
 		if (!fichier.exists()) {
-			System.out.println("Le fichier n'existe pas, veuillez r�essayer !");	
+			System.out.println("Le fichier n'existe pas, veuillez reessayer !");	
 		} 
 		// Si il existe on peut travailler
 		else {
 			try {
 				BufferedReader reader = new BufferedReader(
 				new InputStreamReader(new FileInputStream(fichier), "UTF-8"));
-				
+
 				// Lecture de l'Alphabet
 				String Lines = reader.readLine();
 				alphabet = new char[Integer.parseInt(Lines)];
@@ -188,14 +187,13 @@ public class Automate {
 					alphabet[i] = lettre++;
 					//System.out.println(alphabet[i]); // A SUPPRIMER
 				}
-				
+
 				// Nombre d'etats total et creation des etats
 				Lines = reader.readLine();
 				nbrEtats = Integer.parseInt(Lines);
 				if (this.etats == null) {
 					this.etats = new ArrayList<Etat>(); 
 				}
-				
 				// Nombre d'etat initiaux
 				char nbr = (char) reader.read();
 				int nombreEtatInit = Character.getNumericValue(nbr);
@@ -206,8 +204,8 @@ public class Automate {
 					etatInit.add(new ArrayList<>()); 
 					etatInit.get(i).add(Character.getNumericValue(nbr));
 					//System.out.println("etat = " + etatInit[i] + " ");// A SUPPRIMER
-				} 
-				
+				}
+
 				// Nombre d'etat finaux
 				Lines = reader.readLine();
 				nbr = (char) reader.read();
@@ -221,12 +219,12 @@ public class Automate {
 					//System.out.println("etat = " + etatTerm[i] + " ");// A SUPPRIMER
 				}
 				Lines = reader.readLine(); // On finit la ligne
-				
-				// Nombre de transition 
+
+				// Nombre de transition
 				Lines = reader.readLine();
-				int nbrTransition = Integer.parseInt(Lines); 
-				
-				//Transition tabTransition = new Transition 
+				int nbrTransition = Integer.parseInt(Lines);
+
+				//Transition tabTransition = new Transition
 				// Les transitions
 				ArrayList<Transition> tableauTransitionEtati = new ArrayList<Transition>();
 				int j = 0, etatActuelle = 0; 
@@ -238,13 +236,14 @@ public class Automate {
 					numeroEtatEntree = Character.getNumericValue(nbr);
 					//Recuperation de la lettre
 					nbr =(char) reader.read();
-					translettre = nbr; 
+					translettre = nbr;
 					//Recuperation de l'etat final
-					nbr = (char) reader.read(); 
-					numeroEtatSortie = Character.getNumericValue(nbr); 
+					nbr = (char) reader.read();
+					numeroEtatSortie = Character.getNumericValue(nbr);
 
 					Transition t = new Transition(numeroEtatEntree, translettre, numeroEtatSortie);
 					// Si l'etat de depart change c'est que nous avons parcouru toutes les transitions
+
 					if (numeroEtatEntree != etatActuelle) { 
 						ArrayList<Transition> copieArrayList = new ArrayList<>(); 
 						copieArrayList.addAll(tableauTransitionEtati); 
@@ -257,7 +256,7 @@ public class Automate {
 					tableauTransitionEtati.add(t);
 					j++;
 					//Fin de la ligne
-					Lines = reader.readLine(); 
+					Lines = reader.readLine();
 				}
 				// Pour le dernier etats on ajout ces transitions
 				etats.add(numeroEtatEntree, new Etat(numeroEtatEntree, tableauTransitionEtati, j));
@@ -405,5 +404,33 @@ public class Automate {
 	
 }
 
-	
-
+public boolean est_un_automate_complet() {
+		// Verif synchrone et déterministe
+		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
+			boolean bool = true;
+			System.out.println("nbr etats : "+ nbrEtats);
+			for (int a = 0; a < nbrEtats; a++) {
+				if(bool == true) {
+					System.out.println("L'Automate n'est pas complet car : ");
+				}
+				bool = false;
+				int b =0;
+				System.out.print("	Etat "+etats.get(a).getNomEtat()+" :");
+				for (char lettre : alphabet) {
+					/*Si b est supérieur au nombres d'états sachant que les états sont triés
+					 * ou si l'état ne possède aucune transition */
+					if (b > etats.get(a).getNbrTrans() || etats.get(a).getNbrTrans() == 0) {
+						System.out.print(" en " + lettre );
+					}else if (etats.get(a).getLettre(b) > lettre) {
+						System.out.print(" en " +lettre );
+					}else if(etats.get(a).getLettre(b) == lettre) { // La lettre est présente
+						b++; //On augmente que si on a dépasser la p
+					}
+				}
+				//Saut de ligne entre chaque état
+				System.out.println("");
+			}
+			return bool;
+		}
+		return false;
+	}
