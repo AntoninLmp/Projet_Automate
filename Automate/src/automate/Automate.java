@@ -440,6 +440,19 @@ public class Automate {
 			}
 		}
 	}
+
+	public void determinisation_et_completion_asynchrone(){
+		//si plusieurs entree -> fusion des entrees
+		fusion_entree();
+		Boolean fin = false;
+		while (fin != true) {
+			for (int i = 0; i < nbrEtats; i++) {
+				if (etats.get(i).getNomEtat().containsAll(etatInit.get(i))) {
+					;
+				}
+			}
+		}
+	}
 }
 	
 
