@@ -36,7 +36,9 @@ public class Automate {
 		}
 		System.out.println("}");
 		System.out.print("  - Etats Q = { ");
-		for(int i=0; i<nbrEtats; i++) {  System.out.print(etats.get(i).getNomEtat() + " "); }
+		for(int i=0; i<nbrEtats ; i++) {  
+			System.out.print(etats.get(i).getNomEtat() + " "); 
+		}
 		System.out.println("}");
 		System.out.print("  - Etats I = { ");
 		affichertab(etatInit);
@@ -291,9 +293,7 @@ public class Automate {
 		}
 		return false;
 	}
-	public boolean est_un_automate_complet() {
-		return true;
-	}
+	
 	
 	// Completion d'un Automate Finis Complet et Deterministe
 	public void completion() {
@@ -402,7 +402,7 @@ public class Automate {
 
 	
 	
-}
+
 
 public boolean est_un_automate_complet() {
 		// Verif synchrone et déterministe
@@ -434,3 +434,30 @@ public boolean est_un_automate_complet() {
 		}
 		return false;
 	}
+
+	public void fusion_entree(){
+		if (etatInit.size() > 1) {
+			int i=0;
+			while(etatInit.size()>1){
+				etats.get(etatInit.get(i).get(0)).fusion(etats.get(etatInit.get(i+1).get(0)));
+				etatInit.get(i).addAll(etatInit.get(i+1));//1+2->1,2
+				etats.remove(etatInit.get(i+1).get(0).intValue());
+				nbrEtats--;
+				etatInit.remove(i+1);
+			}
+		}
+	}
+
+	public void determinisation_et_completion_asynchrone(){
+		//si plusieurs entree -> fusion des entrees
+		fusion_entree();
+		Boolean fin = false;
+		while (fin != true) { //pour tous les états 
+			for (int i = 0; i < nbrEtats; i++) { //on va se demander pour chaque etats dont il est composé ou il va pour chaque lettre de l'alphabet
+				if (etats.get(i).getNomEtat().containsAll(etatInit.get(i))) {
+					;
+				}
+			}
+		}
+	}
+}
