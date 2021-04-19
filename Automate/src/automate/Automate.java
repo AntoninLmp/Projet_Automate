@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class Automate {
@@ -291,9 +292,6 @@ public class Automate {
 		}
 		return false;
 	}
-	public boolean est_un_automate_complet() {
-		return true;
-	}
 	
 	// Completion d'un Automate Finis Complet et Deterministe
 	public void completion() {
@@ -400,9 +398,6 @@ public class Automate {
 		}
 	}
 
-	
-	
-}
 
 public boolean est_un_automate_complet() {
 		// Verif synchrone et déterministe
@@ -434,3 +429,48 @@ public boolean est_un_automate_complet() {
 		}
 		return false;
 	}
+
+	public boolean contains(char[] alpha, char carac) {
+		for(int i=0 ; i<alpha.length ; i++) {
+			if (alpha[i] == carac) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public String lire_mot() {
+		//On récupère le mot saisi par l'utilisateur
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Veuillez saisir un mot ('*' représente le mot vide) :");
+		String mot = scan.nextLine();
+		System.out.println("Vous avez sisi : " + mot);
+		
+		//On vérifie si le mot est valide
+		boolean test = true;
+		do {
+			test = true;
+			for (int i=0 ; i<mot.length(); i++) {
+				char carac = mot.charAt(i);
+				if (contains(this.alphabet, carac) == false && carac != '*'){
+					test = false;
+				}
+			}
+			if (test == false) {
+				System.out.println("Le mot n'est pas valide !");
+				System.out.println("Veuillez saisir un mot ('*' représente le mot vide) :");
+				mot = scan.nextLine();
+				System.out.println("Vous avez sisi : " + mot);
+			}
+			else if (test == true) {
+				System.out.println("Le mot est valide");
+			}
+		}while(test == false);
+		return mot;
+	}
+
+
+	public boolean reconnaitre_mot(String mot, Automate A) {
+		return true;
+	}
+}
