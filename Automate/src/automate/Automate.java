@@ -399,7 +399,7 @@ public class Automate {
 	}
 
 
-public boolean est_un_automate_complet() {
+	public boolean est_un_automate_complet() {
 		// Verif synchrone et déterministe
 		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
 			boolean bool = true;
@@ -430,6 +430,12 @@ public boolean est_un_automate_complet() {
 		return false;
 	}
 
+	
+	
+	
+	
+	
+	//Fonction qui permet de voir si un caractère fait parti de l'alphabet d'un automate
 	public boolean contains(char[] alpha, char carac) {
 		for(int i=0 ; i<alpha.length ; i++) {
 			if (alpha[i] == carac) {
@@ -439,6 +445,7 @@ public boolean est_un_automate_complet() {
 		return false;
 	}
 
+	//Fonction permettant à l'utilisateur de saisir un mot et qui vérifie s'il est valide
 	public String lire_mot() {
 		//On récupère le mot saisi par l'utilisateur
 		Scanner scan = new Scanner(System.in);
@@ -460,7 +467,7 @@ public boolean est_un_automate_complet() {
 				System.out.println("Le mot n'est pas valide !");
 				System.out.println("Veuillez saisir un mot ('*' représente le mot vide) :");
 				mot = scan.nextLine();
-				System.out.println("Vous avez sisi : " + mot);
+				System.out.println("Vous avez saisi : " + mot);
 			}
 			else if (test == true) {
 				System.out.println("Le mot est valide");
@@ -468,9 +475,88 @@ public boolean est_un_automate_complet() {
 		}while(test == false);
 		return mot;
 	}
-
-
-	public boolean reconnaitre_mot(String mot, Automate A) {
-		return true;
+	
+	
+	/*
+	//A partir d'une ArrayList, cette fonction permet d'obtenir
+	//l'état correspondant dans la liste d'états globale
+	public Etat etatCorrespondant(ArrayList<Integer> e){
+		Etat etat_final = etats.get(0);
+		int compteur = 0;
+		for (int i=0 ; i<etats.size(); i++) {
+			if(etats.get(i).getNomEtat().size() == e.size()) {
+				compteur = 0;
+				for (int j=0 ; j<etats.get(i).getNomEtat().size(); j++) {
+					if (etats.get(i).getNomEtat().get(j) == e.get(j)) {
+						compteur ++;
+					}
+					if (compteur == 3) {
+						etat_final = etats.get(i);
+					}
+				}
+			}
+		}
+		return etat_final;
 	}
+		
+	public boolean estTerminal(Etat e) {
+		int compteur = 0;
+		for (int i=0 ; i<etatTerm.size() ; i++) {
+			if (etatTerm.get(i).size() == e.getNomEtat().size()){
+				compteur = 0;
+				for (int j=0 ; j<etatTerm.get(i).size(); j++) {
+					if (etatTerm.get(i).get(j) == e.getNomEtat().get(j)) {
+						compteur ++;
+					}
+					if (compteur == 3) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean transitionExistante(Etat e, char symbole) {
+		for(int i=0 ; i<e.getTransition().size(); i++) {
+			if (e.getTransition().get(i).getLettre() == symbole) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Transition getTransitionExistante(Etat e, char symbole) {
+		for(int i=0 ; i<e.getTransition().size(); i++) {
+			if (e.getTransition().get(i).getLettre() == symbole) {
+				return e.getTransition().get(i);
+			}
+		}
+		return e.getTransition().get(0);
+	}
+	
+	//Reconnaissance d'un mot sur un automate deterministe complet
+	public boolean reconnaitre_mot(String mot){
+		Etat etat_courant = etatCorrespondant(etatInit.get(0));
+		char symbole_courant = mot.charAt(0);
+		int compteur = 0;
+		Transition trans = etat_courant.getTransition().get(0);
+		while (compteur != mot.length()) {
+			compteur ++;
+			System.out.println(compteur);
+			trans = getTransitionExistante(etat_courant, symbole_courant);
+			symbole_courant = trans.getLettre();
+			etat_courant = etatCorrespondant(trans.getEtatSortie());
+			etat_courant.affichageNomEtat();
+			if (estTerminal(etat_courant) == true) {
+				return true;
+			}
+			
+		}
+		if (estTerminal(etat_courant) == true) {
+			return true;
+		}
+		return false;
+	}
+	*/
 }
