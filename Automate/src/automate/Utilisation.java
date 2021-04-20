@@ -1,6 +1,6 @@
 package automate;
 
-
+import java.util.Scanner;
 
 public class Utilisation {
 	
@@ -21,6 +21,22 @@ public class Utilisation {
 		System.out.println("l'automate 1 est asynchrone (false) :"+a1.est_un_automate_asynchrone());
 		System.out.println("l'automate 2 est asynchrone (true) :"+a2.est_un_automate_asynchrone());
 		
-		}
-
+		//TEST DE LA RECONNAISSANCE DE MOT
+		System.out.println("Combien de mot voulez-vous tester?");
+		Scanner scan = new Scanner(System.in);
+		String reponse = scan.nextLine();
+		int nb_mot = Integer.parseInt(reponse);
+		int compteur = 0;
+		
+		while (compteur != nb_mot) {
+			String mot = a1.lire_mot();
+			if (a1.reconnaitre_mot(mot)) {
+				System.out.println("Le mot est reconnu");
+			}
+			else {
+				System.out.println("Le mot n'est pas reconnu");
+			}
+			compteur ++;
+		}	
+	}
 }
