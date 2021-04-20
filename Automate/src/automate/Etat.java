@@ -28,9 +28,21 @@ public class Etat extends Automate {
 		this.transition = new ArrayList<Transition>();
 		this.nbrTrans = 0;
 	}
+	
 	//constructeur de copie
+	public Etat(final Etat e){
+		this(e.numeroEtat, e.transition, e.nbrTrans);
+	}
+
 	public Etat copie () {
 		return new Etat(this.numeroEtat, this.transition, this.nbrTrans); 
+	}
+	
+	
+	
+	@Override
+	public String toString() {
+		return "Etat [numeroEtat=" + numeroEtat + ", transition=" + transition + ", nbrTrans=" + nbrTrans + "]";
 	}
 	
 	// getter et setter
@@ -101,10 +113,16 @@ public class Etat extends Automate {
         // nombre de transition
         nbrTrans = transition.size();
     }
-    
+
 	
-	
-	
-	
-	
+
+	public Boolean contient_epsilon(){
+		for (Transition t : transition) {
+			if(t.getLettre() == '*'){
+				return true;
+			}
+		}
+		return false;
+	}
 }
+

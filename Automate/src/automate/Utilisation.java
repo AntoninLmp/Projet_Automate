@@ -7,7 +7,7 @@ public class Utilisation {
 		//Automate a1 = new Automate();	
 		Automate a2 = new Automate();
 		//a1.lire_automate_fichier("src/Fichier/A6-3.txt");
-		a2.lire_automate_fichier("src/Fichier/A6-6.txt");
+		a2.lire_automate_fichier("src/Fichier/A6-5.txt");
 		//a1.afficherAutomate();
 		a2.afficherAutomate();
 		//a1.completion();
@@ -19,8 +19,8 @@ public class Utilisation {
 		//System.out.println("l'automate 2 est asynchrone (true) :"+a2.est_un_automate_asynchrone());
 
 		//determinisation et completion asynchrone
-		a2.fusion_entree();
-		//a2.afficherAutomate();
+		a2.determinisation_et_completion_asynchrone();
+		a2.afficherAutomate();
 	}
 
 }
