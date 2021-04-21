@@ -16,6 +16,10 @@ public class Utilisation {
 		//test est_un_automate_asynchrone
 		System.out.println("l'automate 1 est asynchrone (false) :"+a1.est_un_automate_asynchrone());
 		System.out.println("l'automate 2 est asynchrone (true) :"+a2.est_un_automate_asynchrone());
+		
+		//test est_un_automate_deterministe 
+		a1.est_un_automate_deterministe() ; 
+		
 	}
 
 }

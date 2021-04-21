@@ -275,9 +275,8 @@ public class Automate {
 		}
 	}
 	
-	public boolean est_un_automate_deterministe() {
-		return true; 
-	}
+
+	
 	public boolean est_un_automate_asynchrone() {
 		for(int i=0 ; i < etats.size() ; i++) {
 			for(int j=0 ; j < etats.get(i).getNbrTrans() ; j++) {
@@ -291,9 +290,7 @@ public class Automate {
 		}
 		return false;
 	}
-	public boolean est_un_automate_complet() {
-		return true;
-	}
+
 	
 	// Completion d'un Automate Finis Complet et Deterministe
 	public void completion() {
@@ -402,35 +399,80 @@ public class Automate {
 
 	
 	
-}
 
-public boolean est_un_automate_complet() {
-		// Verif synchrone et déterministe
-		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
-			boolean bool = true;
-			System.out.println("nbr etats : "+ nbrEtats);
-			for (int a = 0; a < nbrEtats; a++) {
-				if(bool == true) {
-					System.out.println("L'Automate n'est pas complet car : ");
+
+	public boolean est_un_automate_complet() {
+			// Verif synchrone et déterministe
+			if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
+				boolean bool = true;
+				System.out.println("nbr etats : "+ nbrEtats);
+				for (int a = 0; a < nbrEtats; a++) {
+					if(bool == true) {
+						System.out.println("L'Automate n'est pas complet car : ");
+					}
+					bool = false;
+					int b =0;
+					System.out.print("	Etat "+etats.get(a).getNomEtat()+" :");
+					for (char lettre : alphabet) {
+						/*Si b est supérieur au nombres d'états sachant que les états sont triés
+						 * ou si l'état ne possède aucune transition */
+						if (b > etats.get(a).getNbrTrans() || etats.get(a).getNbrTrans() == 0) {
+							System.out.print(" en " + lettre );
+						}else if (etats.get(a).getLettre(b) > lettre) {
+							System.out.print(" en " +lettre );
+						}else if(etats.get(a).getLettre(b) == lettre) { // La lettre est présente
+							b++; //On augmente que si on a dépasser la p
+						}
+					}
+					//Saut de ligne entre chaque état
+					System.out.println("");
 				}
-				bool = false;
-				int b =0;
-				System.out.print("	Etat "+etats.get(a).getNomEtat()+" :");
-				for (char lettre : alphabet) {
-					/*Si b est supérieur au nombres d'états sachant que les états sont triés
-					 * ou si l'état ne possède aucune transition */
-					if (b > etats.get(a).getNbrTrans() || etats.get(a).getNbrTrans() == 0) {
-						System.out.print(" en " + lettre );
-					}else if (etats.get(a).getLettre(b) > lettre) {
-						System.out.print(" en " +lettre );
-					}else if(etats.get(a).getLettre(b) == lettre) { // La lettre est présente
-						b++; //On augmente que si on a dépasser la p
+				return bool;
+			}
+			return false;
+		}
+	
+	
+	
+	public boolean est_un_automate_deterministe() {  //Vérifier si l’automate synchrone AF est déterministe ou non. Le résultat du test est affiché.
+		
+		if(this.est_un_automate_asynchrone()) {
+			System.out.println("L'automate n'est pas deterministe car il est asynchrone"); 
+			return false; 
+		}
+		else if (this.etatInit.size()!=1) {
+			System.out.println("L'automate contient " + this.etatInit.size() + " etats initiaux"); 
+			System.out.println("L'automate n'est pas deterministe car il contient plus d'une entree")  ;
+			return false ;
+			
+		}
+		else {
+			for(int i=0 ; i<this.etats.size();i++){
+				//System.out.println("TEST ETAT = " + this.etats.get(i).getNomEtat()); 
+				//System.out.println("TEST TRANSITION  = " +  this.etats.get(i).getNbrTrans()) ; 
+					
+				for(int j=0 ; j <this.etats.get(i).getNbrTrans() ; j++ ) {
+					Transition trans1 =  this.etats.get(i).getTransition().get(j);
+					//System.out.println("\nTEST TRANS1 = " + trans1 + "\n") ;
+					
+						
+					for(int k=j+1 ; k <this.etats.get(i).getNbrTrans()    ; k++ ) {
+						Transition trans2 =  this.etats.get(i).getTransition().get(k);
+						//System.out.println("TEST TRANS2 = " + trans2 ) ; 
+							
+						if(trans1.getEtatDepart()==trans2.getEtatDepart() || trans1.getLettre() == trans2.getLettre() ) {
+							System.out.println("L'automate n'est pas deterministe car deux transitions ont le meme etat entree ET la meme lettre :  " + trans1 + trans2) ;  
+							return false ; 
+						}
 					}
 				}
-				//Saut de ligne entre chaque état
-				System.out.println("");
 			}
-			return bool;
 		}
-		return false;
+		
+		System.out.println("L'automate est deterministe") ; 
+		return true ;
 	}
+	
+	
+	
+}
