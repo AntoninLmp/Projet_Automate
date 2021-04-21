@@ -31,7 +31,11 @@ public class Etat extends Automate {
 	}
 	//constructeur de copie
 	public Etat copie () {
-		return new Etat(this.numeroEtat, this.transition, this.nbrTrans); 
+		ArrayList<Transition> transCopie = new ArrayList<>(); 
+		for (int i = 0; i < transition.size(); i++) {
+			transCopie.add(transition.get(i).copie());
+		}
+		return new Etat(this.numeroEtat, transCopie, this.nbrTrans); 
 	}
 	
 	
@@ -42,9 +46,25 @@ public class Etat extends Automate {
 	}
 	public void setNomEtat(int num) { 	numeroEtat.set(0, num); }
 	public void setnbrTrans(int num) { 	nbrTrans = num; }
+	public void setLettre(final int index, final char lettre) {	transition.get(index).setLettre(lettre); }
+	public void setEtatDepart(final int index,final ArrayList<Integer> nom) { 	transition.get(index).setEtatDepart(nom); }
+	public void setEtatFinal(final int index,final ArrayList<Integer> nom) { 	transition.get(index).setEtatSortie(nom); }
+	public void setEtatDepart(final int index,final int nom) { 	
+		ArrayList<Integer> nomArrayList = new ArrayList<>(); 
+		nomArrayList.add(nom); 
+		transition.get(index).setEtatDepart(nomArrayList); 
+	}
+	public void setEtatFinal(final int index,final int nom) { 
+		ArrayList<Integer> nomArrayList = new ArrayList<>(); 
+		nomArrayList.add(nom);
+		transition.get(index).setEtatSortie(nomArrayList); 
+	}
+	
+	
 	
 	public ArrayList<Integer> getNomEtat() { 	return numeroEtat; }
 	public int getNbrTrans() { 	return nbrTrans; }
+	public ArrayList<Transition> geTransitions() { return transition; }
 	public ArrayList<Integer> getEtatDepart(final int index) {  	return transition.get(index).getEtatDepart(); }
 	public char getLettre(final int index) { 		return transition.get(index).getLettre(); }
 	public ArrayList<Integer> getEtatFinal(final int index) {		return transition.get(index).getEtatSortie(); }
