@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import javax.print.attribute.standard.Copies;
+
 
 public class Automate {
 	static public final int MAX = 26; // On acte qu'un etat ne peut pas avoir plus de 26 transition
@@ -27,6 +29,14 @@ public class Automate {
 		this.nbrEtats = nbrEtat;
 	}
 
+	public Automate(final Automate a){
+		alphabet = a.alphabet;
+		etats = new ArrayList<Etat>(a.etats);
+		nbrEtats = a.nbrEtats;
+		etatInit = new ArrayList<ArrayList<Integer>>(a.etatInit);
+		etatTerm = new ArrayList<ArrayList<Integer>>(a.etatTerm);
+	}
+
 	//Affichage automate
 	public void afficherAutomate() {
 		System.out.println("Automate");
@@ -36,7 +46,9 @@ public class Automate {
 		}
 		System.out.println("}");
 		System.out.print("  - Etats Q = { ");
-		for(int i=0; i<nbrEtats; i++) {  System.out.print(etats.get(i).getNomEtat() + " "); }
+		for(int i=0; i<nbrEtats ; i++) {  
+			System.out.print(etats.get(i).getNomEtat() + " "); 
+		}
 		System.out.println("}");
 		System.out.print("  - Etats I = { ");
 		affichertab(etatInit);
@@ -291,9 +303,7 @@ public class Automate {
 		}
 		return false;
 	}
-	public boolean est_un_automate_complet() {
-		return true;
-	}
+	
 	
 	// Completion d'un Automate Finis Complet et Deterministe
 	public void completion() {
@@ -402,7 +412,7 @@ public class Automate {
 
 	
 	
-}
+
 
 public boolean est_un_automate_complet() {
 		// Verif synchrone et déterministe
@@ -434,3 +444,82 @@ public boolean est_un_automate_complet() {
 		}
 		return false;
 	}
+
+	public void fusion_entree(){
+		if (etatInit.size() > 1) {
+			int i=0;
+			while(etatInit.size()>1){
+				etats.get(etatInit.get(i).get(0)).fusion(etats.get(etatInit.get(i+1).get(0)));
+				etatInit.get(i).addAll(etatInit.get(i+1));//1+2->1,2
+				etats.remove(etatInit.get(i+1).get(0).intValue());
+				nbrEtats--;
+				etatInit.remove(i+1);
+			}
+		}
+	}
+
+	//savoir si un états doit être remplacer par sa fermeture epsilon
+	public Boolean test_fermeture_epsilon(Etat e1){ 
+		for (Etat e : etats) {
+			for (Transition t : e.getTransition()) {
+				if((t.getEtatSortie().equals(e1.getNomEtat()) && t.getLettre() != '*' && e1.contient_epsilon()) || etatInit.contains(e1.getNomEtat()) ){ //on doit remplacer par sa fermeture epsilon
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	public void remove_etat(Etat e){
+		ArrayList<Integer> etat = e.getNomEtat();
+		if(etatInit.contains(etat)){
+			etatInit.remove(etat);
+		}
+		if (etatTerm.contains(etat)) {
+			etatTerm.remove(etat);
+		}
+		etats.remove(e);
+		nbrEtats--;
+	}
+
+	public Etat etat_a_fusioner(Etat e){ //etat à fusionner avec e
+		for (Transition t : e.getTransition()) {
+			if(t.getLettre() == '*'){
+				return etats.get(t.getEtatSortie().get(0));
+			}
+			
+		}
+		return null;
+	}
+
+	public Etat fermeture(Etat e) { //permet d'éviter de faire sa propre copie de l'automate
+		Etat copie = new Etat(e);
+		while (copie.contient_epsilon()) { //remplacer par sa transition epsilon tant qu'il y a epsilon
+			copie.fusion(etat_a_fusioner(copie));
+			return copie;
+		}
+		return e;
+	}
+
+	public void elimination_epsilon(){
+		for (int i = 0; i < nbrEtats; i++) {
+			if (remplacer_fermeture_epsilon(etats.get(i))) {
+				etats.set(i, fermeture(etats.get(i)));
+			}
+			else{
+				remove_etat(etats.get(i));
+			}
+		}
+	}
+
+	public void determinisation_et_completion_asynchrone(){
+		//si plusieurs entree -> fusion des entrees
+		fusion_entree();
+		elimination_epsilon();
+		//determinisation_et_completion_synchrone();
+		//completion();
+		
+	}	
+		
+}
