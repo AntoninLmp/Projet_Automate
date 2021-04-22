@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-import javax.print.attribute.standard.Copies;
 
 
 public class Automate {
@@ -189,13 +188,14 @@ public class Automate {
 		System.out.println();
 	}
 
-	public void lire_automate_fichier(String NomFichier) {
+	public boolean lire_automate_fichier(String NomFichier) {
 
 		// ouverture du fichier
 		File fichier = new File(NomFichier);
 		// On regarde si le fichier n'existe pas
 		if (!fichier.exists()) {
 			System.out.println("Le fichier n'existe pas, veuillez reessayer !");	
+			return false; 
 		} 
 		// Si il existe on peut travailler
 		else {
@@ -302,6 +302,7 @@ public class Automate {
 				e.printStackTrace();
 			}
 		}
+		return true;
 	}
 	
 	public boolean est_un_automate_deterministe() {
@@ -612,6 +613,7 @@ public class Automate {
 				System.out.println("Le mot est valide");
 			}
 		}while(test == false);
+		scan.close();
 		return mot;
 	}
 	
@@ -692,7 +694,7 @@ public class Automate {
 		return false;
 	}
 	
-}
+
 
 	public void fusion_entree(){
 		if (etatInit.size() > 1) {
@@ -750,7 +752,7 @@ public class Automate {
 		}
 		return e;
 	}
-
+	/*
 	public void elimination_epsilon(){
 		for (int i = 0; i < nbrEtats; i++) {
 			if (remplacer_fermeture_epsilon(etats.get(i))) {
@@ -769,6 +771,7 @@ public class Automate {
 		//determinisation_et_completion_synchrone();
 		//completion();
 		
-	}	
+	}
+	*/
 		
 }

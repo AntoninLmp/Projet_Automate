@@ -82,22 +82,6 @@ public class Etat extends Automate {
 		return copie().transition;
 	}
 	
-	public void afficherEtat() {
-		System.out.print("( "+numeroEtat+" ), { ");
-		for(int i = 0; i < nbrTrans; i++) {
-			transition.get(i).afficherTransition(transition.get(i).getEtatDepart());
-			System.out.print(transition.get(i).getLettre()); 
-			transition.get(i).afficherTransition(transition.get(i).getEtatSortie());
-		}
-		System.out.println("} "); 
-	}
-	public void afficherEtatDepart(int i) {
-		transition.get(i).afficherTransition(transition.get(i).getEtatDepart());
-	}
-	public void afficherEtatSortie(int i) {
-		transition.get(i).afficherTransition(transition.get(i).getEtatSortie());
-	}
-	
 	
 	// AJOUT TRANSITION
 	public void ajoutTransition( final ArrayList<Integer> eD, final char lettre, final ArrayList<Integer> eS) {
