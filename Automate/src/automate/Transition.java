@@ -31,9 +31,22 @@ public class Transition implements Comparable<Transition>{
 	public char getLettre() { return lettre; }
 	public ArrayList<Integer> getEtatSortie() { return etatSortie; }
 	
-	public void setEtatDepart(ArrayList<Integer> etatD) { this.etatDepart.addAll(etatD); }
+	public void setEtatDepart(ArrayList<Integer> etatD) { 
+		this.etatDepart = copieArraylist(etatD);  
+	}
 	public void setLettre(char lettre) { this.lettre = lettre; }
-	public void setEtatSortie(ArrayList<Integer> etatS) { this.etatSortie.addAll(etatS); }
+	public void setEtatSortie(ArrayList<Integer> etatS) { 
+		this.etatSortie = copieArraylist(etatS); 
+	}
+	
+	public ArrayList<Integer> copieArraylist(ArrayList<Integer> etat){
+		ArrayList<Integer> copie = new ArrayList<>(); 
+		for (int i = 0; i < etat.size(); i++) {
+			copie.add(etat.get(i)); 
+		}
+		return copie;
+	}
+	
 	
 	public void afficherTransition() {
 		System.out.print(this.toString());
@@ -44,21 +57,41 @@ public class Transition implements Comparable<Transition>{
 		return "(" + etatDepart + lettre + etatSortie + ")"; 
 	}
 	
-	public void afficherTransition(final ArrayList<Integer> etat) {
-		if(this != null) {
-			for (int i = 0; i < etat.size(); i++) {
-				System.out.print(etat.get(i));
-				if (etat.size() > 1 && i < etat.size()-1) {
-					System.out.print(".");
-				}
-			}
-		}
-	}
+	
 	
 	@Override
 	public int compareTo(Transition t) {
 		return this.lettre - t.lettre; 
 	}
 	
+	
+	// AFFICHAGE
+	
+	public void afficherEtatDepart() {
+		afficherArrayListNom(etatDepart);
+	}
+	public void afficherEtatSortie() {
+		afficherArrayListNom(etatSortie);
+	}
+	
+	public void afficherArrayListNom(final ArrayList<Integer> etat) {
+		if(this != null) {
+			for (int i = 0; i < etat.size(); i++) {
+				if (etat.get(i) == -1) {
+					System.out.print("P");
+				}else {
+					System.out.print(etat.get(i));
+				}				
+				if (etat.size() > 1 && i < etat.size()-1) {
+					System.out.print(".");
+				}
+			}
+		}
+	}
+	public void affichageTransition() {
+		afficherArrayListNom(etatDepart);
+		System.out.print(lettre);
+		afficherArrayListNom(etatSortie);
+	}
 	
 }
