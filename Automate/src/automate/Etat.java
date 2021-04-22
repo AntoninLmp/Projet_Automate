@@ -114,8 +114,6 @@ public class Etat extends Automate {
         nbrTrans = transition.size();
     }
 
-	
-
 	public Boolean contient_epsilon(){
 		for (Transition t : transition) {
 			if(t.getLettre() == '*'){
