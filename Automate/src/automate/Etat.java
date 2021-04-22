@@ -29,7 +29,12 @@ public class Etat extends Automate {
 		this.transition = new ArrayList<Transition>();
 		this.nbrTrans = 0;
 	}
+	
 	//constructeur de copie
+	public Etat(final Etat e){
+		this(e.numeroEtat, e.transition, e.nbrTrans);
+	}
+
 	public Etat copie () {
 		ArrayList<Transition> transCopie = new ArrayList<>(); 
 		for (int i = 0; i < transition.size(); i++) {
@@ -38,8 +43,12 @@ public class Etat extends Automate {
 		return new Etat(this.numeroEtat, transCopie, this.nbrTrans); 
 	}
 	
+	@Override
+	public String toString() {
+		return "Etat [numeroEtat=" + numeroEtat + ", transition=" + transition + ", nbrTrans=" + nbrTrans + "]";
+	}
 	
-	// Getter et Setter
+	// getter et setter
 	public void setNomEtat(ArrayList<Integer> num) { 
 		numeroEtat.clear();
 		numeroEtat.addAll(num);  
@@ -69,7 +78,25 @@ public class Etat extends Automate {
 	public char getLettre(final int index) { 		return transition.get(index).getLettre(); }
 	public ArrayList<Integer> getEtatFinal(final int index) {		return transition.get(index).getEtatSortie(); }
 	
+	public ArrayList<Transition> getTransition() {
+		return copie().transition;
+	}
 	
+	public void afficherEtat() {
+		System.out.print("( "+numeroEtat+" ), { ");
+		for(int i = 0; i < nbrTrans; i++) {
+			transition.get(i).afficherTransition(transition.get(i).getEtatDepart());
+			System.out.print(transition.get(i).getLettre()); 
+			transition.get(i).afficherTransition(transition.get(i).getEtatSortie());
+		}
+		System.out.println("} "); 
+	}
+	public void afficherEtatDepart(int i) {
+		transition.get(i).afficherTransition(transition.get(i).getEtatDepart());
+	}
+	public void afficherEtatSortie(int i) {
+		transition.get(i).afficherTransition(transition.get(i).getEtatSortie());
+	}
 	
 	
 	// AJOUT TRANSITION
@@ -101,7 +128,8 @@ public class Etat extends Automate {
 			}
 		}
 	}
-	public void affichageEtat() {
+  
+  public void affichageEtat() {
 		if (this != null) {
 			System.out.print("Le nom est " + numeroEtat + " avec "+ nbrTrans +" transitions : ");
 			for (int i = 0; i < transition.size(); i++) {
@@ -111,9 +139,23 @@ public class Etat extends Automate {
 			System.out.println("");
 		}
 	}
-	
-	
-	
-	
-	
+
+	public void fusion(final Etat e){
+        // nom
+        numeroEtat.addAll(e.getNomEtat());
+        // transitions
+        transition.addAll(e.getTransition());
+        // nombre de transition
+        nbrTrans = transition.size();
+    }
+
+	public Boolean contient_epsilon(){
+		for (Transition t : transition) {
+			if(t.getLettre() == '*'){
+				return true;
+			}
+		}
+		return false;
+	}
 }
+
