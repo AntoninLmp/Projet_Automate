@@ -504,7 +504,7 @@ public boolean est_un_automate_complet() {
 
 	public void elimination_epsilon(){
 		for (int i = 0; i < nbrEtats; i++) {
-			if (remplacer_fermeture_epsilon(etats.get(i))) {
+			if (test_fermeture_epsilon(etats.get(i))) {
 				etats.set(i, fermeture(etats.get(i)));
 			}
 			else{
