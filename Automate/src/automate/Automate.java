@@ -451,6 +451,7 @@ public class Automate {
 		}
 	}
 
+	
 	public boolean est_un_automate_complet() {
 		// Verif synchrone et déterministe
 		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
@@ -464,8 +465,8 @@ public class Automate {
 				int b =0;
 				System.out.print("	Etat "+etats.get(a).getNomEtat()+" :");
 				for (char lettre : alphabet) {
-					/*Si b est supérieur au nombres d'états sachant que les états sont triés
-					 * ou si l'état ne possède aucune transition */
+					//Si b est supérieur au nombres d'états sachant que les états sont triés
+					// ou si l'état ne possède aucune transition 
 					if (b > etats.get(a).getNbrTrans() || etats.get(a).getNbrTrans() == 0) {
 						System.out.print(" en " + lettre );
 					}else if (etats.get(a).getLettre(b) > lettre) {
@@ -479,10 +480,15 @@ public class Automate {
 			}
 			return bool;
 		}
+		System.out.println("FIN") ;
+		
 		return false;
+		
+		 
 	}
 	
 	
+
 	//METHODE POUR VERIFIER SI UN CARACTERE FAIT PARTIE DE L ALPHABET
 	public boolean contains(char[] alpha, char carac) {
 		for(int i=0 ; i<alpha.length ; i++) {
@@ -960,6 +966,20 @@ public class Automate {
 	}
 	
 	
+ 	public void determinisation_et_completion() {
+ 		if(!this.est_un_automate_deterministe()) {
+ 			this.determinisation(); 
+ 			
+ 			System.out.println("PROBLEME") ; 
+ 			
+ 			this.completion();
+ 			
+ 		}
+ 		this.est_un_automate_deterministe() ; 
+ 		this.est_un_automate_complet() ; 
+ 	}
+ 	
+ 	
 	
 	public void supp_repetition_tab(ArrayList<Integer> tab) {
 		if(tab != null && tab.size() >=2 ) {

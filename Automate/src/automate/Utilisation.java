@@ -57,14 +57,15 @@ public class Utilisation {
 		//TEST determinisation
 		//a3.est_un_automate_deterministe() ;
 		
-		//a1.afficherAutomate(); 
+		a1.afficherAutomate(); 
 	
-		//a1.fusion_entree2(); 
-
 		a1.determinisation();
 		
 		//a3.afficherAutomate();
 		
+		//a1.determinisation_et_completion() ; 
+		
+		//a1.est_un_automate_complet() ; 
 		
 	}
 }
