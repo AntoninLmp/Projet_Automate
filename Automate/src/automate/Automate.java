@@ -937,15 +937,6 @@ public class Automate {
 			this.nbrEtats = tabEtat.size(); 
 			
 			
-			System.out.println("\n------------------------------------------------------------ \n") ; 
-			System.out.println("Automate determinise : \n" ) ; 
-			
-			
-			System.out.println("Etat : " + this.etats) ;
-			System.out.println("Nb etat : " + this.nbrEtats) ;
-			System.out.println("Etat init: " + this.etatInit) ;
-			System.out.println("Etat term: " + this.etatTerm) ; 
-			
 			
 			System.out.println("\n-------------------------------AFFICHAGE----------------------------- \n") ; 
 			
