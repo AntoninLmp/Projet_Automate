@@ -16,7 +16,7 @@ public class Automate {
 	private ArrayList<ArrayList<Integer>> etatInit;
 	private ArrayList<ArrayList<Integer>> etatTerm;
 
-	// Constructeur par defaut
+	// CONSTRUCTEUR PAR DEFAUT 
 	public Automate() {
 	}
 
@@ -34,7 +34,13 @@ public class Automate {
 		etatTerm = new ArrayList<ArrayList<Integer>>(a.etatTerm);
 	}
 
-	//Affichage automate
+	/*
+	 * AFFICHAGE D'UN AUTOMATE 
+	 * - etats qu'il contient
+	 * - etats initiaux
+	 * - etat finaux
+	 * - table de transition
+	 */
 	public void afficherAutomate() {
 		System.out.println("Automate");
 		System.out.print("  - Alphabet { ");
@@ -58,7 +64,7 @@ public class Automate {
 		tableTransitionAutomate();
 	}
 
-	// Fonction pour afficher un tableau d'entier
+	// Fonction pour afficher les ArrayLists d'entiers
 	public void affichertabDoubleArray(final ArrayList<ArrayList<Integer>> tab) {
 		if (tab != null) {
 			for(int i=0; i<tab.size(); i++) {
@@ -201,6 +207,10 @@ public class Automate {
 		System.out.println();
 	}
 
+	
+	
+	
+	
 	public boolean lire_automate_fichier(String NomFichier) {
 
 		// ouverture du fichier
@@ -387,6 +397,7 @@ public class Automate {
 	public boolean est_un_automate_deterministe() {
 		return true; 
 	}
+	
 	public boolean est_un_automate_asynchrone() {
     for(int i=0 ; i < etats.size() ; i++) {
 			for(int j=0 ; j < etats.get(i).getNbrTrans() ; j++) {
@@ -400,8 +411,9 @@ public class Automate {
 		}
 		return false;
 	}
+	
 	public boolean est_un_automate_complet() {
-		// Verif synchrone et d�terministe
+		// Verif synchrone et deterministe
 		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
 			System.out.println("nbr etats : "+ nbrEtats);
 			boolean bool = true; 
@@ -411,18 +423,18 @@ public class Automate {
 					System.out.println("L'Automate n'est pas complet car : ");
 					System.out.print("	Etat "+etats.get(a).getNomEtat()+" :");
 					for (char lettre : alphabet) {
-						/*Si b est sup�rieur au nombres d'�tats sachant que les �tats sont tri�s
-						 * ou si l'�tat ne poss�de aucune transition */
+						/*Si b est superieur au nombres d'etats sachant que les etats sont tries
+						 * ou si l'etat ne possede aucune transition */
 						if (b > etats.get(a).getNbrTrans() || etats.get(a).getNbrTrans() == 0) {
 							System.out.print(" en " + lettre );
 						}else if (etats.get(a).getLettre(b) > lettre) {
 							System.out.print(" en " +lettre );
-						}else if(etats.get(a).getLettre(b) == lettre) { // La lettre est pr�sente
-							b++; //On augmente que si on a d�passer la p
+						}else if(etats.get(a).getLettre(b) == lettre) { // La lettre est presente
+							b++; //On augmente que si on a depasser la p
 						}
 						bool = false; 
 					}
-					//Saut de ligne entre chaque �tat
+					//Saut de ligne entre chaque etat
 					System.out.println("");
 				}
 			}
