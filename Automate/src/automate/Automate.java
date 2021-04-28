@@ -963,6 +963,7 @@ public class Automate {
 		else {
 			System.out.println("L'automate est deterministe") ; 
 			return this ; 
+			
 		}
 
 	}
