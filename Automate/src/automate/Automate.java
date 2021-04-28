@@ -486,8 +486,6 @@ public class Automate {
 		
 		 
 	}
-	
-	
 
 	//METHODE POUR VERIFIER SI UN CARACTERE FAIT PARTIE DE L ALPHABET
 	public boolean contains(char[] alpha, char carac) {
@@ -499,7 +497,6 @@ public class Automate {
 		return false;
 	}
 	
-
 	//METHODE QUI PERMET A L UTILISATEUR DE SAISIR UN MOT
 	//ET QUI VERIFIE SI LE MOT EST VALIDE
 	public String lire_mot() {

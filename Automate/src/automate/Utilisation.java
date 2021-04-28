@@ -65,7 +65,6 @@ public class Utilisation {
 		
 		//a1.determinisation_et_completion() ; 
 		
-		//a1.est_un_automate_complet() ; 
 		
 	}
 }
