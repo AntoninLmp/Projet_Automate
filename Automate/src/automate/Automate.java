@@ -129,6 +129,8 @@ public class Automate {
 						for (int j = 0; j < 9 - (etats.get(i).getNomEtat().size()*2) ; j++) {
 							System.out.print(" ");
 						}
+					}else if (etats.get(i).getNomEtat().get(0) >= 10) {
+						System.out.print("      ");
 					}else {
 						System.out.print("       ");
 					}
@@ -137,6 +139,8 @@ public class Automate {
 						for (int j = 0; j < 8 - (etats.get(i).getNomEtat().size()*2) ; j++) {
 							System.out.print(" ");
 						}
+					}else if (etats.get(i).getNomEtat().get(0) >= 10) {
+						System.out.print("     ");
 					}else {
 						System.out.print("      ");
 					}
@@ -145,6 +149,8 @@ public class Automate {
 						for (int j = 0; j < 7 - (etats.get(i).getNomEtat().size()*2) ; j++) {
 							System.out.print(" ");
 						}
+					}else if (etats.get(i).getNomEtat().get(0) >= 10) {
+						System.out.print("    ");
 					}else {
 						System.out.print("     ");
 					}
@@ -164,8 +170,9 @@ public class Automate {
 							etats.get(i).afficherEtatSortie(x);
 							if (etats.get(i).getEtatFinal(x).size() > 1) {
 								espace -= etats.get(i).getEtatFinal(x).size() *2 ; 
-							}
-							else {
+							}else if (etats.get(i).getEtatFinal(x).get(0) >= 10) {
+								espace -= 3;
+							}else {
 								espace -= 2; 
 							}
 						}
@@ -216,9 +223,10 @@ public class Automate {
 				
 				/**** LECTURE DE ALPHABET *****/
 				Ligne = reader.readLine();
-				alphabet = new char[Integer.parseInt(Ligne)];
+				alphabet = new char[Integer.parseInt(Ligne)+1];
 				char lettre = 'a';
 				for (int i = 0; i < Integer.parseInt(Ligne); i++) { alphabet[i] = lettre++; }
+				alphabet[alphabet.length-1] = '*'; 
 
 				/**** LECTURE NOMBRE TOTAL D'ETAT *****/
 				Ligne = reader.readLine();
