@@ -8,6 +8,11 @@ public class Transition implements Comparable<Transition>{
 	private ArrayList<Integer> etatSortie; 
 	
 	// Constructeurs
+	public Transition() {
+		etatDepart = new ArrayList<Integer>(); 
+		etatSortie = new ArrayList<Integer>();  
+	}
+	
 	public Transition(final ArrayList<Integer> eD, char let, final ArrayList<Integer> eS) {
 		etatDepart = new ArrayList<Integer>(); 
 		etatSortie = new ArrayList<Integer>();
@@ -54,6 +59,9 @@ public class Transition implements Comparable<Transition>{
 			}
 		}
 	}
+	
+	
+
 	
 	@Override
 	public int compareTo(Transition t) {

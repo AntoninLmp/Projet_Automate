@@ -8,6 +8,14 @@ public class Etat extends Automate {
 	private ArrayList<Transition> transition; // Contiendra les transitions ex : 1a1 ou 2c8...
 	private int nbrTrans;
 	
+	
+	public Etat() {
+		this.numeroEtat = new ArrayList<>(); 
+		this.transition = new ArrayList<Transition>();
+		this.nbrTrans = 0;
+	}
+	
+	
 	public Etat(final int nom, final ArrayList<Transition> transition, final int nbrTrans) {
 		this.numeroEtat = new ArrayList<>(); 
 		this.numeroEtat.add(nom); 
@@ -28,6 +36,16 @@ public class Etat extends Automate {
 		this.transition = new ArrayList<Transition>();
 		this.nbrTrans = 0;
 	}
+	
+	public Etat(final ArrayList<Integer> nom) {
+		this.numeroEtat = new ArrayList<>();
+		this.numeroEtat.addAll(nom); 
+		this.transition = new ArrayList<Transition>();
+		this.nbrTrans = 0;
+	}
+	
+	
+
 	
 	//constructeur de copie
 	public Etat(final Etat e){
@@ -63,6 +81,7 @@ public class Etat extends Automate {
 		return copie().transition;
 	}
 	
+	
 	public void afficherEtat() {
 		System.out.print("( "+numeroEtat+" ), { ");
 		for(int i = 0; i < nbrTrans; i++) {
@@ -85,11 +104,18 @@ public class Etat extends Automate {
 		transition.add( new Transition(eD, lettre, eS));
 		nbrTrans++;
 	}
+	
 	public void ajoutTransition( final int eD, final char lettre, final int eS) {
 		transition.add(new Transition(eD, lettre, eS));
 		nbrTrans++;
 		Collections.sort(transition);
 	}
+	
+	//supprimer une transition 
+	public void removeTransition(final Transition t) {
+		transition.remove(t) ; 
+	}
+	
 	
 	// AFFICHAGE NOM ETAT
 	public void affichageNomEtat() {
@@ -114,7 +140,9 @@ public class Etat extends Automate {
         nbrTrans = transition.size();
     }
 
-	public Boolean contient_epsilon(){
+	
+	
+	public boolean contient_epsilon(){
 		for (Transition t : transition) {
 			if(t.getLettre() == '*'){
 				return true;
