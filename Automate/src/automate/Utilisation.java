@@ -10,7 +10,8 @@ public class Utilisation {
 		Automate a1 = new Automate();	
 		Automate a2 = new Automate();
 		Automate a3 = new Automate(); 
-		a1.lire_automate_fichier("src/Fichier/A6-3.txt");
+		a1.lire_automate_fichier("src/Fichier/A6-17.txt");
+		
 		a2.lire_automate_fichier("src/Fichier/A6-5.txt");
 		a3.lire_automate_fichier("src/Fichier/A6-36.txt");
 		
@@ -56,7 +57,11 @@ public class Utilisation {
 		//TEST determinisation
 		//a3.est_un_automate_deterministe() ;
 		
-		a3.determinisation();
+		//a1.afficherAutomate(); 
+	
+		//a1.fusion_entree2(); 
+
+		a1.determinisation();
 		
 		//a3.afficherAutomate();
 		

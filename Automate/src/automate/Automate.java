@@ -47,6 +47,16 @@ public class Automate {
 		this.etatTerm = new ArrayList<ArrayList<Integer>>(etatTerm);
 	}
 
+	public Automate copieDe(Automate a) {
+ 		Automate copie = new Automate();
+ 			copie.alphabet = a.alphabet;
+ 			copie.etats = (ArrayList<Etat>) a.etats.clone();
+ 			copie.nbrEtats = a.nbrEtats;
+ 			copie.etatInit = (ArrayList<ArrayList<Integer>>) a.etatInit.clone();
+ 			copie.etatTerm = (ArrayList<ArrayList<Integer>>) a.etatTerm.clone();
+ 			return copie;
+ 	}
+	
 	
 	public ArrayList<Etat> getEtats(){ return etats; } 
 
@@ -58,11 +68,13 @@ public class Automate {
 		for(char alpha : alphabet) {
 			System.out.print(alpha+ " ");
 		}
+		
 		System.out.println("}");
 		System.out.print("  - Etats Q = { ");
 		for(int i=0; i<nbrEtats ; i++) {  
 			System.out.print(etats.get(i).getNomEtat() + " "); 
-		}
+		} 
+		
 		System.out.println("}");
 		System.out.print("  - Etats I = { ");
 		affichertab(etatInit);
@@ -607,10 +619,10 @@ public class Automate {
 				etatInit.remove(i+1);
 				triTransitions(etats.get(etatInit.get(i).get(0)));
 			}
+		System.out.println("REUSSI " ) ;
 		}
+		
 	}
-	
-
 	
 
 	//savoir si un états doit être remplacer par sa fermeture epsilon
@@ -771,49 +783,67 @@ public class Automate {
 	}
 	
 	
+	public void fusion_entree2 () {
+		System.out.println("\n------------------------------ FUSION 2 \n") ; 
+		if (etatInit.size() > 1) {	
+			Etat new_etatI = new Etat() ; 
+			
+			for(int i =0 ; i< etatInit.size() ; i ++ ) {
+				boolean test = false ; 
+				int e=0  ;
+				while ( test == false  && e< etats.size() ) {   
+					if(etats.get(e).getNomEtat().size() == 1) {
+						if(etats.get(e).getNomEtat().get(0) == etatInit.get(i).get(0)) {
+							Etat etat_temp = new Etat(etats.get(e)) ; 
+							new_etatI.fusion(etat_temp);
+							etats.remove(e) ; 
+							nbrEtats -- ; 
+							test = true ; 
+						}	
+					}
+					e = e + 1  ; 					 
+				}
+			}
+			triTransitions(new_etatI); 
+			etats.add(new_etatI) ; 
+			nbrEtats ++ ; 
+			etatInit.clear();
+			etatInit.add(new_etatI.getNomEtat()) ; 	
+		}
+	}
 	
-	public Automate determinisation() {
+	
+ 	public Automate determinisation() {
 		if(this.est_un_automate_deterministe()==false) {
 			System.out.println("\n\nDETERMINISATION \n") ; 
 			 
-			
 			Automate automateInit = new Automate(this) ;       //on copie l'automate initiale  
 			
-			Etat etat0 = new Etat(this.etats.get(0)); 
 			
-			
-			System.out.println("AFFICHER AUTOMATE INITIAL") ; 
+			System.out.println("\n--------------- AFFICHER AUTOMATE INITIAL--------------\n") ; 
 			this.afficherAutomate();  
-		
-			this.fusion_entree() ; 
-			 
+			this.fusion_entree2() ; 
 			
-			System.out.println("ETAT INITIAUX" + this.etatInit) ;
-			System.out.println("NB INITIAUX : " + this.etatInit.size()) ;
-		
-			
+			System.out.println("\n--------------- AFFICHER AUTOMATE INITIAL APRES FUSION--------------\n") ; 
 			this.afficherAutomate() ; 
 			
-			automateInit.afficherAutomate(); 
 			
 			
-			System.out.println("\n\n\nLISTE DES ETATS :\n" + this.etats ) ; 
-			System.out.println("\n\nETAT 0 " + etat0) ; 
-			
-			automateInit.etats.add(etat0) ; 
-			automateInit.etats.remove(0) ; 
-			
-			System.out.println("\n\nLISTE DES ETATS :\n" + automateInit.etats ) ; 
-			System.out.println("ETAT INITIAUX" + automateInit.etatInit) ;
-			System.out.println("NB INITIAUX : " + automateInit.etatInit.size()) ;
-			
-			automateInit.afficherAutomate();
-			
-			
-			//liste de tous les nouveaux etat 
+			//liste de tous les nouveaux etat + ajout de l'etat entree 
 			ArrayList<Etat> tabEtat = new ArrayList<>() ;     
-			tabEtat.add(this.etats.get(0)) ; 
-			 
+			//tabEtat.add(this.etats.get(0)) ; 
+			
+			int b = 0 ; 
+			while (!compareTab(this.etats.get(b).getNomEtat(), this.etatInit.get(0)) ) {
+				b++ ; 
+			}
+			tabEtat.add(this.etats.get(b)); 
+			
+			
+			System.out.println("\n--------------- AFFICHER Etat initial --------------\n") ; 
+			System.out.println(this.etats.get(b)) ; 
+			
+			
 			
 			int i = 0 ; 
 			while ( i != tabEtat.size() ) {           // i regarde si on a traite tous les etats de la liste 
@@ -917,15 +947,11 @@ public class Automate {
 			System.out.println("Etat term: " + this.etatTerm) ; 
 			
 			
-			System.out.println("\n------------------------------------------------------------ \n") ; 
-			System.out.println("AFFICHAGE\n") ; 
+			System.out.println("\n-------------------------------AFFICHAGE----------------------------- \n") ; 
 			
 			this.afficherAutomate() ;
 			
-			
-			
-			System.out.println("\n------------------------------------------------------------ \n") ;
-			System.out.println("FIN DETERMINISATION\n") ; 
+			System.out.println("\n------------------------------FIN DETERMINISATION------------------------------ \n") ; 
 			
 			this.est_un_automate_deterministe() ; 
 			
@@ -956,6 +982,6 @@ public class Automate {
 	}
 	
 	
-	
-		
 }
+
+
