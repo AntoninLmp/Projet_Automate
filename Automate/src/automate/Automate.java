@@ -1,10 +1,8 @@
 package automate;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.util.*;
 
 
@@ -200,71 +198,135 @@ public class Automate {
 		// Si il existe on peut travailler
 		else {
 			try {
-				BufferedReader reader = new BufferedReader(
-				new InputStreamReader(new FileInputStream(fichier), "UTF-8"));
-
-				// Lecture de l'Alphabet
-				String Lines = reader.readLine();
-				alphabet = new char[Integer.parseInt(Lines)];
+				//BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fichier), "UTF-8"));
+				RandomAccessFile reader = new RandomAccessFile(NomFichier, "r");
+				
+				int taille_ligne;
+				String Ligne; 
+				char caractere;
+				long positionDebutLigne;
+				
+				/**** LECTURE DE ALPHABET *****/
+				Ligne = reader.readLine();
+				alphabet = new char[Integer.parseInt(Ligne)];
 				char lettre = 'a';
-				for (int i = 0; i < Integer.parseInt(Lines); i++) {
-					alphabet[i] = lettre++;
-					//System.out.println(alphabet[i]); // A SUPPRIMER
-				}
+				for (int i = 0; i < Integer.parseInt(Ligne); i++) { alphabet[i] = lettre++; }
 
-				// Nombre d'etats total et creation des etats
-				Lines = reader.readLine();
-				nbrEtats = Integer.parseInt(Lines);
+				/**** LECTURE NOMBRE TOTAL D'ETAT *****/
+				Ligne = reader.readLine();
+				nbrEtats = Integer.parseInt(Ligne);
 				if (this.etats == null) {
 					this.etats = new ArrayList<Etat>();
 				}
-				// Nombre d'etat initiaux
-				char nbr = (char) reader.read();
-				int nombreEtatInit = Character.getNumericValue(nbr);
+				
+				/**** LECTURE ETAT INITIAUX *****/
+
+				// on recupere la position dans le fichier
+				positionDebutLigne = reader.getFilePointer(); 
+				Ligne = reader.readLine();
+				// on recupere la taille de la ligne
+				taille_ligne = Ligne.length(); 
+				// On se replace ou on avait sauvegarder la position du curseur
+				reader.seek(positionDebutLigne);
+				
+				int nombreEtatInit = Character.getNumericValue(reader.read());
+				taille_ligne--; 
 				etatInit = new ArrayList<>(); 
+				caractere = (char) reader.read(); // A cause du caractere espace
+				taille_ligne--; 
+				
 				for (int i = 0; i < nombreEtatInit; i++) {
-					nbr = (char) reader.read(); // A cause du caractere espace
-					nbr = (char) reader.read();
+					String nombre = ""; 
+					do {
+						caractere = (char) reader.read();
+						taille_ligne--; 
+						if (caractere != ' ') {
+							nombre += caractere;
+						}						
+					} while (caractere != ' ' && taille_ligne > 0);
 					etatInit.add(new ArrayList<>()); 
-					etatInit.get(i).add(Character.getNumericValue(nbr));
-					//System.out.println("etat = " + etatInit[i] + " ");// A SUPPRIMER
+					etatInit.get(i).add(Integer.parseInt(nombre));
 				}
+				// Fin de la ligne
+				Ligne = reader.readLine(); 
+				
+				
+				
+				/**** LECTURE ETAT FINAUX *****/
 
-				// Nombre d'etat finaux
-				Lines = reader.readLine();
-				nbr = (char) reader.read();
-				nombreEtatInit = Character.getNumericValue(nbr);
-				etatTerm = new ArrayList<>(); 
+				// Recuperation de la taille de la ligne
+				positionDebutLigne = reader.getFilePointer(); 
+				Ligne = reader.readLine();
+				taille_ligne = Ligne.length(); 
+				reader.seek(positionDebutLigne);
+				
+				// LECTURE : nombre etats finaux
+				nombreEtatInit = Character.getNumericValue(reader.read());
+				taille_ligne--; 
+				etatTerm = new ArrayList<>();
+				
+				caractere = (char) reader.read(); // A cause du caractere espace
+				taille_ligne--;
+				
 				for (int i = 0; i < nombreEtatInit; i++) {
-					nbr = (char) reader.read(); // A cause du caractere espace
-					nbr = (char) reader.read();
+					String nombre = ""; 
+					do {
+						caractere = (char) reader.read();
+						taille_ligne--; 
+						if (caractere != ' ') {
+							nombre += caractere; 
+						}
+					} while (caractere != ' ' && taille_ligne > 0);
 					etatTerm.add(new ArrayList<>()); 
-					etatTerm.get(i).add(Character.getNumericValue(nbr));
-					//System.out.println("etat = " + etatTerm[i] + " ");// A SUPPRIMER
+					etatTerm.get(i).add(Integer.parseInt(nombre));
 				}
-				Lines = reader.readLine(); // On finit la ligne
+				// Fin de la ligne
+				Ligne = reader.readLine(); 		
+				
+				
+				/**** LECTURE NOMBRE DE TRANSITION *****/
+				Ligne = reader.readLine();
+				int nbrTransition = Integer.parseInt(Ligne);
 
-				// Nombre de transition
-				Lines = reader.readLine();
-				int nbrTransition = Integer.parseInt(Lines);
-
-				//Transition tabTransition = new Transition
 				// Les transitions
 				ArrayList<Transition> tableauTransitionEtati = new ArrayList<Transition>();
 				int j = 0, etatActuelle = 0; 
 				int numeroEtatEntree = 0, numeroEtatSortie = 0; 
 				char translettre;
 				for (int i = 0; i < nbrTransition; i++) {
-					//Recuperation du l'etat de depart
-					nbr =(char) reader.read();
-					numeroEtatEntree = Character.getNumericValue(nbr);
-					//Recuperation de la lettre
-					nbr =(char) reader.read();
-					translettre = nbr;
-					//Recuperation de l'etat final
-					nbr = (char) reader.read();
-					numeroEtatSortie = Character.getNumericValue(nbr);
-
+					
+					// on recupere la position dans le fichier
+					positionDebutLigne = reader.getFilePointer(); 
+					Ligne = reader.readLine();
+					// on recupere la taille de la ligne
+					taille_ligne = Ligne.length(); 
+					// On se replace ou on avait sauvegarder la position du curseur
+					reader.seek(positionDebutLigne);
+					
+					numeroEtatEntree = 0;
+					numeroEtatSortie = 0;
+					String nombre = ""; 
+					//LECTURE DE L'ETAT DE DEPART
+					caractere =(char) reader.read();
+					taille_ligne--; 
+					while(caractere >= '0' && caractere <= '9'){
+						nombre += caractere;
+						caractere =(char) reader.read();
+						taille_ligne--; 
+					}
+					numeroEtatEntree = Integer.parseInt(nombre);
+					// LECTURE DE LA LETTRE (Elle est recuperer durant la dernier tour de boucle)
+					translettre = caractere;
+					
+					//LECTURE DE L'ETAT SORTIE
+					nombre = "";
+					do{
+						caractere =(char) reader.read();
+						nombre += caractere;  
+						taille_ligne--;
+					}while(taille_ligne > 0);
+					numeroEtatSortie = Integer.parseInt(nombre);
+					
 					Transition t = new Transition(numeroEtatEntree, translettre, numeroEtatSortie);
 					// Si l'etat de depart change c'est que nous avons parcouru toutes les transitions
 
@@ -274,13 +336,13 @@ public class Automate {
 						etats.add(new Etat(numeroEtatEntree-1,copieArrayList, j)); 
 						tableauTransitionEtati.clear();
 						etatActuelle++; // On passe a un etat N+1
-						j = 0;// On repart � la premier case du tableau 
+						j = 0;// On repart a la premier case du tableau 
 					}
 					
 					tableauTransitionEtati.add(t);
 					j++;
 					//Fin de la ligne
-					Lines = reader.readLine();
+					Ligne = reader.readLine();
 				}
 				if (etats.size() != nbrEtats) {
 					for (int i = etats.size()+1; i < nbrEtats; i++) {
@@ -288,6 +350,7 @@ public class Automate {
 					}
 				}
 				// Pour le dernier etats on ajout ces transitions
+				System.out.println(numeroEtatEntree);
 				etats.add(numeroEtatEntree, new Etat(numeroEtatEntree, tableauTransitionEtati, j));
 				
 				if(nbrTransition < nbrEtats) {
