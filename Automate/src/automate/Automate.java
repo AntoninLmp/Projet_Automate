@@ -47,6 +47,15 @@ public class Automate {
 		this.etatTerm = new ArrayList<ArrayList<Integer>>(etatTerm);
 	}
 
+	public Automate copieDe(Automate a) {
+		Automate copie = new Automate();
+			copie.alphabet = a.alphabet;
+			copie.etats = (ArrayList<Etat>) a.etats.clone();
+			copie.nbrEtats = a.nbrEtats;
+			copie.etatInit = (ArrayList<ArrayList<Integer>>) a.etatInit.clone();
+			copie.etatTerm = (ArrayList<ArrayList<Integer>>) a.etatTerm.clone();
+			return copie;
+	}
 	
 	public ArrayList<Etat> getEtats(){ return etats; } 
 
@@ -777,13 +786,15 @@ public class Automate {
 			System.out.println("\n\nDETERMINISATION \n") ; 
 			 
 			
-			Automate automateInit = new Automate(this) ;       //on copie l'automate initiale  
+			//Automate automateInit = new Automate(this) ;       //on copie l'automate initiale  
+			Automate automateInit = copieDe(this) ; 
 			
 			Etat etat0 = new Etat(this.etats.get(0)); 
 			
 			
 			System.out.println("AFFICHER AUTOMATE INITIAL") ; 
-			this.afficherAutomate();  
+			this.afficherAutomate(); 
+			
 		
 			this.fusion_entree() ; 
 			 
@@ -921,6 +932,7 @@ public class Automate {
 			System.out.println("AFFICHAGE\n") ; 
 			
 			this.afficherAutomate() ;
+			automateInit.afficherAutomate();
 			
 			
 			
@@ -938,7 +950,7 @@ public class Automate {
 			System.out.println("L'automate est deterministe") ; 
 			return this ; 
 		}
-
+	
 	}
 	
 	
