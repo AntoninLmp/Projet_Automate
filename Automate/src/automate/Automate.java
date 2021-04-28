@@ -140,7 +140,15 @@ public class Automate {
 					}else {
 						System.out.print("      ");
 					}
-				} 
+				}else {
+					if (etats.get(i).getNomEtat().size() > 1) {
+						for (int j = 0; j < 7 - (etats.get(i).getNomEtat().size()*2) ; j++) {
+							System.out.print(" ");
+						}
+					}else {
+						System.out.print("     ");
+					}
+				}
 				if(etats.get(i).getNomEtat().get(0) == -1) {
 					System.out.print("P |");
 				}else {
