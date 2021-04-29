@@ -63,8 +63,10 @@ public class Utilisation {
 				case 2:
 					
 					if (automate.est_un_automate_asynchrone()) {
+						System.out.println("L'automate est asynchrone !");
 						// determinisation_et_completion_asynchrone()
 					}else {
+						System.out.println("L'automate est synchrone !");
 						if (automate.est_un_automate_deterministe()) {
 							if (automate.est_un_automate_complet()) {
 								// Deja determinisite et complet

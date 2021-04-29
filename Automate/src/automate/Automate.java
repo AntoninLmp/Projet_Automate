@@ -107,6 +107,10 @@ public class Automate {
 				for(int i=0; i<nbrEtats; i++) { System.out.print(" ");}
 				System.out.print("|");
 			}
+			for(int i=0; i<nbrEtats-1; i++) { System.out.print(" ");}
+			System.out.print("*");
+			for(int i=0; i<nbrEtats; i++) { System.out.print(" ");}
+			System.out.print("|");
 			System.out.println();
 			ligneSepration();
 
@@ -189,6 +193,25 @@ public class Automate {
 					System.out.print("|");
 					espace = nbrEtats*2;
 				}
+				for(int x=0; x < etats.get(i).getNbrTrans(); x++) {
+					if (etats.get(i).getLettre(x) == '*') {
+						System.out.print(" ");
+						etats.get(i).afficherEtatSortie(x);
+						if (etats.get(i).getEtatFinal(x).size() > 1) {
+							espace -= etats.get(i).getEtatFinal(x).size() *2 ; 
+						}else if (etats.get(i).getEtatFinal(x).get(0) >= 10) {
+							espace -= 3;
+						}else {
+							espace -= 2; 
+						}
+					}
+				}
+				for(int k = 0; k < espace; k++) {
+					System.out.print(" ");
+				}
+				System.out.print("|");
+				espace = nbrEtats*2;
+				
 				System.out.println();
 				ligneSepration();
 			}
@@ -198,7 +221,7 @@ public class Automate {
 	// Fonction pour afficher une separation dans la table de transition
 	public void ligneSepration() {
 		System.out.print("---------|");
-		for (int i = 0; i < alphabet.length; i++) {
+		for (int i = 0; i < alphabet.length +1 ; i++) {
 			for(int j = 0; j < nbrEtats; j++) {
 				System.out.print("--");
 			}
@@ -233,10 +256,9 @@ public class Automate {
 				
 				/**** LECTURE DE ALPHABET *****/
 				Ligne = reader.readLine();
-				alphabet = new char[Integer.parseInt(Ligne)+1];
+				alphabet = new char[Integer.parseInt(Ligne)];
 				char lettre = 'a';
 				for (int i = 0; i < Integer.parseInt(Ligne); i++) { alphabet[i] = lettre++; }
-				alphabet[alphabet.length-1] = '*'; 
 
 				/**** LECTURE NOMBRE TOTAL D'ETAT *****/
 				Ligne = reader.readLine();
