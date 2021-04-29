@@ -79,7 +79,7 @@ public class Utilisation {
 								automate.completion();
 							}
 						}else {
-							//automate.determinisation_et_completion_synchrone(); 
+							automate.determinisation_et_completion_synchrone(); 
 						}
 					}
 					automate.afficherAutomate();
@@ -168,6 +168,15 @@ public class Utilisation {
 		//determinisation et completion asynchrone
 		//a2.determinisation_et_completion_asynchrone();
 		//a2.afficherAutomate();
+		 
+		//TEST determinisation
+		//a3.est_un_automate_deterministe() ;
+		a1.afficherAutomate(); 
+		//a1.determinisation();
+		//a3.afficherAutomate();
+		a1.determinisation_et_completion() ; 
+		 
+		 
 		 * */
 	}
 }

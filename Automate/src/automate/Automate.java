@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.*;
 
+import java.util.Collections; 
 
 public class Automate {
 	static public final int MAX = 26; // On acte qu'un etat ne peut pas avoir plus de 26 transition
@@ -33,6 +34,15 @@ public class Automate {
 		etatInit = new ArrayList<ArrayList<Integer>>(a.etatInit);
 		etatTerm = new ArrayList<ArrayList<Integer>>(a.etatTerm);
 	}
+	
+	public Automate(ArrayList<Etat> etats , int nbrEtats, ArrayList<ArrayList<Integer>> etatInit , ArrayList<ArrayList<Integer>> etatTerm ) {
+		this.etats = new ArrayList<Etat>(etats);
+		this.nbrEtats = nbrEtats;
+		this.etatInit = new ArrayList<ArrayList<Integer>>(etatInit);
+		this.etatTerm = new ArrayList<ArrayList<Integer>>(etatTerm);
+	}
+	
+	public ArrayList<Etat> getEtats(){ return etats; } 
 
 	/*
 	 * AFFICHAGE D'UN AUTOMATE 
@@ -94,6 +104,7 @@ public class Automate {
 
 	//Fonction pour afficher une tableau de transition
 	public void tableTransitionAutomate(ArrayList<Etat> etats) {
+
 		if (etats != null) {
 			
 			// Affichage entete
@@ -416,9 +427,26 @@ public class Automate {
 		return true;
 	}
 	
-	public boolean est_un_automate_deterministe() {
-		return true; 
+	
+	public boolean compareTab(final ArrayList<Integer> tab1, final ArrayList<Integer> tab2 ) {
+		if(tab1 != null && tab2 != null) {
+			if(tab1.size() == tab2.size()) {
+				for ( int i = 0; i< tab1.size(); i++ ) {
+					if(tab1.get(i) != tab2.get(i) ) {
+						return false ; 
+					}
+				}	
+			}
+			else {
+				return false ; 
+			}
+			return true ; 
+		}
+		return false ; 
 	}
+
+	
+	
 	
 	public boolean est_un_automate_asynchrone() {
     for(int i=0 ; i < etats.size() ; i++) {
@@ -872,7 +900,6 @@ public class Automate {
 	}
 	*/
 
-
 	/***** LANGAGE COMPLEMENTAIRE *****/
 	public void automate_complementaire(){
 		if (this != null){
@@ -881,10 +908,10 @@ public class Automate {
 				return; 
 			}
 			else if (this.est_un_automate_deterministe() && this.est_un_automate_complet() /* this.est_minimal() */){
-				System.out.println("Le complementaire est obtenu a� partir d'un automate deterministe, complet et minimal (AFDCM)");
+				System.out.println("Le complementaire est obtenu a� partir d'un automate deterministe, complet et minimal (AFDCM)");
 			}
 			else if (this.est_un_automate_deterministe() && this.est_un_automate_complet()){
-				System.out.println("Le complementaire est obtenu a� partir d'un automate deterministe, complet (AFDC)");
+				System.out.println("Le complementaire est obtenu a� partir d'un automate deterministe, complet (AFDC)");
 
 			}
 			/** OBTENTION DE L'AUTOMATE COMPLEMENTAIRE  */
@@ -966,9 +993,299 @@ public class Automate {
 				System.out.println("L'automate est deja standard !");
 			}
 			
+	
+	public boolean est_un_automate_deterministe() {  //Vérifier si l’automate synchrone AF est déterministe ou non. Le résultat du test est affiché.
+
+		if(this.est_un_automate_asynchrone()) {
+			System.out.println("L'automate n'est pas deterministe car il est asynchrone"); 
+			return false; 
+		}
+		else if (this.etatInit.size()!=1) {
+			System.out.println("L'automate contient " + this.etatInit.size() + " etats initiaux"); 
+			System.out.println("L'automate n'est pas deterministe car il contient plus d'une entree")  ;
+			return false ;
+
+		}
+		else {
+			for(int i=0 ; i<this.etats.size();i++){
+				//System.out.println("TEST ETAT = " + this.etats.get(i).getNomEtat()); 
+				//System.out.println("TEST TRANSITION  = " +  this.etats.get(i).getNbrTrans()) ; 
+
+				for(int j=0 ; j <this.etats.get(i).getNbrTrans() ; j++ ) {
+					Transition trans1 =  this.etats.get(i).getTransition().get(j);
+					//System.out.println("\nTEST TRANS1 = " + trans1 + "\n") ;
+
+
+					for(int k=j+1 ; k <this.etats.get(i).getNbrTrans()    ; k++ ) {
+						Transition trans2 =  this.etats.get(i).getTransition().get(k);
+						//System.out.println("TEST TRANS2 = " + trans2 ) ; 
+
+						if(trans1.getEtatDepart()==trans2.getEtatDepart() || trans1.getLettre() == trans2.getLettre() ) {
+							System.out.println("L'automate n'est pas deterministe car deux transitions ont le meme etat entree ET la meme lettre :  " + trans1 + trans2) ;  
+							return false ; 
+						}
+					}
+				}
+			}
+		}
+
+		System.out.println("L'automate est deterministe") ; 
+		return true ;
+
+
+
+	}
+
+
+	//trie les transitions dans un etat
+	//ne les classe pas 
+	public void triTransitions(Etat e ) {      
+		if (e.getNomEtat().size() > 1) {
+			//suppression des redondances 
+			for (int k=0 ; k < e.getTransition().size(); k++ ) {
+				for (int l=k+1 ; l <e.getTransition().size(); l++ ) {
+
+					if(e.getTransition().get(k).getLettre()== e.getTransition().get(l).getLettre() && compareTab(e.getTransition().get(k).getEtatSortie(), e.getTransition().get(l).getEtatSortie())) {
+						e.removeTransition(e.getTransition().get(l));    
+						e.setnbrTrans(e.getNbrTrans()-1) ;
+					}
+				}
+			}
+
+			//etat de depart ->  nomEtat
+			int nombreT = e.getTransition().size() ; 
+			for( int i = 0 ; i< nombreT ; i++) { 
+				Transition t = new Transition(e.getNomEtat() , e.getTransition().get(i).getLettre(), e.getTransition().get(i).getEtatSortie() ) ;
+				e.ajoutTransition(t.getEtatDepart(), t.getLettre(), t.getEtatSortie()); 
+
+			}
+			for( int j = 0 ; j< nombreT ; j++) { 
+				e.removeTransition(e.getTransition().get(0));
+				e.setnbrTrans(e.getNbrTrans() - 1 );
+			}
 		}
 	}
 
 
+	public boolean compareTransition(final Transition t1, final Transition t2) {
+		if(compareTab(t1.getEtatDepart(),t2.getEtatDepart()) == false || compareTab(t1.getEtatSortie(), t2.getEtatSortie())==false  || t1.getLettre()!=t2.getLettre() ) {
+			return false ; 
+		}
+		else {
+			return true ; 
+		}
+	}
+
+
+	public void affichertabEtat(ArrayList<Etat> tab) {
+		for (Etat e : tab) {
+			System.out.println(e) ; 
+		}
+	}
+
+
+	public void fusion_entree2 () {
+		System.out.println("\n------------------------------ FUSION 2 \n") ; 
+		if (etatInit.size() > 1) {	
+			Etat new_etatI = new Etat() ; 
+
+			for(int i =0 ; i< etatInit.size() ; i ++ ) {
+				boolean test = false ; 
+				int e=0  ;
+				while ( test == false  && e< etats.size() ) {   
+					if(etats.get(e).getNomEtat().size() == 1) {
+						if(etats.get(e).getNomEtat().get(0) == etatInit.get(i).get(0)) {
+							Etat etat_temp = new Etat(etats.get(e)) ; 
+							new_etatI.fusion(etat_temp);
+							etats.remove(e) ; 
+							nbrEtats -- ; 
+							test = true ; 
+						}	
+					}
+					e = e + 1  ; 					 
+				}
+			}
+			triTransitions(new_etatI); 
+			etats.add(new_etatI) ; 
+			nbrEtats ++ ; 
+			etatInit.clear();
+			etatInit.add(new_etatI.getNomEtat()) ; 	
+		}
+	}
+
+
+ 	public Automate determinisation() {
+		if(this.est_un_automate_deterministe()==false) {
+			System.out.println("\n\nDETERMINISATION \n") ; 
+
+			Automate automateInit = new Automate(this) ;       //on copie l'automate initiale  
+
+
+			System.out.println("\n--------------- AFFICHER AUTOMATE INITIAL--------------\n") ; 
+			this.afficherAutomate();  
+			this.fusion_entree2() ; 
+
+			System.out.println("\n--------------- AFFICHER AUTOMATE INITIAL APRES FUSION--------------\n") ; 
+			this.afficherAutomate() ; 
+
+
+
+			//liste de tous les nouveaux etat + ajout de l'etat entree 
+			ArrayList<Etat> tabEtat = new ArrayList<>() ;     
+			//tabEtat.add(this.etats.get(0)) ; 
+
+			int b = 0 ; 
+			while (!compareTab(this.etats.get(b).getNomEtat(), this.etatInit.get(0)) ) {
+				b++ ; 
+			}
+			tabEtat.add(this.etats.get(b)); 
+
+
+			System.out.println("\n--------------- AFFICHER Etat initial --------------\n") ; 
+			System.out.println(this.etats.get(b)) ; 
+
+
+
+			int i = 0 ; 
+			while ( i != tabEtat.size() ) {           // i regarde si on a traite tous les etats de la liste 
+
+				//System.out.println("\n ----- ETUDIONS LES TRANSITIONS DE L' " + tabEtat.get(i) ) ;
+
+				for ( char a : this.alphabet) {   
+					//System.out.println("\nCEST QUOI A " + a) ;
+					ArrayList<Integer> nvEtat = new ArrayList<>() ;    //lui c'est que le nom de l'etat
+
+					for  ( int j=0 ; j<tabEtat.get(i).getTransition().size(); j++ ){    
+
+						if(tabEtat.get(i).getTransition().get(j).getLettre() == a ) {    //on prend toutes les transitions passant par une lettre 
+							//System.out.println("TROUVE" + tabEtat.get(i).getTransition().get(j) ) ; 
+
+							for(int k=0 ; k<tabEtat.get(i).getTransition().get(j).getEtatSortie().size() ; k++ ) {    //on sauvegarde l'etat de sortie
+								nvEtat.add(tabEtat.get(i).getTransition().get(j).getEtatSortie().get(k)) ;
+								Collections.sort(nvEtat);		//trier le tableau 
+								supp_repetition_tab(nvEtat) ; //on supprime les numeros redondants
+							}
+
+						} 
+
+					}	
+
+					if(nvEtat.size()>=1) {
+						//System.out.println("LE NOUVEAU ETAT EST " + nvEtat) ; 
+
+
+						//fusion des etats de sortie
+						Etat new_etat = new Etat() ; 
+						for (int n : nvEtat) {
+							//System.out.println("JE CHERCHE L'ETAT " + n + " Dans l'automate initial") ;
+							for(int l = 0 ; l< automateInit.nbrEtats ; l++ ) {
+								if( n == automateInit.etats.get(l).getNomEtat().get(0)) {  //dans l'automate initiale, les etats sont constitue d'un seul nombre
+									Etat etat_int = new Etat(automateInit.etats.get(l)) ;
+									//System.out.println("TROUVE ETAT" + automateInit.etats.get(l)) ; 
+									new_etat.fusion(etat_int);
+								}
+							}
+						}
+						triTransitions(new_etat) ;
+
+						if(nvEtat.size()>1) {
+							Transition t = new Transition(tabEtat.get(i).getNomEtat(), a, nvEtat) ; 
+							tabEtat.get(i).ajoutTransition(t.getEtatDepart() , t.getLettre(), t.getEtatSortie());    //ajoute la nouvelle transition qui fusionne les etatTerm
+							for( int j=0 ; j<nvEtat.size(); j++ ) {          //supprime les transitions constituees des etatTerm
+								for (int k =0 ; k<tabEtat.get(i).getTransition().size() ; k++ ) {
+									if (tabEtat.get(i).getTransition().get(k).getEtatSortie().size() == 1 ) {
+										if(nvEtat.get(j) == tabEtat.get(i).getTransition().get(k).getEtatSortie().get(0) && tabEtat.get(i).getTransition().get(k).getLettre() == a ){
+											tabEtat.get(i).removeTransition(tabEtat.get(i).getTransition().get(k));
+											tabEtat.get(i).setnbrTrans(tabEtat.get(i).getNbrTrans() - 1 );
+										}
+									}
+								}
+							}
+						}
+
+						//on regarde si le nouveau etat est dans la liste des etats tabEtat, sinon on l'ajoute
+						boolean test = false ; 
+						for ( Etat e : tabEtat) {
+							if (compareTab(nvEtat, e.getNomEtat())) {
+								test = true ; 
+							}
+						}
+						if (test == false ) {
+							tabEtat.add(new_etat); 
+						}
+					}
+
+				}
+				i++ ; 
+			}
+
+
+			System.out.println("\n------------------------------------------------------------ \n") ; 
+
+
+			//On redefinit les etats sorties
+			this.etatTerm.clear() ; 
+			for(int n = 0 ; n<automateInit.etatTerm.size() ; n ++) {
+				int t = automateInit.etatTerm.get(n).get(0) ; 
+					for (Etat x : tabEtat ) {
+						if (x.getNomEtat().contains(t) && !etatTerm.contains(x.getNomEtat()) ) {
+							this.etatTerm.add(x.getNomEtat()) ; 
+						}
+					}
+			}
+			this.etats.clear() ; 
+			this.etats.addAll(tabEtat) ; 
+			this.nbrEtats = tabEtat.size(); 
+
+
+
+			System.out.println("\n-------------------------------AFFICHAGE----------------------------- \n") ; 
+
+			this.afficherAutomate() ;
+
+			System.out.println("\n------------------------------FIN DETERMINISATION------------------------------ \n") ; 
+
+			this.est_un_automate_deterministe() ; 
+
+
+
+			return this ; 
+		}
+
+		else {
+			System.out.println("L'automate est deterministe") ; 
+			return this ; 
+
+		}
+
+	}
+
+
+ 	public void determinisation_et_completion_synchrone() {
+ 		if(!this.est_un_automate_deterministe()) {
+ 			this.determinisation(); 
+
+ 			System.out.println("PROBLEME") ; 
+
+ 			this.completion();
+
+ 		}
+ 		this.est_un_automate_deterministe() ; 
+ 		this.est_un_automate_complet() ; 
+ 	}
+
+
+
+	public void supp_repetition_tab(ArrayList<Integer> tab) {
+		if(tab != null && tab.size() >=2 ) {
+			for (int i=0 ; i< tab.size(); i++ ) {
+				for (int j=i+1; j<tab.size(); j++ ) {
+					if(tab.get(i) == tab.get(j)) {
+						tab.remove(j) ; 
+					}
+				}
+			}
+		}
+	}
 		
 }

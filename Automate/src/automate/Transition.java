@@ -22,6 +22,13 @@ public class Transition implements Comparable<Transition>{
 		etatDepart.add(eD); 
 		etatSortie.add(eS);
 	}
+	
+	public Transition() {
+		etatDepart = new ArrayList<Integer>(); 
+		etatSortie = new ArrayList<Integer>();  
+	}
+	
+	
 	public Transition copie() {
 		return new Transition(etatDepart,lettre, etatSortie);
 	}
