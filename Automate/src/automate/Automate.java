@@ -876,7 +876,7 @@ public class Automate {
 	/***** LANGAGE COMPLEMENTAIRE *****/
 	public void automate_complementaire(){
 		if (this != null){
-			if (!this.est_un_automate_deterministe() && !this.est_un_automate_complet()){
+			if (!this.est_un_automate_deterministe() || !this.est_un_automate_complet()){
 				System.out.println("ERREUR : l'automate n'est pas complet et/ou deterministe, le complementaire n'est pas possible");
 				return; 
 			}
@@ -907,6 +907,65 @@ public class Automate {
 				}
 				etatTerm.add(copie); 
 			}
+		}
+	}
+	
+	
+	/***** STANDARDISATION *****/
+	public void automate_standard(){
+		if(this != null){
+			boolean standard = true; 
+			// ETAPE 1 : Verification qu'il n'est pas deja standard
+			if(etatInit.size() == 1) {
+				// Parcours de l'automate pour verifier qu'aucune transition revient sur l'etat initial
+				for(int i = 0; i < etats.size(); i++){
+					for(int j = 0; j < etats.get(i).getNbrTrans(); j++){
+						System.out.println(etats.get(i).getEtatFinal(j)+ " =? " + etatInit.get(0));
+						if(comparaisonEtat(etats.get(i).getEtatFinal(j), etatInit.get(0))) {
+							standard = false;
+						}
+					}
+				}
+			}else {  // Si plus d'un etat initial alors pas standard
+				standard = false; 
+			}
+			if(!standard){ // Pas standard
+				/* Ajout d'un nouvel etat initial nommer nbrEtats + 1
+				 * Variable du nouvel etat  */
+				ArrayList<Integer> nouvel_etat_initial = new ArrayList<>(); 
+				nouvel_etat_initial.add(this.nbrEtats);
+				ArrayList<Transition> tableauTransitions = new ArrayList<>(); 
+				int nombre_transitions = 0; 
+				boolean dejaAjouter = false; 
+				
+				// Recuperation des etats des transitions
+				for (int i = 0; i < etatInit.size(); i++) {
+					for (int j = 0; j < etats.size(); j++) {
+						// On cherche les etats initiaux
+						if (comparaisonEtat(etatInit.get(i), etats.get(j).getNomEtat())) {
+							for (int j2 = 0; j2 < etats.get(j).getNbrTrans(); j2++) {
+								System.out.println(etats.get(j).getEtatFinal(j2));
+								Transition transition = new Transition(nouvel_etat_initial, etats.get(j).getLettre(j2), etats.get(j).getEtatFinal(j2));
+								tableauTransitions.add(transition); 
+								nombre_transitions++;
+								if(estTerminal(etats.get(j)) && dejaAjouter == false) {
+									etatTerm.add(nouvel_etat_initial);
+									dejaAjouter = true; 
+								}
+							}
+						}
+					}
+				}			
+				// Ajout d'un etat 
+				etats.add(new Etat(nouvel_etat_initial, tableauTransitions, nombre_transitions));
+				nbrEtats++;
+				// Remplacement de l'etat initiale et reconnaissance du mot vide
+				etatInit.clear();
+				etatInit.add(nouvel_etat_initial);
+			}else {
+				System.out.println("L'automate est deja standard !");
+			}
+			
 		}
 	}
 
