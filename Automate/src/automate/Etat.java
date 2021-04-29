@@ -30,6 +30,19 @@ public class Etat extends Automate {
 		this.nbrTrans = 0;
 	}
 	
+	public Etat() {
+		this.numeroEtat = new ArrayList<>(); 
+		this.transition = new ArrayList<Transition>();
+		this.nbrTrans = 0;
+	}
+	
+	public Etat(final ArrayList<Integer> nom) {
+		this.numeroEtat = new ArrayList<>();
+		this.numeroEtat.addAll(nom); 
+		this.transition = new ArrayList<Transition>();
+		this.nbrTrans = 0;
+	}
+	
 	//constructeur de copie
 	public Etat(final Etat e){
 		this(e.numeroEtat, e.transition, e.nbrTrans);
@@ -92,6 +105,11 @@ public class Etat extends Automate {
 		transition.add(new Transition(eD, lettre, eS));
 		nbrTrans++;
 		Collections.sort(transition);
+	}
+	
+	//supprimer une transition 
+	public void removeTransition(final Transition t) {
+		transition.remove(t) ; 
 	}
 	
 	// AFFICHAGE NOM ETAT
