@@ -68,10 +68,14 @@ public class Utilisation {
 					}else {
 						System.out.println("L'automate est synchrone !");
 						if (automate.est_un_automate_deterministe()) {
+							System.out.println("L'automate est deterministe !");
 							if (automate.est_un_automate_complet()) {
 								// Deja determinisite et complet
+								System.out.println("\t L'automate est synchrone, deterministe et complet!");
+								
 								//AFDC = automate.clone(); 
 							}else {
+								System.out.println("L'automate n'est pas complet!");
 								automate.completion();
 							}
 						}else {
@@ -99,13 +103,15 @@ public class Utilisation {
 							System.out.println("Le mot n'est pas reconnu");
 						}
 						compteur ++;
-					}	
+					}
 					break;
 				case 5:
-					// complementaire 
+					automate.automate_complementaire();
+					automate.afficherAutomate();
 					break;
 				case 6:
-					// Standardisation
+					automate.automate_standard();
+					automate.afficherAutomate();
 					break;
 					
 				case -1: 

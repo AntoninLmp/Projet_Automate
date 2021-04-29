@@ -71,7 +71,7 @@ public class Automate {
 		System.out.print("  - Etats T = { ");
 		affichertabDoubleArray(etatTerm);
 		System.out.println(" }");
-		tableTransitionAutomate();
+		tableTransitionAutomate(etats);
 	}
 
 	// Fonction pour afficher les ArrayLists d'entiers
@@ -102,8 +102,9 @@ public class Automate {
 		}
 	}
 
-	//Fonction pour afficher une table de transition
-	public void tableTransitionAutomate() {
+	//Fonction pour afficher une tableau de transition
+	public void tableTransitionAutomate(ArrayList<Etat> etats) {
+
 		if (etats != null) {
 			
 			// Affichage entete
@@ -242,7 +243,7 @@ public class Automate {
 
 	
 	
-	
+	/****** LECTURE AUTOMATE FICHIER  *******/
 	
 	public boolean lire_automate_fichier(String NomFichier) {
 
@@ -464,19 +465,18 @@ public class Automate {
 	public boolean est_un_automate_complet() {
 		// Verif synchrone et deterministe
 		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
-			System.out.println("nbr etats : "+ nbrEtats);
 			boolean bool = true; 
 			for (int a = 0; a < nbrEtats; a++) {
 				int b =0;
 				if(etats.get(a).getNbrTrans() != alphabet.length) {
 					System.out.println("L'Automate n'est pas complet car : ");
-					System.out.print("	Etat "+etats.get(a).getNomEtat()+" :");
+					System.out.print("	Etat "+ etats.get(a).getNomEtat()+" :");
 					for (char lettre : alphabet) {
 						/*Si b est superieur au nombres d'etats sachant que les etats sont tries
 						 * ou si l'etat ne possede aucune transition */
-						if (b > etats.get(a).getNbrTrans() || etats.get(a).getNbrTrans() == 0) {
+						if (b == etats.get(a).getNbrTrans() || etats.get(a).getNbrTrans() == 0) {
 							System.out.print(" en " + lettre );
-						}else if (etats.get(a).getLettre(b) > lettre) {
+						}else if (etats.get(a).getLettre(b) != lettre) {
 							System.out.print(" en " +lettre );
 						}else if(etats.get(a).getLettre(b) == lettre) { // La lettre est presente
 							b++; //On augmente que si on a depasser la p
@@ -501,7 +501,7 @@ public class Automate {
 					// Si le nombre de lettre = nombre de transition alors l'etat est complet sinon 
 					if(etats.get(i).getNbrTrans() != alphabet.length) {
 						for (int j = 0; j < alphabet.length; j++) {
-							// Si le nombre de Transition est sup�rieur alors 
+							// Si le nombre de Transition est superieur alors 
 							if (etats.get(i).getNbrTrans() > j) {
 								if(etats.get(i).getLettre(j) != alphabet[j]) {
 									etats.get(i).ajoutTransition( i, alphabet[j], -1);
@@ -512,7 +512,7 @@ public class Automate {
 						}
 					}	
 				}
-				// Ajout de l'�tat poubelle 
+				// Ajout de l'etat poubelle 
 				etats.add(new Etat(-1));
 				nbrEtats++;
 				for (int i = 0; i < alphabet.length; i++) {
@@ -534,7 +534,8 @@ public class Automate {
 		return false; 
 	}
 	
-	// Permet de savoir si un etat est terminal ou pas 
+	
+	//METHODE QUI VERIFIE SI UN ETAT EST TERMINAL 
 	public boolean estTerminal(final ArrayList<Integer> nomEtat) {
 		if (nomEtat != null) {
 			for (int k2 = 0; k2 < etatTerm.size(); k2++) {
@@ -546,6 +547,17 @@ public class Automate {
 		return false; 
 	}
 	
+	public boolean estTerminal(Etat e) {
+		if (e != null){
+			for(int i=0 ; i<etatTerm.size(); i++) {
+				if(comparaisonEtat(etatTerm.get(i), e.getNomEtat())){
+					return true;
+				}
+			}
+		}		
+		return false;
+	}
+	
 	
 	//Minimisation d'un automate 
 	public void minimisation() {
@@ -553,7 +565,7 @@ public class Automate {
 		// Pour minimiser un automate il doit etre deterministe et complet
 		if(this.est_un_automate_complet() && this.est_un_automate_deterministe()) {
 			System.out.println("\n   - MINIMISATION -");
-			// ETAPE 0 : Cr�ation d'une COPIE du tableau d'etats qui pourra �tre modifier sans impacter le tableau etats
+			// ETAPE 0 : Creation d'une COPIE du tableau d'etats qui pourra etre modifier sans impacter le tableau etats
 			ArrayList<Etat> autoMinimiser = new ArrayList<>(); 
 			for (int i = 0; i < etats.size(); i++) {
 				autoMinimiser.add(etats.get(i).copie());	
@@ -562,7 +574,7 @@ public class Automate {
 			// ETAPE 1 : SEPARER LES ETATS TERMINAUX ET NON TERMINAUX
 			for (int j = 0; j < autoMinimiser.size(); j++) {
 				boolean estTerm = false; // Etat : T (terminal) OU NT (non terminaux)
-				//Boucle pour v�rifier chaque etatsFinal : On cherche les etats qui sont terminaux
+				//Boucle pour verifier chaque etatsFinal : On cherche les etats qui sont terminaux
 				for (int k = 0; k < autoMinimiser.get(j).getNbrTrans(); k++) {
 					estTerm = estTerminal(autoMinimiser.get(j).getEtatFinal(k)); 
 					// On met un 1 pour T et 0 pour NT
@@ -601,7 +613,7 @@ public class Automate {
 						for (int l = k+1; l < autoMinimiser.size(); l++) {
 							int nombreEtatIdentique = 0;							
 							if(estTerminal(autoMinimiser.get(k).getNomEtat()) == estTerminal(autoMinimiser.get(l).getNomEtat())) {
-								// Boucle pour v�rifier que les �tats sont bien identiques
+								// Boucle pour verifier que les etats sont bien identiques
 								for (int i = 0; i < alphabet.length; i++) {
 									if (comparaisonEtat(autoMinimiser.get(k).getEtatFinal(i), autoMinimiser.get(l).getEtatFinal(i)) == false) {
 										break; // Si les 2 transitions ne sont pas identiques ils ne sont identiques
@@ -625,7 +637,7 @@ public class Automate {
 							for (int i = 0; i < autoMinimiser.size(); i++) {
 								for (int m = 0; m < alphabet.length; m++) {
 									boolean ajout = false; 
-									// Remplacement partout o� il y avait des les anciens �tats
+									// Remplacement partout oe il y avait des les anciens etats
 									for (int m2 = 0; m2 < etats.get(i).getEtatFinal(m).size(); m2++) {
 										for (int m3 = 0; m3 < newNomArrayList.size(); m3++) {
 											if (etats.get(i).getEtatFinal(m).get(m2) == newNomArrayList.get(m3)) {
@@ -641,10 +653,8 @@ public class Automate {
 							}
 						}				
 					}
-					//System.err.println(newNomArrayList + " " + tabEtatEtudier);
-					//System.out.println("--------------------------");	
 				}
-				// Si on se retrouve � la fin des tours on FUSION les �tats identiques
+				// Si on se retrouve e la fin des tours on FUSION les etats identiques
 				if (j == autoMinimiser.size()-1) {
 					// ETAPE 3 : FUSION 	
 					for (int i = 0; i < tabEtatEtudier.size(); i++) {
@@ -658,34 +668,35 @@ public class Automate {
 								m = 0; 
 							}							
 						}
-						
-						// REMPLACEMENT des etats Initiaux par le nouvel etat
-						if (etatInit.contains(autoMinimiser.get(l).getNomEtat())) {
-							etatInit.add(tabEtatEtudier.get(i));
-							for (int m2 = 0; m2 < tabEtatEtudier.get(i).size(); m2++) {
-								ArrayList<Integer> nom = new ArrayList<>(); 
-								nom.add(tabEtatEtudier.get(i).get(m2)); 
-								for (int n = 0; n < etatInit.size(); n++) {
-									if (comparaisonEtat(etatInit.get(n), nom)) {
-										etatInit.remove(n); 
+						if ( comparaisonEtat(autoMinimiser.get(l).getNomEtat(), tabEtatEtudier.get(i)) == false) {
+							// REMPLACEMENT des etats Initiaux par le nouvel etat
+							if (etatInit.contains(autoMinimiser.get(l).getNomEtat())) {
+								etatInit.add(tabEtatEtudier.get(i));
+								for (int m2 = 0; m2 < tabEtatEtudier.get(i).size(); m2++) {
+									ArrayList<Integer> nom = new ArrayList<>(); 
+									nom.add(tabEtatEtudier.get(i).get(m2)); 
+									for (int n = 0; n < etatInit.size(); n++) {
+										if (comparaisonEtat(etatInit.get(n), nom)) {
+											etatInit.remove(n); 
+										}
 									}
 								}
 							}
-						}
-						// REMPLACEMENT des etats Terminaux par le nouvel etat
-						if (etatTerm.contains(autoMinimiser.get(l).getNomEtat())) {
-							etatTerm.add(tabEtatEtudier.get(i));
-							for (int m2 = 0; m2 < tabEtatEtudier.get(i).size(); m2++) {
-								ArrayList<Integer> nom = new ArrayList<>(); 
-								nom.add(tabEtatEtudier.get(i).get(m2)); 
-								for (int n = 0; n < etatTerm.size(); n++) {
-									if (comparaisonEtat(etatTerm.get(n), nom)) {
-										etatTerm.remove(n); 
+							// REMPLACEMENT des etats Terminaux par le nouvel etat
+							if (etatTerm.contains(autoMinimiser.get(l).getNomEtat())) {
+								etatTerm.add(tabEtatEtudier.get(i));
+								for (int m2 = 0; m2 < tabEtatEtudier.get(i).size(); m2++) {
+									ArrayList<Integer> nom = new ArrayList<>(); 
+									nom.add(tabEtatEtudier.get(i).get(m2)); 
+									for (int n = 0; n < etatTerm.size(); n++) {
+										if (comparaisonEtat(etatTerm.get(n), nom)) {
+											etatTerm.remove(n); 
+										}
 									}
 								}
 							}
-						}
-						autoMinimiser.get(l).setNomEtat(tabEtatEtudier.get(i));
+							autoMinimiser.get(l).setNomEtat(tabEtatEtudier.get(i));
+						}						
 						// SUPPRESSION DES ETATS IDENTIQUES
 						for (int m2 = 1; m2 < tabEtatEtudier.get(i).size(); m2++) {
 							l = 0;
@@ -701,12 +712,12 @@ public class Automate {
 						}
 					}					
 				}
+				tableTransitionAutomate(autoMinimiser);
 			}
 			etats = autoMinimiser;
-			afficherAutomate();
 		}
 		else {	
-			System.out.println("L'automate ne peut pas etre minimiser car il n'est pas compleyt et/ou deterministe");
+			System.out.println("L'automate ne peut pas etre minimiser car il n'est pas complet et/ou deterministe");
 		}
 		
 	}
@@ -758,8 +769,9 @@ public class Automate {
 	}
 	
 	
-	//METHODE QUI A PARTIR D UNE ARRAYLIST (etatInit et etatTerm) 
-	//PERMET D OBTENIR L ETAT CORRESPONDANT DANS LA LISTE DE TOUS LES ETATS
+	/* METHODE QUI A PARTIR D UNE ARRAYLIST (etatInit et etatTerm) 
+	 * PERMET D OBTENIR L ETAT CORRESPONDANT DANS LA LISTE DE TOUS LES ETATS
+	 */
 	public Etat etatCorrespondant(ArrayList<Integer> e){
 		Etat etat_corres = etats.get(0);
 		for(int i=0 ; i<etats.size(); i++) {
@@ -768,34 +780,8 @@ public class Automate {
 			}
 		}
 		return etat_corres;
-	}
-	
-	
-	//METHODE QUI VERIFIE SI UN ETAT EST TERMINAL
-	public boolean estTerminal(Etat e) {
-		for(int i=0 ; i<etatTerm.size(); i++) {
-			if(comparaisonEtat(etatTerm.get(i), e.getNomEtat())){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	
-	//METHODE QUI A PARTIR D UN ETAT DONNE ET D UNE LETTRE 
-	//DIT S IL EXISTE UNE TRANSITION PASSANT PAR CETTE LETTRE ET ARRIVANT A UN NOUVEL ETAT
-	/*
-	public boolean transitionExistante(Etat e, char symbole) {
-		for(int i=0 ; i<e.getTransition().size(); i++) {
-			if (e.getTransition().get(i).getLettre() == symbole) {
-				return true;
-			}
-		}
-		return false;
-	}
-	*/
-	
-	
+	}	
+		
 	//METHODE QUI A PARTIR D UN ETAT DONNE ET D UNE LETTRE
 	//RETOURNE LA TRANSITION PARTANT DE CETTE ETAT ET PASSANT PAR CETTE LETTRE
 	public Transition getTransitionExistante(Etat e, char symbole) {
@@ -913,6 +899,100 @@ public class Automate {
 		
 	}
 	*/
+
+	/***** LANGAGE COMPLEMENTAIRE *****/
+	public void automate_complementaire(){
+		if (this != null){
+			if (!this.est_un_automate_deterministe() || !this.est_un_automate_complet()){
+				System.out.println("ERREUR : l'automate n'est pas complet et/ou deterministe, le complementaire n'est pas possible");
+				return; 
+			}
+			else if (this.est_un_automate_deterministe() && this.est_un_automate_complet() /* this.est_minimal() */){
+				System.out.println("Le complementaire est obtenu a� partir d'un automate deterministe, complet et minimal (AFDCM)");
+			}
+			else if (this.est_un_automate_deterministe() && this.est_un_automate_complet()){
+				System.out.println("Le complementaire est obtenu a� partir d'un automate deterministe, complet (AFDC)");
+
+			}
+			/** OBTENTION DE L'AUTOMATE COMPLEMENTAIRE  */
+			// les etats terminaux deviennent non terminaux et inversement
+			ArrayList<ArrayList<Integer>> tab_tout_les_etats = new ArrayList<>();
+			for(int i=0; i<etats.size(); i++) {  
+				if (!estTerminal(etats.get(i))) {
+					tab_tout_les_etats.add(etats.get(i).getNomEtat());
+				}
+			}
+			System.out.print("\tLes etats ");
+			affichertabDoubleArray(tab_tout_les_etats);
+			System.out.println(" deviennent terminaux !");
+			// On enleve les etats et on remplace par des etats qu'on vient de stocker
+			etatTerm.clear();
+			for (int i = 0; i < tab_tout_les_etats.size(); i++) {
+				ArrayList<Integer> copie = new ArrayList<>(); 
+				for (int j = 0; j < tab_tout_les_etats.get(i).size(); j++) {
+					copie.add(tab_tout_les_etats.get(i).get(j));
+				}
+				etatTerm.add(copie); 
+			}
+		}
+	}
+	
+	
+	/***** STANDARDISATION *****/
+	public void automate_standard(){
+		if(this != null){
+			boolean standard = true; 
+			// ETAPE 1 : Verification qu'il n'est pas deja standard
+			if(etatInit.size() == 1) {
+				// Parcours de l'automate pour verifier qu'aucune transition revient sur l'etat initial
+				for(int i = 0; i < etats.size(); i++){
+					for(int j = 0; j < etats.get(i).getNbrTrans(); j++){
+						System.out.println(etats.get(i).getEtatFinal(j)+ " =? " + etatInit.get(0));
+						if(comparaisonEtat(etats.get(i).getEtatFinal(j), etatInit.get(0))) {
+							standard = false;
+						}
+					}
+				}
+			}else {  // Si plus d'un etat initial alors pas standard
+				standard = false; 
+			}
+			if(!standard){ // Pas standard
+				/* Ajout d'un nouvel etat initial nommer nbrEtats + 1
+				 * Variable du nouvel etat  */
+				ArrayList<Integer> nouvel_etat_initial = new ArrayList<>(); 
+				nouvel_etat_initial.add(this.nbrEtats);
+				ArrayList<Transition> tableauTransitions = new ArrayList<>(); 
+				int nombre_transitions = 0; 
+				boolean dejaAjouter = false; 
+				
+				// Recuperation des etats des transitions
+				for (int i = 0; i < etatInit.size(); i++) {
+					for (int j = 0; j < etats.size(); j++) {
+						// On cherche les etats initiaux
+						if (comparaisonEtat(etatInit.get(i), etats.get(j).getNomEtat())) {
+							for (int j2 = 0; j2 < etats.get(j).getNbrTrans(); j2++) {
+								System.out.println(etats.get(j).getEtatFinal(j2));
+								Transition transition = new Transition(nouvel_etat_initial, etats.get(j).getLettre(j2), etats.get(j).getEtatFinal(j2));
+								tableauTransitions.add(transition); 
+								nombre_transitions++;
+								if(estTerminal(etats.get(j)) && dejaAjouter == false) {
+									etatTerm.add(nouvel_etat_initial);
+									dejaAjouter = true; 
+								}
+							}
+						}
+					}
+				}			
+				// Ajout d'un etat 
+				etats.add(new Etat(nouvel_etat_initial, tableauTransitions, nombre_transitions));
+				nbrEtats++;
+				// Remplacement de l'etat initiale et reconnaissance du mot vide
+				etatInit.clear();
+				etatInit.add(nouvel_etat_initial);
+			}else {
+				System.out.println("L'automate est deja standard !");
+			}
+			
 	
 	public boolean est_un_automate_deterministe() {  //Vérifier si l’automate synchrone AF est déterministe ou non. Le résultat du test est affiché.
 
@@ -1207,7 +1287,6 @@ public class Automate {
 			}
 		}
 	}
-
 
 		
 }
