@@ -871,5 +871,45 @@ public class Automate {
 		
 	}
 	*/
+
+
+	/***** LANGAGE COMPLEMENTAIRE *****/
+	public void automate_complementaire(){
+		if (this != null){
+			if (!this.est_un_automate_deterministe() && !this.est_un_automate_complet()){
+				System.out.println("ERREUR : l'automate n'est pas complet et/ou deterministe, le complementaire n'est pas possible");
+				return; 
+			}
+			else if (this.est_un_automate_deterministe() && this.est_un_automate_complet() /* this.est_minimal() */){
+				System.out.println("Le complementaire est obtenu a  partir d'un automate deterministe, complet et minimal (AFDCM)");
+			}
+			else if (this.est_un_automate_deterministe() && this.est_un_automate_complet()){
+				System.out.println("Le complementaire est obtenu a  partir d'un automate deterministe, complet (AFDC)");
+
+			}
+			/** OBTENTION DE L'AUTOMATE COMPLEMENTAIRE  */
+			// les etats terminaux deviennent non terminaux et inversement
+			ArrayList<ArrayList<Integer>> tab_tout_les_etats = new ArrayList<>();
+			for(int i=0; i<etats.size(); i++) {  
+				if (!estTerminal(etats.get(i))) {
+					tab_tout_les_etats.add(etats.get(i).getNomEtat());
+				}
+			}
+			System.out.print("\tLes etats ");
+			affichertabDoubleArray(tab_tout_les_etats);
+			System.out.println(" deviennent terminaux !");
+			// On enleve les etats et on remplace par des etats qu'on vient de stocker
+			etatTerm.clear();
+			for (int i = 0; i < tab_tout_les_etats.size(); i++) {
+				ArrayList<Integer> copie = new ArrayList<>(); 
+				for (int j = 0; j < tab_tout_les_etats.get(i).size(); j++) {
+					copie.add(tab_tout_les_etats.get(i).get(j));
+				}
+				etatTerm.add(copie); 
+			}
+		}
+	}
+
+
 		
 }

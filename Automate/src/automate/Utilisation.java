@@ -106,10 +106,12 @@ public class Utilisation {
 					}
 					break;
 				case 5:
-					// complementaire 
+					automate.automate_complementaire();
+					automate.afficherAutomate();
 					break;
 				case 6:
-					// Standardisation
+					automate.automate_standard();
+					automate.afficherAutomate();
 					break;
 					
 				case -1: 
