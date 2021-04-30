@@ -64,7 +64,7 @@ public class Utilisation {
 					
 					if (automate.est_un_automate_asynchrone()) {
 						System.out.println("L'automate est asynchrone !");
-						// determinisation_et_completion_asynchrone()
+						automate.determinisation_et_completion_asynchrone();
 					}else {
 						System.out.println("L'automate est synchrone !");
 						if (automate.est_un_automate_deterministe()) {
@@ -72,7 +72,6 @@ public class Utilisation {
 							if (automate.est_un_automate_complet()) {
 								// Deja determinisite et complet
 								System.out.println("\t L'automate est synchrone, deterministe et complet!");
-								
 								//AFDC = automate.clone(); 
 							}else {
 								System.out.println("L'automate n'est pas complet!");
@@ -85,7 +84,12 @@ public class Utilisation {
 					automate.afficherAutomate();
 					break;
 				case 3:
-					automate.minimisation();
+					if (automate.est_minimal()) {
+						System.out.println("\t--> L'Automate est deja minimal ");
+					}else {
+						automate.minimisation(true);
+					}
+					System.out.println("\n\n");
 					automate.afficherAutomate();
 					break;
 				case 4:
