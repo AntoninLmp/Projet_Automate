@@ -477,7 +477,7 @@ public class Automate {
 	/*----------------------------------------------------------------------------------*/
 
 	public boolean est_un_automate_deterministe() {  
-		//VÃƒÂ©rifier si lÃ¢â‚¬â„¢automate synchrone AF est dÃƒÂ©terministe ou non. Le rÃƒÂ©sultat du test est affichÃƒÂ©.
+		//Vérifier si l’automate synchrone AF est déterministe ou non. Le résultat du test est affiché.
 
 		if(this.est_un_automate_asynchrone()) {
 			System.out.println("L'automate n'est pas deterministe car il est asynchrone"); 
@@ -1114,18 +1114,15 @@ public class Automate {
 		}
 		return false;
 	}
-	
+		
 
-
-	
-
-	
-	
-	
+  
 	/*----------------------------------------------------------------------------------*/
 	/*****                          LANGAGE COMPLEMENTAIRE                          *****/
 	/*----------------------------------------------------------------------------------*/
 
+  
+  
 	public void automate_complementaire(){
 		if (this != null){
 			if (!this.est_un_automate_deterministe() || !this.est_un_automate_complet()){
@@ -1220,8 +1217,7 @@ public class Automate {
 				System.out.println("L'automate est deja standard !");
 			}
 		}
-	}
-			
+	}			
 	
 	
 
@@ -1314,5 +1310,6 @@ public class Automate {
 			}
 		}
 	}
+
 		
 }
