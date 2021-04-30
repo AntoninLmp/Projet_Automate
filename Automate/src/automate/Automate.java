@@ -992,7 +992,8 @@ public class Automate {
 			}else {
 				System.out.println("L'automate est deja standard !");
 			}
-			
+		}
+	}
 	
 	public boolean est_un_automate_deterministe() {  //Vérifier si l’automate synchrone AF est déterministe ou non. Le résultat du test est affiché.
 
