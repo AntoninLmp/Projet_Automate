@@ -530,7 +530,7 @@ public class Automate {
 			//tabEtat.add(this.etats.get(0)) ; 
 
 			int b = 0 ; 
-			while (!compareTab(this.etats.get(b).getNomEtat(), this.etatInit.get(0)) ) {
+			while (!comparaisonEtat(this.etats.get(b).getNomEtat(), this.etatInit.get(0)) ) {
 				b++ ; 
 			}
 			tabEtat.add(this.etats.get(b)); 
@@ -596,7 +596,7 @@ public class Automate {
 						//on regarde si le nouveau etat est dans la liste des etats tabEtat, sinon on l'ajoute
 						boolean test = false ; 
 						for ( Etat e : tabEtat) {
-							if (compareTab(nvEtat, e.getNomEtat())) {
+							if (comparaisonEtat(nvEtat, e.getNomEtat())) {
 								test = true ; 
 							}
 						}
@@ -705,8 +705,8 @@ public class Automate {
 	/*----------------------------------------------------------------------------------*/
 	
 	public void determinisation_et_completion_synchrone() {
-		this.est_un_automate_deterministe() ; 
-		this.est_un_automate_complet() ; 
+		this.determinisation() ; 
+		this.completion() ; 
 	}
 
 	public void determinisation_et_completion_asynchrone(){
@@ -1230,7 +1230,7 @@ public class Automate {
 			for (int k=0 ; k < e.getTransition().size(); k++ ) {
 				for (int l=k+1 ; l <e.getTransition().size(); l++ ) {
 
-					if(e.getTransition().get(k).getLettre()== e.getTransition().get(l).getLettre() && compareTab(e.getTransition().get(k).getEtatSortie(), e.getTransition().get(l).getEtatSortie())) {
+					if(e.getTransition().get(k).getLettre()== e.getTransition().get(l).getLettre() && comparaisonEtat(e.getTransition().get(k).getEtatSortie(), e.getTransition().get(l).getEtatSortie())) {
 						e.removeTransition(e.getTransition().get(l));    
 						e.setnbrTrans(e.getNbrTrans()-1) ;
 					}
@@ -1253,7 +1253,7 @@ public class Automate {
 
 
 	public boolean compareTransition(final Transition t1, final Transition t2) {
-		if(compareTab(t1.getEtatDepart(),t2.getEtatDepart()) == false || compareTab(t1.getEtatSortie(), t2.getEtatSortie())==false  || t1.getLettre()!=t2.getLettre() ) {
+		if(comparaisonEtat(t1.getEtatDepart(),t2.getEtatDepart()) == false || comparaisonEtat(t1.getEtatSortie(), t2.getEtatSortie())==false  || t1.getLettre()!=t2.getLettre() ) {
 			return false ; 
 		}
 		else {
