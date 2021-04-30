@@ -75,23 +75,23 @@ public class Automate {
 	 */
 
 	public void afficherAutomate() {
-		System.out.println("Automate");
-		System.out.print("  - Alphabet { ");
+		System.out.println("\t\t -- AUTOMATE -- ");
+		System.out.print("\t  - Alphabet { ");
 		for(char alpha : alphabet) {
 			System.out.print(alpha+ " ");
 		}
 		System.out.println("}");
-		System.out.print("  - Etats Q = { ");
+		System.out.print("\t  - Etats Q = { ");
 		for(int i=0; i<etats.size(); i++) {  
 			affichertabSimpleArray(etats.get(i).getNomEtat()); 
 			if (i != etats.size()-1) {System.out.print(", ");}
 		}
 		System.out.println(" }");
 
-		System.out.print("  - Etats I = { ");
+		System.out.print("\t  - Etats I = { ");
 		affichertabDoubleArray(etatInit);
 		System.out.println(" }");
-		System.out.print("  - Etats T = { ");
+		System.out.print("\t  - Etats T = { ");
 		affichertabDoubleArray(etatTerm);
 		System.out.println(" }");
 		tableTransitionAutomate(etats);
@@ -130,9 +130,9 @@ public class Automate {
 		if (etats != null) {
 			
 			// Affichage Entete
-			System.out.println("\n\t\t   ╔══════════════════════════╗");
-			System.out.println("\t\t   ║    TABLE DE TRANSITION   ║");
-			System.out.println("\t\t   ╚══════════════════════════╝\n");
+			System.out.println("\n\t\t╔══════════════════════════╗ ");
+			System.out.println("\t\t║    TABLE DE TRANSITION   ║");
+			System.out.println("\t\t╚══════════════════════════╝   \n");
 			System.out.print("\t         |");
 			
 			// Affichage de l'alphabet que l'automate reconnait
@@ -521,9 +521,7 @@ public class Automate {
 								Collections.sort(nvEtat);		//trier le tableau 
 								supp_repetition_tab(nvEtat) ; //on supprime les numeros redondants
 							}
-
-						} 
-
+						}
 					}	
 
 					if(nvEtat.size()>=1) {
@@ -722,7 +720,7 @@ public class Automate {
 		nbrEtats--;
 	}
 
-	public Etat etat_a_fusioner(Etat e){ //etat Ã  fusionner avec e
+	public Etat etat_a_fusioner(Etat e){ //etat ÃƒÂ  fusionner avec e
 		for (Transition t : e.getTransition()) {
 			if(t.getLettre() == '*'){
 				return etats.get(t.getEtatSortie().get(0));
@@ -732,7 +730,7 @@ public class Automate {
 		return null;
 	}
 
-	public Etat fermeture(Etat e) { //permet d'Ã©viter de faire sa propre copie de l'automate
+	public Etat fermeture(Etat e) { //permet d'ÃƒÂ©viter de faire sa propre copie de l'automate
 		Etat copie = new Etat(e);
 		while (copie.contient_epsilon()) { //remplacer par sa transition epsilon tant qu'il y a epsilon
 			copie.fusion(etat_a_fusioner(copie));
@@ -994,7 +992,6 @@ public class Automate {
 		else {	
 			System.out.println("L'automate ne peut pas etre minimiser car il n'est pas complet et/ou deterministe");
 		}
-		
 	}
 	
 
@@ -1021,11 +1018,11 @@ public class Automate {
 		
 		//On recupere le mot saisi par l'utilisateur
 		Scanner scan = new Scanner(System.in);
-		System.out.println("Veuillez saisir un mot ('*' reprÃ©sente le mot vide) :");
+		System.out.println("Veuillez saisir un mot ('*' reprÃƒÂ©sente le mot vide) :");
 		String mot = scan.nextLine();
 		System.out.println("Vous avez saisi : " + mot);
 		
-		//On vÃ©rifie si le mot est valide
+		//On vÃƒÂ©rifie si le mot est valide
 		boolean test = true;
 		do {
 			test = true;
@@ -1037,7 +1034,7 @@ public class Automate {
 			}
 			if (test == false) {
 				System.out.println("Le mot n'est pas valide !");
-				System.out.println("Veuillez saisir un mot ('*' reprÃ©sente le mot vide) :");
+				System.out.println("Veuillez saisir un mot ('*' reprÃƒÂ©sente le mot vide) :");
 				mot = scan.nextLine();
 				System.out.println("Vous avez saisi : " + mot);
 			}
@@ -1082,7 +1079,7 @@ public class Automate {
 		char symbole_courant = mot.charAt(0);
 		Transition trans = etat_courant.getTransition().get(0);
 		
-		//On parcourt l'automate dÃ©terministe complet en prenant les lettres du mot une Ã  une 
+		//On parcourt l'automate dÃƒÂ©terministe complet en prenant les lettres du mot une ÃƒÂ  une 
 		while (compteur != mot.length()) {
 			trans = getTransitionExistante(etat_courant, symbole_courant);
 			etat_courant = etatCorrespondant(trans.getEtatSortie());
@@ -1092,7 +1089,7 @@ public class Automate {
 		trans = getTransitionExistante(etat_courant, symbole_courant);
 		etat_courant = etatCorrespondant(trans.getEtatSortie());
 		
-		//On vÃ©rifie si l'Ã©tat final sur lequel on est arrivÃ© est termianl ou non
+		//On vÃƒÂ©rifie si l'ÃƒÂ©tat final sur lequel on est arrivÃƒÂ© est termianl ou non
 		//Si oui, le mot est reconnu
 		//Sinon, le mot n'est pas reconnu
 		if (estTerminal(etat_courant)) {
@@ -1209,7 +1206,7 @@ public class Automate {
 	}
 			
 	
-	public boolean est_un_automate_deterministe() {  //VÃ©rifier si lâ€™automate synchrone AF est dÃ©terministe ou non. Le rÃ©sultat du test est affichÃ©.
+	public boolean est_un_automate_deterministe() {  //VÃƒÂ©rifier si lÃ¢â‚¬â„¢automate synchrone AF est dÃƒÂ©terministe ou non. Le rÃƒÂ©sultat du test est affichÃƒÂ©.
 
 		if(this.est_un_automate_asynchrone()) {
 			System.out.println("L'automate n'est pas deterministe car il est asynchrone"); 
