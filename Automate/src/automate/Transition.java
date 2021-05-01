@@ -27,6 +27,10 @@ public class Transition implements Comparable<Transition>{
 		etatDepart = new ArrayList<Integer>(); 
 		etatSortie = new ArrayList<Integer>();  
 	}
+
+	public Transition(Transition t) {
+		this(t.getEtatDepart(), t.getLettre(), t.getEtatSortie());
+	}
 	
 	
 	public Transition copie() {

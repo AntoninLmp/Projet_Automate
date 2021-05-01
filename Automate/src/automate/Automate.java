@@ -44,6 +44,16 @@ public class Automate {
 	
 	public ArrayList<Etat> getEtats(){ return etats; } 
 
+	
+	
+	public ArrayList<ArrayList<Integer>> getEtatTerm() {
+		return etatTerm;
+	}
+
+	public void setEtatTerm(ArrayList<ArrayList<Integer>> etatTerm) {
+		this.etatTerm = etatTerm;
+	}
+
 	/*
 	 * AFFICHAGE D'UN AUTOMATE 
 	 * - etats qu'il contient
@@ -860,45 +870,99 @@ public class Automate {
 		nbrEtats--;
 	}
 
-	public Etat etat_a_fusioner(Etat e){ //etat à fusionner avec e
+	public Etat etat_a_fusioner(Etat e){ //etat a  fusionner avec e
 		for (Transition t : e.getTransition()) {
 			if(t.getLettre() == '*'){
-				return etats.get(t.getEtatSortie().get(0));
+				for (Etat etat : etats) { //trouver le bon etat dans l'automate sinon l'indice est mauvais puisqu'il correspond au nouvel automate 
+					if (etat.getNomEtat().equals(t.getEtatSortie())) {
+						return etat;
+					}
+				}
+				
 			}
 			
 		}
 		return null;
 	}
 
-	public Etat fermeture(Etat e) { //permet d'éviter de faire sa propre copie de l'automate
-		Etat copie = new Etat(e);
-		while (copie.contient_epsilon()) { //remplacer par sa transition epsilon tant qu'il y a epsilon
-			copie.fusion(etat_a_fusioner(copie));
-			return copie;
+	public int transition_a_supprimer(Etat e){ //etat a  fusionner avec e
+		for (int i = 0; i < e.getNbrTrans(); i++) {
+			if(e.getTransition().get(i).getLettre() == '*'){
+				return i;
+			}
 		}
-		return e;
+		return 0;
 	}
-	/*
+
+	public Etat fermeture(Etat e ){ //etat à fusionner avec e
+		//Automate old = new Automate(this);
+		Etat copie = e.copie();
+
+		while (copie.contient_epsilon()) { //remplacer par sa transition epsilon tant qu'il y a epsilon
+			int trans = transition_a_supprimer(copie);
+			copie.fusion(etat_a_fusioner(copie));
+			copie.removeTransition(trans);
+			
+			//etat terminal ou non 
+			//on compare le nom et les etats terminaux
+			final int nbrEtatTerm = etatTerm.size();
+
+			for (int i = 0; i < nbrEtatTerm; i++) {
+				for (int j = 0; j < etatTerm.get(i).size(); j++) {
+					if (copie.getNomEtat().contains(etatTerm.get(i).get(j)) && (!etatTerm.contains(copie.getNomEtat()))) {
+						etatTerm.add(copie.getNomEtat());
+					}
+				}
+			}
+
+
+		}
+		return copie;
+	}
+
+	public void triNomEtat(Etat e){
+		//tri à bulle
+		for (int i = e.getNomEtat().size(); i>0; i--) {//tu passes pas dans la boucle d'après 
+			for (int j = 2; j < i; j++) {
+				if (e.getNomEtat().get(j-1)>e.getNomEtat().get(j)) {
+					Integer tmp = e.getNomEtat().get(j-1);
+					e.setNomEtat(j-1, e.getNomEtat().get(j));
+					e.setNomEtat(j, tmp);
+				}
+			}
+		}
+	}
+
 	public void elimination_epsilon(){
+		//remplacer par les fermeture epsilon
 		for (int i = 0; i < nbrEtats; i++) {
 			if (test_fermeture_epsilon(etats.get(i))) {
+				etats.get(i).affichageEtat();//il manque 2 et 6
 				etats.set(i, fermeture(etats.get(i)));
+			
+				//triTransitions(etats.get(i)); //son truc est bisar il dis qu'il y a 0 transition 
+				triNomEtat(etats.get(i));
+			
 			}
 			else{
 				remove_etat(etats.get(i));
 			}
 		}
+		/* for (int i = 0; i < nbrEtats; i++) {
+			if (test_fermeture_epsilon(etats.get(i))) {
+				etats.set(i, fermeture(etats.get(i)));
+			}
+		} */
 	}
 
 	public void determinisation_et_completion_asynchrone(){
 		//si plusieurs entree -> fusion des entrees
 		fusion_entree();
 		elimination_epsilon();
-		//determinisation_et_completion_synchrone();
-		//completion();
-		
+		this.afficherAutomate();
+		//determinisation_et_completion_synchrone();		
 	}
-	*/
+	
 
 	/***** LANGAGE COMPLEMENTAIRE *****/
 	public void automate_complementaire(){
@@ -1289,5 +1353,5 @@ public class Automate {
 		}
 	}
 
-		
+	
 }
