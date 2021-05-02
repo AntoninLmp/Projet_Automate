@@ -72,7 +72,6 @@ public class Utilisation {
 								if (automate.est_un_automate_complet()) {
 									// Deja determinisite et complet
 									System.out.println("\t L'automate est synchrone, deterministe et complet!");
-									//AFDC = automate.clone(); 
 								}else {
 									System.out.println("L'automate n'est pas complet!");
 									automate.completion();

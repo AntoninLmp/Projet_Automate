@@ -625,8 +625,7 @@ public class Automate {
 		return this ;
 	}
 
-	public void fusion_entree2 () {
-		System.out.println("\n------------------------------ FUSION 2 \n") ; 
+	public void fusion_entree2 () { 
 		if (etatInit.size() > 1) {	
 			Etat new_etatI = new Etat() ; 
 
@@ -1289,9 +1288,7 @@ public class Automate {
 				for (int j = 0; j < etats.get(i).getNbrTrans(); j++) {
 					writer.write(nomEnString(etats.get(i).getEtatDepart(j)) + ""+ etats.get(i).getLettre(j)+ ""+ nomEnString(etats.get(i).getEtatFinal(j))+ "\n");
 				} 
-			}			
-			
-			
+			}	
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -1362,9 +1359,6 @@ public class Automate {
 			System.out.println(e) ; 
 		}
 	}
-
-
-	
 
 
 	public void supp_repetition_tab(ArrayList<Integer> tab) {
