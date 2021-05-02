@@ -901,6 +901,7 @@ public class Automate {
 			copie.fusion(etat_a_fusioner(copie));
 			copie.removeTransition(trans);
 			triNomEtat(copie);
+			
 		}
 		return copie;
 	}
@@ -941,6 +942,9 @@ public class Automate {
 		sup.clear();
 
 		//mettre les états terminaux et initiaux
+		//remise à zero
+		etatInit.clear();
+		etatTerm.clear();
 		//initiaux
 		for (int i = 0; i < etats.size(); i++) {
 			for (int j = 0; j < etats.get(i).getNomEtat().size() ; j++) {
@@ -970,7 +974,7 @@ public class Automate {
 		//si plusieurs entree -> fusion des entrees
 		fusion_entree();
 		elimination_epsilon();
-		//determinisation_et_completion_synchrone();		
+		determinisation_et_completion_synchrone();
 	}
 	
 	public void triNomEtat(Etat e){

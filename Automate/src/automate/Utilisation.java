@@ -129,8 +129,8 @@ public class Utilisation {
 		*/
 		
 		Automate a1 = new Automate();	
-		Automate a2 = new Automate();
-		a1.lire_automate_fichier("src/Fichier/A6-34.txt");
+		//Automate a2 = new Automate();
+		a1.lire_automate_fichier("src/Fichier/test_cours_2.txt");
 		/*a2.lire_automate_fichier("src/Fichier/A6-6.txt");
 
 		a1.afficherAutomate();
@@ -175,11 +175,8 @@ public class Utilisation {
 		a1.afficherAutomate(); 
 		//a1.determinisation();
 		//a3.afficherAutomate();
-		a1.determinisation_et_completion_asynchrone() ; 
-		a1.afficherAutomate();
-		for (Etat etat : a1.getEtats()) {
-			etat.affichageEtat();
-		}
+		//a1.determinisation_et_completion_asynchrone() ; 
+		a1.determinisation_et_completion();
 
 
 	}
