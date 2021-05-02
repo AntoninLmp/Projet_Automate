@@ -161,13 +161,14 @@ public class Etat extends Automate {
 	public void fusion(final Etat e){
         // nom
         numeroEtat.addAll(e.getNomEtat());
-
+		
         // transitions
         transition.addAll(e.getTransition());
 
         // nombre de transition
         nbrTrans = transition.size();
 
+		triNomEtat(e);
 		//renommer les transitions
 		for (Transition transition : transition) {
 			transition.setEtatDepart(numeroEtat);

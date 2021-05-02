@@ -1,5 +1,6 @@
 package automate;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Utilisation {
@@ -175,6 +176,11 @@ public class Utilisation {
 		//a1.determinisation();
 		//a3.afficherAutomate();
 		a1.determinisation_et_completion_asynchrone() ; 
+		a1.afficherAutomate();
+		for (Etat etat : a1.getEtats()) {
+			etat.affichageEtat();
+		}
+
 
 	}
 }

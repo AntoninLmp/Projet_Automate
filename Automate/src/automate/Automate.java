@@ -849,7 +849,7 @@ public class Automate {
 	public Boolean test_fermeture_epsilon(Etat e1){ 
 		for (Etat e : etats) {
 			for (Transition t : e.getTransition()) {
-				if((t.getEtatSortie().equals(e1.getNomEtat()) && t.getLettre() != '*' && e1.contient_epsilon()) || etatInit.contains(e1.getNomEtat()) ){ //on doit remplacer par sa fermeture epsilon
+				if((t.getEtatSortie().equals(e1.getNomEtat()) && t.getLettre() != '*') || etatInit.contains(e1.getNomEtat()) ){ //on doit remplacer par sa fermeture epsilon
 					return true;
 				}
 			}
@@ -878,7 +878,6 @@ public class Automate {
 						return etat;
 					}
 				}
-				
 			}
 			
 		}
@@ -895,74 +894,107 @@ public class Automate {
 	}
 
 	public Etat fermeture(Etat e ){ //etat à fusionner avec e
-		//Automate old = new Automate(this);
 		Etat copie = e.copie();
 
-		while (copie.contient_epsilon()) { //remplacer par sa transition epsilon tant qu'il y a epsilon
+		while (copie.contient_epsilon()) { //remplacer par sa transition epsilon tant qu'il y a epsilon	
 			int trans = transition_a_supprimer(copie);
 			copie.fusion(etat_a_fusioner(copie));
 			copie.removeTransition(trans);
-			
-			//etat terminal ou non 
-			//on compare le nom et les etats terminaux
-			final int nbrEtatTerm = etatTerm.size();
-
-			for (int i = 0; i < nbrEtatTerm; i++) {
-				for (int j = 0; j < etatTerm.get(i).size(); j++) {
-					if (copie.getNomEtat().contains(etatTerm.get(i).get(j)) && (!etatTerm.contains(copie.getNomEtat()))) {
-						etatTerm.add(copie.getNomEtat());
-					}
-				}
-			}
-
-
+			triNomEtat(copie);
 		}
 		return copie;
 	}
 
-	public void triNomEtat(Etat e){
-		//tri à bulle
-		for (int i = e.getNomEtat().size(); i>0; i--) {//tu passes pas dans la boucle d'après 
-			for (int j = 2; j < i; j++) {
-				if (e.getNomEtat().get(j-1)>e.getNomEtat().get(j)) {
-					Integer tmp = e.getNomEtat().get(j-1);
-					e.setNomEtat(j-1, e.getNomEtat().get(j));
-					e.setNomEtat(j, tmp);
-				}
-			}
-		}
-	}
-
 	public void elimination_epsilon(){
+		//retenir les états a supprimer plus tard 
+		ArrayList<Etat> sup = new ArrayList<>();
+
+		//retenir les etats initiaux et terminaux
+		ArrayList<ArrayList<Integer>> etatInitCopie = new ArrayList<>(etatInit);
+		ArrayList<ArrayList<Integer>> etatTermCopie = new ArrayList<>(etatTerm);
+
 		//remplacer par les fermeture epsilon
 		for (int i = 0; i < nbrEtats; i++) {
 			if (test_fermeture_epsilon(etats.get(i))) {
-				etats.get(i).affichageEtat();//il manque 2 et 6
 				etats.set(i, fermeture(etats.get(i)));
-			
-				//triTransitions(etats.get(i)); //son truc est bisar il dis qu'il y a 0 transition 
-				triNomEtat(etats.get(i));
-			
+				//triTransitions(etats.get(i)); //son truc marche pas j'ai l'impression
 			}
 			else{
-				remove_etat(etats.get(i));
+				sup.add(etats.get(i));
 			}
 		}
-		/* for (int i = 0; i < nbrEtats; i++) {
-			if (test_fermeture_epsilon(etats.get(i))) {
-				etats.set(i, fermeture(etats.get(i)));
+		//supprimer les états non-necessaire
+		for (int i = 0; i < etats.size(); i++) {
+			for (int j = 0; j < sup.size(); j++) {
+				if (etats.get(i).equals(sup.get(j))) {
+					if (etatTerm.contains(etats.get(i).getNomEtat())) {
+						etatTerm.remove(etats.get(i).getNomEtat());
+					}
+					if (etatInit.contains(etats.get(i).getNomEtat())) {
+						etatInit.remove(etats.get(i).getNomEtat());
+					}
+					etats.remove(etats.get(i));
+					nbrEtats--;
+				}
 			}
-		} */
+		}
+		sup.clear();
+
+		//mettre les états terminaux et initiaux
+		//initiaux
+		for (int i = 0; i < etats.size(); i++) {
+			for (int j = 0; j < etats.get(i).getNomEtat().size() ; j++) {
+				for (int j2 = 0; j2 < etatInitCopie.size(); j2++) {
+					if (etatInitCopie.get(j2).contains(etats.get(i).getNomEtat().get(j))) {
+						etatInit.add(etats.get(i).getNomEtat());
+					}
+				}
+			}
+		}
+
+		//terminaux
+		for (int i = 0; i < etats.size(); i++) {
+			for (int j = 0; j < etats.get(i).getNomEtat().size() ; j++) {
+				for (int j2 = 0; j2 < etatTermCopie.size(); j2++) {
+					if (etatTermCopie.get(j2).contains(etats.get(i).getNomEtat().get(j))) {
+						etatTerm.add(etats.get(i).getNomEtat());
+					}
+				}
+			}
+		}
+		
+
 	}
 
 	public void determinisation_et_completion_asynchrone(){
 		//si plusieurs entree -> fusion des entrees
 		fusion_entree();
 		elimination_epsilon();
-		this.afficherAutomate();
 		//determinisation_et_completion_synchrone();		
 	}
 	
+	public void triNomEtat(Etat e){
+		e.getNomEtat().sort(null);
+		/*If the specified comparator is null then all elements in this list must implement the 
+		Comparable interface and the elements' natural ordering should be used.*/
+		
+	}
+
+	public void determinisation_et_completion(){
+        if (est_un_automate_asynchrone()) {
+            determinisation_et_completion_asynchrone();
+        }
+        else{
+            if (est_un_automate_deterministe()) {
+                if (!est_un_automate_complet()) {
+                    completion();
+                }
+            }
+            else{
+                determinisation_et_completion_synchrone();
+            }
+        }
+    }
 
 	/***** LANGAGE COMPLEMENTAIRE *****/
 	public void automate_complementaire(){
@@ -1340,7 +1372,6 @@ public class Automate {
  	}
 
 
-
 	public void supp_repetition_tab(ArrayList<Integer> tab) {
 		if(tab != null && tab.size() >=2 ) {
 			for (int i=0 ; i< tab.size(); i++ ) {
@@ -1352,6 +1383,4 @@ public class Automate {
 			}
 		}
 	}
-
-	
 }
