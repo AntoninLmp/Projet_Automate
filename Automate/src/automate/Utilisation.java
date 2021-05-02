@@ -10,7 +10,7 @@ public class Utilisation {
 		int choix = 0; 
 		boolean premiereVisite = true; 
 		Automate automate = new Automate();
-		String nomFichier;
+		String nomFichier, numeroFichier ="";
 		Scanner scan = new Scanner(System.in);
 		while ( choix != -1) {
 			
@@ -52,7 +52,7 @@ public class Utilisation {
 					do {
 						nomFichier = "A6-";
 						System.out.println("\t Quel automate voulez vous utilisez ?");
-						String numeroFichier = scan.nextLine();
+						numeroFichier = scan.nextLine();
 						nomFichier += numeroFichier + ".txt";
 						automate = new Automate();
 					 	existe = automate.lire_automate_fichier("src/Fichier/"+nomFichier);
@@ -61,27 +61,30 @@ public class Utilisation {
 					System.out.println("\n\n");
 					break;
 				case 2:
-					
-					if (automate.est_un_automate_asynchrone()) {
-						System.out.println("L'automate est asynchrone !");
-						automate.determinisation_et_completion_asynchrone();
-					}else {
-						System.out.println("L'automate est synchrone !");
-						if (automate.est_un_automate_deterministe()) {
-							System.out.println("L'automate est deterministe !");
-							if (automate.est_un_automate_complet()) {
-								// Deja determinisite et complet
-								System.out.println("\t L'automate est synchrone, deterministe et complet!");
-								//AFDC = automate.clone(); 
-							}else {
-								System.out.println("L'automate n'est pas complet!");
-								automate.completion();
-							}
+					if ( automate != null) {
+						if (automate.est_un_automate_asynchrone()) {
+							System.out.println("L'automate est asynchrone !");
+							automate.determinisation_et_completion_asynchrone();
 						}else {
-							automate.determinisation_et_completion_synchrone(); 
+							System.out.println("L'automate est synchrone !");
+							if (automate.est_un_automate_deterministe()) {
+								System.out.println("L'automate est deterministe !");
+								if (automate.est_un_automate_complet()) {
+									// Deja determinisite et complet
+									System.out.println("\t L'automate est synchrone, deterministe et complet!");
+									//AFDC = automate.clone(); 
+								}else {
+									System.out.println("L'automate n'est pas complet!");
+									automate.completion();
+								}
+							}else {
+								automate.determinisation_et_completion_synchrone(); 
+							}
 						}
+						automate.afficherAutomate();
+						automate.ecriture_trace(numeroFichier);
 					}
-					automate.afficherAutomate();
+					
 					break;
 				case 3:
 					if (automate.est_minimal()) {
