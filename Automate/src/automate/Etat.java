@@ -121,12 +121,16 @@ public class Etat extends Automate {
 	}
 	
 	public void affichageNomEtat() {
-		if (numeroEtat != null) {
-			for(int i=0; i< numeroEtat.size(); i++) {
-				if(i > 0) {
+		if(this != null) {
+			for (int i = 0; i < numeroEtat.size(); i++) {
+				if (numeroEtat.get(i) == -1) {
+					System.out.print("P");
+				}else {
+					System.out.print(numeroEtat.get(i));
+				}				
+				if (numeroEtat.size() > 1 && i < numeroEtat.size()-1) {
 					System.out.print(".");
 				}
-				System.out.print(numeroEtat.get(i));
 			}
 		}
 	}

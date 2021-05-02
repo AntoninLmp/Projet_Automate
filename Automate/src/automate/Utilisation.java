@@ -78,7 +78,7 @@ public class Utilisation {
 								automate.completion();
 							}
 						}else {
-							//automate.determinisation_et_completion_synchrone(); 
+							automate.determinisation_et_completion_synchrone(); 
 						}
 					}
 					automate.afficherAutomate();
