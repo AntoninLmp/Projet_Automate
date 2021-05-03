@@ -176,6 +176,10 @@ public class Utilisation {
 		//a1.determinisation();
 		//a3.afficherAutomate();
 		a1.determinisation_et_completion_asynchrone() ; 
+
+		for (Etat etat : a1.getEtats()) {
+			etat.affichageEtat();
+		}
 		//a1.determinisation_et_completion();
 
 

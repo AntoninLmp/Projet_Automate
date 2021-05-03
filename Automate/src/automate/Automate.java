@@ -900,11 +900,11 @@ public class Automate {
 			int trans = transition_a_supprimer(copie);
 			//System.out.println(copie.getTransition().get(trans));
 			copie.fusion(etat_a_fusioner(copie));
-			copie.affichageEtat();
 			copie.removeTransition(trans);
 			triNomEtat(copie);
 			
 		}
+
 		return copie;
 	}
 
@@ -916,17 +916,38 @@ public class Automate {
 		ArrayList<ArrayList<Integer>> etatInitCopie = new ArrayList<>(etatInit);
 		ArrayList<ArrayList<Integer>> etatTermCopie = new ArrayList<>(etatTerm);
 
+		//retenir les etats
+		ArrayList<Etat> etatCopie = new ArrayList<Etat>(etats);
+
 		//remplacer par les fermeture epsilon
 		for (int i = 0; i < nbrEtats; i++) {
 			if (test_fermeture_epsilon(etats.get(i))) {
-				etats.set(i, fermeture(etats.get(i)));
+				etats.set(i, fermeture(etats.get(i)));		
 				//triTransitions(etats.get(i)); //son truc marche pas j'ai l'impression
-				//etats.get(i).affichageEtat();
+				
 			}
 			else{
 				sup.add(etats.get(i));
 			}
 		}
+
+		//regle de 5b6*4 -> 5b4
+		for (Etat etatActuel : etats) {
+			for (Transition transition : etatActuel.getTransition()){
+				for (Etat etat : etatCopie) {
+					if (transition.getEtatSortie().equals(etat.getNomEtat())) {
+						for (Transition trans : etat.getTransition()) {
+							if (trans.getLettre() == '*') {
+								etatActuel.ajoutTransition(etatActuel.getNomEtat(), transition.getLettre(), trans.getEtatSortie());
+								
+							}
+						}
+					}
+					
+				}
+			}
+		}
+
 		//supprimer les états non-necessaire
 		for (int i = 0; i < etats.size(); i++) {
 			for (int j = 0; j < sup.size(); j++) {
