@@ -898,7 +898,9 @@ public class Automate {
 
 		while (copie.contient_epsilon()) { //remplacer par sa transition epsilon tant qu'il y a epsilon	
 			int trans = transition_a_supprimer(copie);
+			//System.out.println(copie.getTransition().get(trans));
 			copie.fusion(etat_a_fusioner(copie));
+			copie.affichageEtat();
 			copie.removeTransition(trans);
 			triNomEtat(copie);
 			
@@ -919,6 +921,7 @@ public class Automate {
 			if (test_fermeture_epsilon(etats.get(i))) {
 				etats.set(i, fermeture(etats.get(i)));
 				//triTransitions(etats.get(i)); //son truc marche pas j'ai l'impression
+				//etats.get(i).affichageEtat();
 			}
 			else{
 				sup.add(etats.get(i));
@@ -966,7 +969,6 @@ public class Automate {
 				}
 			}
 		}
-		
 
 	}
 
@@ -974,7 +976,8 @@ public class Automate {
 		//si plusieurs entree -> fusion des entrees
 		fusion_entree();
 		elimination_epsilon();
-		determinisation_et_completion_synchrone();
+		//determinisation_et_completion_synchrone();
+		afficherAutomate();
 	}
 	
 	public void triNomEtat(Etat e){
