@@ -2,6 +2,7 @@ package automate;
 
 import java.util.Scanner;
 
+
 public class Utilisation {
 	
 
@@ -43,8 +44,6 @@ public class Utilisation {
 			choix = scan.nextInt();
 			scan.nextLine();
 			
-			//Automate AFDC = new Automate(); 
-			//Automate AFDCM = new Automate();
 			
 			switch (choix) {
 				case 1:
@@ -63,31 +62,31 @@ public class Utilisation {
 				case 2:
 					if ( automate != null) {
 						if (automate.est_un_automate_asynchrone()) {
-							System.out.println("L'automate est asynchrone !");
+							System.out.println("\n\n\t ==> L'automate est asynchrone !");
 							automate.determinisation_et_completion_asynchrone();
 						}else {
-							System.out.println("L'automate est synchrone !");
+							System.out.print("\n\n\t ==> L'automate est synchrone ");
 							if (automate.est_un_automate_deterministe()) {
-								System.out.println("L'automate est deterministe !");
+								System.out.print(", deterministe ");
 								if (automate.est_un_automate_complet()) {
 									// Deja determinisite et complet
-									System.out.println("\t L'automate est synchrone, deterministe et complet!");
+									System.out.println(" et complet !");
 								}else {
-									System.out.println("L'automate n'est pas complet!");
 									automate.completion();
 								}
 							}else {
 								automate.determinisation_et_completion_synchrone(); 
 							}
 						}
+						System.out.println("\n");
 						automate.afficherAutomate();
-						automate.ecriture_trace(numeroFichier);
+						System.out.println("\n");
 					}
 					
 					break;
 				case 3:
 					if (automate.est_minimal()) {
-						System.out.println("\t--> L'Automate est deja minimal ");
+						System.out.println("\n\n\t--> L'Automate est deja minimal ");
 					}else {
 						automate.minimisation(true);
 					}
@@ -119,7 +118,9 @@ public class Utilisation {
 					automate.automate_standard();
 					automate.afficherAutomate();
 					break;
-					
+				case 7:
+					automate.ecriture_trace(numeroFichier);
+					break;
 				case -1: 
 					System.out.println("\t Au revoir, a bientot ! ツ");
 					break; 
@@ -128,61 +129,5 @@ public class Utilisation {
 			}
 		}
 		scan.close();
-		
-			
-		
-		/*
-		
-		Automate a1 = new Automate();	
-		Automate a2 = new Automate();
-		a1.lire_automate_fichier("src/Fichier/A6-3.txt");
-		a2.lire_automate_fichier("src/Fichier/A6-6.txt");
-
-		a1.afficherAutomate();
-		a2.afficherAutomate();
-    
-		//a1.completion();
-		//a1.afficherAutomate();
-		//a1.minimisation();
-		
-		//test est_un_automate_asynchrone
-
-		System.out.println("l'automate 1 est asynchrone (false) :"+a1.est_un_automate_asynchrone());
-		System.out.println("l'automate 2 est asynchrone (true) :"+a2.est_un_automate_asynchrone());
-		
-		//TEST DE LA RECONNAISSANCE DE MOT
-		System.out.println("Combien de mot voulez-vous tester?");
-		Scanner scan = new Scanner(System.in);
-		String reponse = scan.nextLine();
-		int nb_mot = Integer.parseInt(reponse);
-		int compteur = 0;
-		
-		while (compteur != nb_mot) {
-			String mot = a1.lire_mot();
-			if (a1.reconnaitre_mot(mot)) {
-				System.out.println("Le mot est reconnu");
-			}
-			else {
-				System.out.println("Le mot n'est pas reconnu");
-			}
-			compteur ++;
-		}	
-
-		//System.out.println("l'automate 1 est asynchrone (false) :"+a1.est_un_automate_asynchrone());
-		//System.out.println("l'automate 2 est asynchrone (true) :"+a2.est_un_automate_asynchrone());
-
-		//determinisation et completion asynchrone
-		//a2.determinisation_et_completion_asynchrone();
-		//a2.afficherAutomate();
-		 
-		//TEST determinisation
-		//a3.est_un_automate_deterministe() ;
-		a1.afficherAutomate(); 
-		//a1.determinisation();
-		//a3.afficherAutomate();
-		a1.determinisation_et_completion() ; 
-		 
-		 
-		 * */
 	}
 }

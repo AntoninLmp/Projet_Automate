@@ -112,6 +112,11 @@ public class Etat extends Automate {
 		transition.remove(t) ; 
 	}
 	
+	public void removeTransition(final int entier) {
+		transition.remove(entier) ; 
+		nbrTrans--; 
+	}
+	
 	// AFFICHAGE NOM ETAT
 	public void afficherEtatDepart(int i) {
 		transition.get(i).afficherEtatDepart();
@@ -151,6 +156,9 @@ public class Etat extends Automate {
         numeroEtat.addAll(e.getNomEtat());
         // transitions
         transition.addAll(e.getTransition());
+        for (int i = 0; i < transition.size(); i++) {
+			transition.get(i).setEtatDepart(numeroEtat);
+		}
         // nombre de transition
         nbrTrans = transition.size();
     }
