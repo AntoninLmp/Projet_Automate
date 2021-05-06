@@ -921,38 +921,19 @@ public class Automate {
 
 		//Si notre nouvel etat va dans un etat compose de plusieurs etat alors on creer ce nouvel etat ex: 0a01 ->0a0,1
 
-		for (Transition trans1 : copie.getTransition()) {
-
-			for (Transition trans2 : copie.geTransitions()) {
-				if (trans1.getLettre() == trans2.getLettre() && !trans1.getEtatSortie().equals(trans2.getEtatSortie())) {
-					ArrayList<Integer> nom1 = new ArrayList<Integer>(trans1.getEtatSortie());
-					ArrayList<Integer> nom2 = new ArrayList<Integer>(trans2.getEtatSortie());
-					
-					copie.affichageEtat();
-
-					trans1.affichageTransition();
-					System.out.println("\n");
-					trans2.affichageTransition();
-					System.out.println("\n");
-
-					nom1.addAll(nom2);
-					nom1.sort(null); //tri par defaut
-					trans1.setEtatSortie(nom1);
-					Transition nouvTrans = new Transition(trans1);
-					copie.ajoutTransition(nouvTrans);
-
-					trans1.affichageTransition();
-					copie.affichageEtat();
-
-					//copie.removeTransition(trans1);
-					//copie.removeTransition(trans2);
-
-					System.out.println("\n\n\n");
+		for (int i = 0; i < copie.getTransition().size(); i++) {
+			ArrayList<Integer> nouvNom = new ArrayList<Integer>(copie.getTransition().get(i).getEtatSortie());
+			//System.out.println("premier i = "+i);
+			for (int j = copie.getTransition().size()-1; j > i; j--) {
+				if (copie.getTransition().get(i).getLettre() == copie.getTransition().get(j).getLettre()) {
+					nouvNom.addAll(copie.getTransition().get(j).getEtatSortie());
+					nouvNom.sort(null);
+					Transition nouvTrans = new Transition(copie.geTransitions().get(i).getEtatDepart(), copie.geTransitions().get(i).getLettre(), nouvNom);
+					copie.setTransition(i, nouvTrans);
+					copie.removeTransition(j);
 				}
 			}
 		}
-
-		
 	
 		return copie;
 	}
@@ -1001,21 +982,31 @@ public class Automate {
 				}
 			}
 		}
+		
+		for (int j = 0; j < nbrEtats; j++) {
+			for (int k = 0; k < a.etats.get(j).getTransition().size(); k++) {
+				Etat nouv = new Etat(a.etats.get(j).getTransition().get(k).getEtatSortie());
+				//si l'état n'est pas dans l'automate alors on le créer on fait sa fermeture epsilon et on l'ajoute a l'automate
+				if (!a.etats.contains(nouv)) {
+					nouv.affichageEtat();
+					//on fusionne d'abbord tous les etats composant nouv dans un nouvel etat
+					Etat nouvEtat = new Etat();
+					for (int i = 0; i < nouv.getNomEtat().size(); i++) {
+						nouvEtat.fusion(etats.get(nouv.getNomEtat().get(i)));
+						
+					}
+					//nouvEtat.affichageEtat();
 
-		//remplacer par les fermeture epsilon
-		/* int i=0;
-		while(!a.est_un_automate_deterministe()) {
-			if (test_fermeture_epsilon(a.etats.get(i))) {
-				etats.set(i, fermeture(etats.get(i)));		
-				//triTransitions(etats.get(i)); //son truc marche pas j'ai l'impression
-				i++;
-				
+					//on réalise la fermeture epsilon de nouv
+					a.etats.add(fermeture(nouvEtat));
+					a.nbrEtats++;
+					a.afficherAutomate();
+				}
 			}
-		} */
-		for (Etat etat: a.etats) {
-			etat.affichageEtat();
 		}
-		System.out.println(a.est_un_automate_deterministe());
+
+
+
 		
 		/* //regle de 5b6*4 -> 5b4
 		for (Etat etatActuel : etats) {
@@ -1053,25 +1044,25 @@ public class Automate {
 
 		/* //mettre les états terminaux et initiaux
 		//remise à zero
-		etatInit.clear();
-		etatTerm.clear();
+		a.etatInit.clear();
+		a.etatTerm.clear();
 		//initiaux
-		for (int i = 0; i < etats.size(); i++) {
-			for (int j = 0; j < etats.get(i).getNomEtat().size() ; j++) {
-				for (int j2 = 0; j2 < etatInitCopie.size(); j2++) {
-					if (etatInitCopie.get(j2).contains(etats.get(i).getNomEtat().get(j))) {
-						etatInit.add(etats.get(i).getNomEtat());
+		for (int i = 0; i < a.etats.size(); i++) {
+			for (int j = 0; j < a.etats.get(i).getNomEtat().size() ; j++) {
+				for (int j2 = 0; j2 < etatInit.size(); j2++) {
+					if (etatInit.get(j2).contains(a.etats.get(i).getNomEtat().get(j))) {
+						a.etatInit.add(a.etats.get(i).getNomEtat());
 					}
 				}
 			}
 		}
 
 		//terminaux
-		for (int i = 0; i < etats.size(); i++) {
-			for (int j = 0; j < etats.get(i).getNomEtat().size() ; j++) {
-				for (int j2 = 0; j2 < etatTermCopie.size(); j2++) {
-					if (etatTermCopie.get(j2).contains(etats.get(i).getNomEtat().get(j))) {
-						etatTerm.add(etats.get(i).getNomEtat());
+		for (int i = 0; i < a.etats.size(); i++) {
+			for (int j = 0; j < a.etats.get(i).getNomEtat().size() ; j++) {
+				for (int j2 = 0; j2 < etatTerm.size(); j2++) {
+					if (etatTerm.get(j2).contains(a.etats.get(i).getNomEtat().get(j))) {
+						a.etatTerm.add(a.etats.get(i).getNomEtat());
 					}
 				}
 			}
