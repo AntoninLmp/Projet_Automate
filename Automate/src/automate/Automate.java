@@ -846,7 +846,7 @@ public class Automate {
 	}
 
 	//savoir si un états doit être remplacer par sa fermeture epsilon
-	public Boolean test_fermeture_epsilon(Etat e1){ 
+	/* public Boolean test_fermeture_epsilon(Etat e1){ 
 		for (Etat e : etats) {
 			for (Transition t : e.getTransition()) {
 				if((t.getEtatSortie().equals(e1.getNomEtat()) && t.getLettre() != '*') || etatInit.contains(e1.getNomEtat()) ){ //on doit remplacer par sa fermeture epsilon
@@ -856,7 +856,7 @@ public class Automate {
 		}
 		return false;
 	}
-
+ */
 
 	public void remove_etat(Etat e){
 		ArrayList<Integer> etat = e.getNomEtat();
@@ -902,36 +902,87 @@ public class Automate {
 			copie.fusion(etat_a_fusioner(copie));
 			copie.removeTransition(trans);
 			triNomEtat(copie);
-			
 		}
 
+		//à verifer si cela marche à chaque fois !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-------VOIR--------!!!!!!!!!!!!!!!!!
+		//regle de 5b6*4 -> 5b4
+		for (Transition transition : copie.getTransition()){
+			for (Etat etat : etats) {
+				if (transition.getEtatSortie().equals(etat.getNomEtat())) {
+					for (Transition transEtat : etat.getTransition()) {
+						if (transEtat.getLettre() == '*') {
+							copie.ajoutTransition(copie.getNomEtat(), transition.getLettre(), transEtat.getEtatSortie());
+								
+						}	
+					}	
+				}		
+			}
+		}
+		
+	
 		return copie;
 	}
 
-	public void elimination_epsilon(){
-		//retenir les états a supprimer plus tard 
-		ArrayList<Etat> sup = new ArrayList<>();
-
-		//retenir les etats initiaux et terminaux
-		ArrayList<ArrayList<Integer>> etatInitCopie = new ArrayList<>(etatInit);
-		ArrayList<ArrayList<Integer>> etatTermCopie = new ArrayList<>(etatTerm);
-
-		//retenir les etats
-		ArrayList<Etat> etatCopie = new ArrayList<Etat>(etats);
-
-		//remplacer par les fermeture epsilon
-		for (int i = 0; i < nbrEtats; i++) {
-			if (test_fermeture_epsilon(etats.get(i))) {
-				etats.set(i, fermeture(etats.get(i)));		
-				//triTransitions(etats.get(i)); //son truc marche pas j'ai l'impression
-				
+	//si un etat de sortie d'un etat dans l'automate n'est pas présent dans l'automate alors on le retourne
+	public int etat_a_traiter(){
+		for (Etat e : etats) {
+			for (Transition t : e.getTransition()){
+				for (Etat e1 : etats) {
+					if (t.getEtatSortie() == e1.getNomEtat()) {
+						;
+					}
+				} 
 			}
-			else{
-				sup.add(etats.get(i));
+		}
+	}
+
+	public void determinisation_et_completion_asynchrone(){
+	 	//si plusieurs entree -> fusion des entrees
+		fusion_entree();
+		
+		//nouvelle automate deterministe
+		Automate a = new Automate();
+
+		//il reconnait le meme alphabet
+		a.alphabet = this.alphabet;
+
+		//nombre etat initialisation
+		a.nbrEtats = 0;
+
+		//etats
+		a.etats = new ArrayList<Etat>();
+
+		//etatInit
+		a.etatInit = new ArrayList<ArrayList<Integer>>();
+		a.etatTerm = new ArrayList<ArrayList<Integer>>();
+
+		//ajout des entrees fusionnees
+		for (Etat e : this.etats) {
+			for (int i = 0; i < this.etatInit.size(); i++) {
+				if (e.getNomEtat().equals(this.etatInit.get(i))) {
+					a.etats.add(e);
+					a.etatInit.add(e.getNomEtat());
+					a.nbrEtats++;
+					a.etats.set(i, fermeture(etats.get(i)));
+				}
 			}
 		}
 
-		//regle de 5b6*4 -> 5b4
+		//remplacer par les fermeture epsilon
+		/* int i=0;
+		while(!a.est_un_automate_deterministe()) {
+			if (test_fermeture_epsilon(a.etats.get(i))) {
+				etats.set(i, fermeture(etats.get(i)));		
+				//triTransitions(etats.get(i)); //son truc marche pas j'ai l'impression
+				i++;
+				
+			}
+		} */
+		for (Etat etat: a.etats) {
+			etat.affichageEtat();
+		}
+		System.out.println(a.est_un_automate_deterministe());
+		/* //regle de 5b6*4 -> 5b4
 		for (Etat etatActuel : etats) {
 			for (Transition transition : etatActuel.getTransition()){
 				for (Etat etat : etatCopie) {
@@ -946,9 +997,9 @@ public class Automate {
 					
 				}
 			}
-		}
+		}*/
 
-		//supprimer les états non-necessaire
+		/* //supprimer les états non-necessaire
 		for (int i = 0; i < etats.size(); i++) {
 			for (int j = 0; j < sup.size(); j++) {
 				if (etats.get(i).equals(sup.get(j))) {
@@ -963,9 +1014,9 @@ public class Automate {
 				}
 			}
 		}
-		sup.clear();
+		sup.clear(); */
 
-		//mettre les états terminaux et initiaux
+		/* //mettre les états terminaux et initiaux
 		//remise à zero
 		etatInit.clear();
 		etatTerm.clear();
@@ -989,16 +1040,12 @@ public class Automate {
 					}
 				}
 			}
-		}
-
-	}
-
-	public void determinisation_et_completion_asynchrone(){
-		//si plusieurs entree -> fusion des entrees
-		fusion_entree();
-		elimination_epsilon();
-		//determinisation_et_completion_synchrone();
+		} */
 		afficherAutomate();
+		
+		a.afficherAutomate();
+		
+
 	}
 	
 	public void triNomEtat(Etat e){
