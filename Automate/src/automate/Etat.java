@@ -99,6 +99,10 @@ public class Etat extends Automate {
 	public ArrayList<Transition> getTransition() {
 		return copie().transition;
 	}
+
+	public void setTransition(int i, Transition t){
+		transition.set(i, t.copie());
+	}
 	
 	
 	// AJOUT TRANSITION

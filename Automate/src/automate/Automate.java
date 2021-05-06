@@ -918,13 +918,47 @@ public class Automate {
 				}		
 			}
 		}
+
+		//Si notre nouvel etat va dans un etat compose de plusieurs etat alors on creer ce nouvel etat ex: 0a01 ->0a0,1
+
+		for (Transition trans1 : copie.getTransition()) {
+
+			for (Transition trans2 : copie.geTransitions()) {
+				if (trans1.getLettre() == trans2.getLettre() && !trans1.getEtatSortie().equals(trans2.getEtatSortie())) {
+					ArrayList<Integer> nom1 = new ArrayList<Integer>(trans1.getEtatSortie());
+					ArrayList<Integer> nom2 = new ArrayList<Integer>(trans2.getEtatSortie());
+					
+					copie.affichageEtat();
+
+					trans1.affichageTransition();
+					System.out.println("\n");
+					trans2.affichageTransition();
+					System.out.println("\n");
+
+					nom1.addAll(nom2);
+					nom1.sort(null); //tri par defaut
+					trans1.setEtatSortie(nom1);
+					Transition nouvTrans = new Transition(trans1);
+					copie.ajoutTransition(nouvTrans);
+
+					trans1.affichageTransition();
+					copie.affichageEtat();
+
+					//copie.removeTransition(trans1);
+					//copie.removeTransition(trans2);
+
+					System.out.println("\n\n\n");
+				}
+			}
+		}
+
 		
 	
 		return copie;
 	}
 
 	//si un etat de sortie d'un etat dans l'automate n'est pas présent dans l'automate alors on le retourne
-	public int etat_a_traiter(){
+	/* public int etat_a_traiter(){
 		for (Etat e : etats) {
 			for (Transition t : e.getTransition()){
 				for (Etat e1 : etats) {
@@ -934,7 +968,7 @@ public class Automate {
 				} 
 			}
 		}
-	}
+	} */
 
 	public void determinisation_et_completion_asynchrone(){
 	 	//si plusieurs entree -> fusion des entrees
@@ -982,6 +1016,7 @@ public class Automate {
 			etat.affichageEtat();
 		}
 		System.out.println(a.est_un_automate_deterministe());
+		
 		/* //regle de 5b6*4 -> 5b4
 		for (Etat etatActuel : etats) {
 			for (Transition transition : etatActuel.getTransition()){
