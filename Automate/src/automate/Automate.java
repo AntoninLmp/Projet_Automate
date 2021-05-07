@@ -1003,7 +1003,7 @@ public class Automate {
 		}
 		
 		
-		for (int j = 0; j < nbrEtats; j++) {
+		for (int j = 0; j < a.nbrEtats; j++) {
 			System.out.println("LE NOMBRE ETAT EST :"+a.nbrEtats + j);
 			for (int k = 0; k < a.etats.get(j).getTransition().size(); k++) {
 				ArrayList<Integer> nom = new ArrayList<Integer>(a.etats.get(j).getTransition().get(k).getEtatSortie());
