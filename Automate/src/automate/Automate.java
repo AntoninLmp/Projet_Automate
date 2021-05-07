@@ -1050,7 +1050,7 @@ public class Automate {
 						for (int x2 = 0; x2 < autoMinimiser.get(k).getNomEtat().size(); x2++) {
 							if (tabEtatEtudier.get(x).contains(autoMinimiser.get(k).getNomEtat().get(x2))) {
 								dejaEtudier = true; 
-								break; 
+								break;
 							}
 						}
 					}									
@@ -1097,12 +1097,24 @@ public class Automate {
 						}
 						if (identique || isole) {
 							// Remplacement des etats par le nom
+							System.out.print(etatsFusion);
 							saveFusion.add(copieDoubleArrayList(etatsFusion));
 							for (int n = 0; n < etatsFusion.size(); n++) {
+								System.out.println("ETUDE DE "+etatsFusion.get(n));
 								for (int n2 = 0; n2 < etats.size(); n2++) {
+									System.out.println("\t-ETAT " + etats.get(n2).getNomEtat());
 									for (int o = 0; o < alphabet.length; o++) {
 										if(comparaisonEtat(etatsFusion.get(n), etats.get(n2).getEtatFinal(o))) {
-											autoMinimiser.get(n2).setEtatFinal(o,newNomArrayList);
+											System.out.println("\t\t -" + etatsFusion.get(n)+ " " + etats.get(n2).getEtatFinal(o) + " "+ newNomArrayList);
+											boolean ajout = true; 
+											for (int i = 0; i < etats.get(n2).getEtatFinal(o).size(); i++) {
+												if (!newNomArrayList.contains(etats.get(n2).getEtatFinal(o).get(i))) {
+													ajout = false;
+												}
+											}
+											if (ajout) {
+												autoMinimiser.get(n2).setEtatFinal(o,newNomArrayList);
+											}
 										}
 									}
 								}
@@ -1189,89 +1201,11 @@ public class Automate {
 							}
 						}
 					}
-					
-					
-					/*
-					for (int i = 0; i < tabEtatEtudier.size(); i++) {
-						// Fusion des nom d'etats
-						int l = 0, m = 0; // l : indice ligne, m : indice de case
-						// Recherche du premier etat 
-						
-						while ( l < autoMinimiser.size() && autoMinimiser.get(l).getNomEtat().get(m) != tabEtatEtudier.get(i).get(0)) {
-							m++; 
-							if(m == autoMinimiser.get(l).getNomEtat().size()) {
-								l++; 
-								m = 0; 
-							}							
-						}
-						if (comparaisonEtat(autoMinimiser.get(l).getNomEtat(), tabEtatEtudier.get(i)) == false) {
-							// REMPLACEMENT des etats Initiaux par le nouvel etat
-							for (int k = 0; k < tabEtatEtudier.get(i).size(); k++) {
-								ArrayList<Integer> etatfusionner = new ArrayList<>();
-								etatfusionner.add(tabEtatEtudier.get(i).get(k));
-								if (etatInit.contains(etatfusionner)) {
-									etatInit.add(tabEtatEtudier.get(i));
-									for (int m2 = 0; m2 < tabEtatEtudier.get(i).size(); m2++) {
-										ArrayList<Integer> nom = new ArrayList<>(); 
-										nom.add(tabEtatEtudier.get(i).get(m2)); 
-										for (int n = 0; n < etatInit.size(); n++) {
-											if (comparaisonEtat(etatInit.get(n), nom)) {
-												etatInit.remove(n);
-											}
-										}
-									}
-								}	
-							}
-							
-							
-							// REMPLACEMENT des etats Terminaux par le nouvel etat
-							for (int k = 0; k < tabEtatEtudier.get(i).size(); k++) {
-								ArrayList<Integer> etatfusionner = new ArrayList<>();
-								etatfusionner.add(tabEtatEtudier.get(i).get(k));
-								if (etatTerm.contains(etatfusionner)) {
-									etatTerm.add(tabEtatEtudier.get(i));
-									for (int m2 = 0; m2 < tabEtatEtudier.get(i).size(); m2++) {
-										ArrayList<Integer> nom = new ArrayList<>(); 
-										nom.add(tabEtatEtudier.get(i).get(m2)); 
-										for (int n = 0; n < etatTerm.size(); n++) {
-											if (comparaisonEtat(etatTerm.get(n), nom)) {
-												etatTerm.remove(n); 
-											}
-										}
-									}
-								}
-							}
-							
-							autoMinimiser.get(l).setNomEtat(tabEtatEtudier.get(i));
-						}				
-						// SUPPRESSION DES ETATS IDENTIQUES
-						for (int m2 = 1; m2 < tabEtatEtudier.get(i).size(); m2++) {
-							l = 0;
-							m = 0;
-							//Changement des etats de depart par le nouvel etat 
-							while (!comparaisonEtat(autoMinimiser.get(l).getNomEtat(), tabEtatEtudier.get(i)) && l < autoMinimiser.size()) {
-								l++;
-							}
-							for (int k = 0; k < autoMinimiser.get(l).getNbrTrans(); k++) {
-								autoMinimiser.get(l).setEtatDepart(k, tabEtatEtudier.get(i));
-							}
-							l = 0;
-							m = 0;
-							// Recherche de l'etat a supprimer
-							while ( l < autoMinimiser.size() && autoMinimiser.get(l).getNomEtat().get(m++) != tabEtatEtudier.get(i).get(m2)) {
-								if ( comparaisonEtat(autoMinimiser.get(l).getNomEtat(), tabEtatEtudier.get(i)) || m == autoMinimiser.get(l).getNomEtat().size()) {
-									l++; 
-									m = 0; 
-								}								
-							}
-							autoMinimiser.remove(l);
-							nbrEtats --; 
-						}*/
-					}					
-				}
-				if (affichage) {
-					tableTransitionAutomate(autoMinimiser);
-				}
+				}					
+			}
+			if (affichage) {
+				tableTransitionAutomate(autoMinimiser);
+			}
 			etats = autoMinimiser;
 		}
 		else {	
