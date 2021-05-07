@@ -1,7 +1,6 @@
 package automate;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.*;
@@ -1464,58 +1463,6 @@ public class Automate {
 	
 	
 	
-	
-	/*----------------------------------------------------------------------------------*/
-	/*****                             ECRITURE TRACES                              *****/
-	/*----------------------------------------------------------------------------------*/
-	
-	public boolean ecriture_trace (String numeroAutomate) {
-		//Ouverture fichier
-		String NomFichier = "A6-trace" + numeroAutomate + ".txt";
-		try {
-			File fichier = new File("src\\Fichier_trace\\", NomFichier);
-			if (fichier.createNewFile()) {
-		        System.out.println("Fichier  creer : " + fichier.getName());
-		    } else {
-		    	System.out.println("Fichier deja existant.");
-		    }		
-			FileWriter writer = new FileWriter(fichier);
-			// AFFICHAGE Nombre de lettres 
-			writer.write(alphabet.length + "\n");
-			// AFFICHAGE nombre etats 
-			writer.write(nbrEtats + "\n");
-			// AFFICHAGE etats initiaux
-			writer.write(etatInit.size() + " ");
-			for (int i = 0; i < etatInit.size(); i++) {
-				writer.write(nomEnString(etatInit.get(i)) + "\n");
-			}
-			// AFFICHAGE etats finaux 
-			writer.write(etatTerm.size() + " ");
-			for (int i = 0; i < etatTerm.size(); i++) {
-				writer.write(nomEnString(etatTerm.get(i)) + "\n");
-			}
-			// AFFICHAGE Nombre de transitions
-			int nombreTransitions = 0;
-			for (int i = 0; i < etats.size(); i++) {
-				nombreTransitions+=etats.get(i).getNbrTrans(); 
-			}
-			writer.write(nombreTransitions+"\n");
-			// AFFICHAGE chaque transition
-			for (int i = 0; i < etats.size(); i++) {
-				for (int j = 0; j < etats.get(i).getNbrTrans(); j++) {
-					writer.write(nomEnString(etats.get(i).getEtatDepart(j)) + ""+ etats.get(i).getLettre(j)+ ""+ nomEnString(etats.get(i).getEtatFinal(j))+ "\n");
-				} 
-			}	
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false; 
-		}
-		return true;
-		
-	}
-
-
 	// Fonction qui transforme une ArrayList en String 
 	public String nomEnString(ArrayList<Integer> a) {
 		if (a != null) {

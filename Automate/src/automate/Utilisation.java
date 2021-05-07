@@ -128,9 +128,6 @@ public class Utilisation {
 					automate.automate_standard();
 					automate.afficherAutomate();
 					break;
-				case 7:
-					automate.ecriture_trace(numeroFichier);
-					break;
 				case -1: 
 					System.out.println("\t Au revoir, a bientot ! ツ");
 					break; 
