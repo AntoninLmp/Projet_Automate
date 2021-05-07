@@ -893,15 +893,28 @@ public class Automate {
 		return 0;
 	}
 
+	public boolean estDansAutomate(ArrayList<Integer> nom){
+		for (Etat e : etats) {
+			if (e.getNomEtat().equals(nom)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public Etat fermeture(Etat e ){ //etat à fusionner avec e
 		Etat copie = e.copie();
 
 		while (copie.contient_epsilon()) { //remplacer par sa transition epsilon tant qu'il y a epsilon	
 			int trans = transition_a_supprimer(copie);
-			//System.out.println(copie.getTransition().get(trans));
-			copie.fusion(etat_a_fusioner(copie));
-			copie.removeTransition(trans);
-			triNomEtat(copie);
+			if (!copie.getTransition().get(trans).etatDejaPresent()) {
+				copie.fusion(etat_a_fusioner(copie));
+				copie.removeTransition(trans);
+				triNomEtat(copie);
+			}
+			else{
+				copie.removeTransition(trans);
+			}
 		}
 
 		//à verifer si cela marche à chaque fois !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-------VOIR--------!!!!!!!!!!!!!!!!!
@@ -910,12 +923,19 @@ public class Automate {
 			for (Etat etat : etats) {
 				if (transition.getEtatSortie().equals(etat.getNomEtat())) {
 					for (Transition transEtat : etat.getTransition()) {
-						if (transEtat.getLettre() == '*') {
+						if (transEtat.getLettre() == '*' && !transEtat.etatDejaPresent()) {
 							copie.ajoutTransition(copie.getNomEtat(), transition.getLettre(), transEtat.getEtatSortie());
-								
 						}	
 					}	
 				}		
+			}
+		}
+
+		for (int i = 0; i < copie.getTransition().size(); i++) {
+			for (int j = copie.getTransition().size()-1; j > i; j--) {
+				if (copie.getTransition().get(i).getLettre() == copie.getTransition().get(j).getLettre() && copie.getTransition().get(i).getEtatSortie().equals(copie.getTransition().get(j).getEtatSortie())) {
+					copie.removeTransition(j);
+				}
 			}
 		}
 
@@ -934,7 +954,6 @@ public class Automate {
 				}
 			}
 		}
-	
 		return copie;
 	}
 
@@ -983,25 +1002,30 @@ public class Automate {
 			}
 		}
 		
+		
 		for (int j = 0; j < nbrEtats; j++) {
+			System.out.println("LE NOMBRE ETAT EST :"+a.nbrEtats + j);
 			for (int k = 0; k < a.etats.get(j).getTransition().size(); k++) {
-				Etat nouv = new Etat(a.etats.get(j).getTransition().get(k).getEtatSortie());
+				ArrayList<Integer> nom = new ArrayList<Integer>(a.etats.get(j).getTransition().get(k).getEtatSortie());
 				//si l'état n'est pas dans l'automate alors on le créer on fait sa fermeture epsilon et on l'ajoute a l'automate
-				if (!a.etats.contains(nouv)) {
-					nouv.affichageEtat();
+				if (!a.estDansAutomate(nom)) {
+					//System.out.println(nom.toString());
 					//on fusionne d'abbord tous les etats composant nouv dans un nouvel etat
 					Etat nouvEtat = new Etat();
-					for (int i = 0; i < nouv.getNomEtat().size(); i++) {
-						nouvEtat.fusion(etats.get(nouv.getNomEtat().get(i)));
-						
+					for (int i = 0; i < nom.size(); i++) {
+						nouvEtat.fusion(etats.get(nom.get(i)));
 					}
+					//enleve les transition inutiles 
 					//nouvEtat.affichageEtat();
+					
 
 					//on réalise la fermeture epsilon de nouv
-					a.etats.add(fermeture(nouvEtat));
 					a.nbrEtats++;
-					a.afficherAutomate();
+					a.etats.add(fermeture(nouvEtat));
+					
 				}
+				System.out.println("LE NOMBRE ETAT EST :"+a.nbrEtats + j);
+				a.afficherAutomate();
 			}
 		}
 
@@ -1067,9 +1091,6 @@ public class Automate {
 				}
 			}
 		} */
-		afficherAutomate();
-		
-		a.afficherAutomate();
 		
 
 	}

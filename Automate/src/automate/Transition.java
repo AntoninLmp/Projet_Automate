@@ -104,5 +104,16 @@ public class Transition implements Comparable<Transition>{
 		System.out.print(lettre);
 		afficherArrayListNom(etatSortie);
 	}
+
+	public boolean etatDejaPresent(){
+		for (int i = 0; i < etatDepart.size(); i++) {
+			for (int j = 0; j < etatSortie.size(); j++) {
+				if (etatDepart.get(i).equals(etatSortie.get(j))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	
 }

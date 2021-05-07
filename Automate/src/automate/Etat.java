@@ -163,7 +163,7 @@ public class Etat extends Automate {
 	}
 
 	public void fusion(final Etat e){
-        // nom
+		// nom
         numeroEtat.addAll(e.getNomEtat());
         // transitions
         transition.addAll(e.getTransition());
@@ -171,10 +171,12 @@ public class Etat extends Automate {
         nbrTrans = transition.size();
 		
 		triNomEtat(this);
+		//si une transition mene vers lui meme en epsilon elle est inutile
 		//renommer les transitions
-		for (Transition transition : transition) {
-			transition.setEtatDepart(numeroEtat);
+		for (Transition t : transition) {
+			t.setEtatDepart(numeroEtat);
 		}
+		
     }
 
 	public Boolean contient_epsilon(){
