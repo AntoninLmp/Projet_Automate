@@ -534,8 +534,14 @@ public class Automate {
 		// ETAPE 1 : Fusion des entrees pour en avoir plus qu'une seule si plus d'une entree
 		fusion_entree2(automateADeterminiser);
 		
+		
 		ArrayList<ArrayList<Integer>> sauvegardeEtatEtudier =  new ArrayList<>(); // Permet de savoir quel etats supprimer
 		sauvegardeEtatEtudier.add(copieSimpleArrayList(automateADeterminiser.etatInit.get(0))); 
+		int index =0;
+		while(!comparaisonEtat(automateADeterminiser.etats.get(index).getNomEtat(), automateADeterminiser.etatInit.get(0)) && ++index < automateADeterminiser.etats.size());
+		for (int i = 0; i < automateADeterminiser.etats.get(index).getNbrTrans(); i++) {
+			sauvegardeEtatEtudier.add(copieSimpleArrayList(automateADeterminiser.etats.get(index).getEtatFinal(i)));
+		}
 		// ETAPE 2 : Determinisation des transitions
 		// AJOUT DES NOUVEAUX ETATS
 		int compteur = 0; 
@@ -661,7 +667,6 @@ public class Automate {
 								if (trouve) {
 									break;
 								}
-								
 							}
 							if (trouve) {
 								break; 
@@ -1538,67 +1543,5 @@ public class Automate {
 				}
 			}
 		}
-	}
-
-
-	/*
-	public boolean compareTransition(final Transition t1, final Transition t2) {
-		if(comparaisonEtat(t1.getEtatDepart(),t2.getEtatDepart()) == false || comparaisonEtat(t1.getEtatSortie(), t2.getEtatSortie())==false  || t1.getLettre()!=t2.getLettre() ) {
-			return false ; 
-		}
-		else {
-			return true ; 
-		}
-	}
-	
-	//trie les transitions dans un etat
-	//ne les classe pas 
-	public void triTransitions(Etat e ) {      
-		if (e.getNomEtat().size() > 1) {
-			//suppression des redondances 
-			for (int k=0 ; k < e.getTransition().size(); k++ ) {
-				for (int l=k+1 ; l <e.getTransition().size(); l++ ) {
-
-					if(e.getTransition().get(k).getLettre()== e.getTransition().get(l).getLettre() && comparaisonEtat(e.getTransition().get(k).getEtatSortie(), e.getTransition().get(l).getEtatSortie())) {
-						e.removeTransition(e.getTransition().get(l));    
-						e.setnbrTrans(e.getNbrTrans()-1) ;
-					}
-				}
-			}
-
-			//etat de depart ->  nomEtat
-			int nombreT = e.getTransition().size() ; 
-			for( int i = 0 ; i< nombreT ; i++) { 
-				Transition t = new Transition(e.getNomEtat() , e.getTransition().get(i).getLettre(), e.getTransition().get(i).getEtatSortie() ) ;
-				e.ajoutTransition(t.getEtatDepart(), t.getLettre(), t.getEtatSortie()); 
-
-			}
-			for( int j = 0 ; j< nombreT ; j++) { 
-				e.removeTransition(e.getTransition().get(0));
-				e.setnbrTrans(e.getNbrTrans() - 1 );
-			}
-		}
-	}
-
-	public void affichertabEtat(ArrayList<Etat> tab) {
-		for (Etat e : tab) {
-			System.out.println(e) ; 
-		}
-	}
-
-
-	public void supp_repetition_tab(ArrayList<Integer> tab) {
-		if(tab != null && tab.size() >=2 ) {
-			for (int i=0 ; i< tab.size(); i++ ) {
-				for (int j=i+1; j<tab.size(); j++ ) {
-					if(tab.get(i) == tab.get(j)) {
-						tab.remove(j) ; 
-					}
-				}
-			}
-		}
-	}
-	*/
-
-		
+	}	
 }
