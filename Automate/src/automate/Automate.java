@@ -534,6 +534,8 @@ public class Automate {
 		// ETAPE 1 : Fusion des entrees pour en avoir plus qu'une seule si plus d'une entree
 		fusion_entree2(automateADeterminiser);
 		
+		ArrayList<ArrayList<Integer>> sauvegardeEtatEtudier =  new ArrayList<>(); // Permet de savoir quel etats supprimer
+		sauvegardeEtatEtudier.add(copieSimpleArrayList(automateADeterminiser.etatInit.get(0))); 
 		// ETAPE 2 : Determinisation des transitions
 		// AJOUT DES NOUVEAUX ETATS
 		int compteur = 0; 
@@ -585,6 +587,7 @@ public class Automate {
 					if (terminal && !automateADeterminiser.etatTerm.contains(nouvelEtat)) {
 						automateADeterminiser.etatTerm.add(new ArrayList<>(nouvelEtat));
 					}
+					sauvegardeEtatEtudier.add(copieSimpleArrayList(nouvelEtat));
 				}
 				compteur = 0; 
 				nouvelEtat.clear();
@@ -632,10 +635,16 @@ public class Automate {
 					automateADeterminiser.etats.get(indiceEtat).ajoutTransition(automateADeterminiser.etats.get(indiceEtat).getNomEtat(), lettre, fusion);
 					// Apparition d'un nouvel etat donc ajout a l'automate  
 					if (x == automateADeterminiser.etats.size()) {
-						System.out.println(automateADeterminiser.etatTerm);
+						sauvegardeEtatEtudier.add(copieSimpleArrayList(fusion));
 						automateADeterminiser.etats.add(new Etat(fusion));
 						automateADeterminiser.nbrEtats++;
 						recuperation_ancienne_transition(automateADeterminiser,automateADeterminiser.etats.size()-1, this);
+						
+						for (int i = 0; i < automateADeterminiser.etats.get(indiceEtat).getNbrTrans(); i++) {
+							sauvegardeEtatEtudier.add(copieSimpleArrayList(automateADeterminiser.etats.get(indiceEtat).getEtatFinal(i)));
+						}
+						
+						
 						boolean trouve = false;
 						for(int a = 0; a < fusion.size(); a++){
 							ArrayList<Integer> nArrayList = new ArrayList<>();
@@ -676,7 +685,7 @@ public class Automate {
 				lettre++;
 			}
 		}
-		
+		System.out.println(sauvegardeEtatEtudier);
 		// ETAPE 5 : Suppresion des etats identiques 
 		for (int i = 0; i < automateADeterminiser.etats.size(); i++) {
 			for (int j = i + 1; j <  automateADeterminiser.etats.size(); j++) {
@@ -690,6 +699,7 @@ public class Automate {
 		//Suppression des etats inutiles 
 		for (int i = 0; i < automateADeterminiser.etats.size(); i++) {
 			boolean present = false; 
+			// SI aucun etat ne va vers cet etat alors il est inutile
 			ArrayList<Integer> nomEtatArrayList = automateADeterminiser.etats.get(i).getNomEtat(); 
 			for (int j = 0; j <  automateADeterminiser.etats.size(); j++) {
 				present = false; 
@@ -707,7 +717,15 @@ public class Automate {
 				automateADeterminiser.etats.remove(i);
 				automateADeterminiser.nbrEtats--; 
 				i--;
-			}					
+			}
+		}
+		
+		for (int i = 0; i < automateADeterminiser.etats.size(); i++) {
+			if(!sauvegardeEtatEtudier.contains(automateADeterminiser.etats.get(i).getNomEtat())) {
+				automateADeterminiser.etats.remove(i); 
+				automateADeterminiser.nbrEtats--; 
+				i--;
+			}
 		}
 		// Suppression des etats terminaux supprimer
 		for (int k = 0; k < automateADeterminiser.etatTerm.size(); k++) {
@@ -1051,7 +1069,7 @@ public class Automate {
 							if (tabEtatEtudier.get(x).contains(autoMinimiser.get(k).getNomEtat().get(x2))) {
 								dejaEtudier = true; 
 								break;
-							}
+							}	
 						}
 					}									
 					if (!dejaEtudier) {
@@ -1097,15 +1115,14 @@ public class Automate {
 						}
 						if (identique || isole) {
 							// Remplacement des etats par le nom
-							System.out.print(etatsFusion);
 							saveFusion.add(copieDoubleArrayList(etatsFusion));
 							for (int n = 0; n < etatsFusion.size(); n++) {
-								System.out.println("ETUDE DE "+etatsFusion.get(n));
+								//System.out.println("ETUDE DE "+etatsFusion.get(n));
 								for (int n2 = 0; n2 < etats.size(); n2++) {
-									System.out.println("\t-ETAT " + etats.get(n2).getNomEtat());
+									//System.out.println("\t-ETAT " + etats.get(n2).getNomEtat());
 									for (int o = 0; o < alphabet.length; o++) {
 										if(comparaisonEtat(etatsFusion.get(n), etats.get(n2).getEtatFinal(o))) {
-											System.out.println("\t\t -" + etatsFusion.get(n)+ " " + etats.get(n2).getEtatFinal(o) + " "+ newNomArrayList);
+											//System.out.println("\t\t -" + etatsFusion.get(n)+ " " + etats.get(n2).getEtatFinal(o) + " "+ newNomArrayList);
 											boolean ajout = true; 
 											for (int i = 0; i < etats.get(n2).getEtatFinal(o).size(); i++) {
 												if (!newNomArrayList.contains(etats.get(n2).getEtatFinal(o).get(i))) {
