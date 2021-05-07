@@ -130,7 +130,7 @@ public class Utilisation {
 		
 		Automate a1 = new Automate();	
 		//Automate a2 = new Automate();
-		a1.lire_automate_fichier("src/Fichier/test_cours_1.txt");
+		a1.lire_automate_fichier("src/Fichier/test_cours_2.txt");
 		/*a2.lire_automate_fichier("src/Fichier/A6-6.txt");
 
 		a1.afficherAutomate();

@@ -105,15 +105,26 @@ public class Transition implements Comparable<Transition>{
 		afficherArrayListNom(etatSortie);
 	}
 
-	public boolean etatDejaPresent(){
-		for (int i = 0; i < etatDepart.size(); i++) {
-			for (int j = 0; j < etatSortie.size(); j++) {
-				if (etatDepart.get(i).equals(etatSortie.get(j))) {
+	//1.2b2 et 2a2 retourne vrai (il ne sert a rien de les fusionner)
+	public boolean etatDejaPresent(Etat e){
+		for (Transition t : e.getTransition()) {
+			for (int i = 0; i < etatSortie.size(); i++) {
+				if (t.getEtatSortie().contains(etatSortie.get(i)) && t.getLettre()==lettre) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
-	
+
+	public boolean estPresent(){
+		for (int i = 0; i < etatDepart.size(); i++) {
+			for (int j = 0; j < etatSortie.size(); j++) {
+				if (etatDepart.get(i).equals(etatSortie.get(j))) { //mettre si lettre egale aussi
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

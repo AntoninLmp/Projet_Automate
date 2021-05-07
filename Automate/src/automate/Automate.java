@@ -902,7 +902,7 @@ public class Automate {
 		return false;
 	}
 
-	public boolean fermable(Etat e){
+	/* public boolean fermable(Etat e){
 		for (Transition t  : e.getTransition()) {
 			for (int i = 0; i < t.getEtatSortie().size(); i++) {
 				for (int j = 0; j < nbrEtats; j++) {
@@ -916,13 +916,13 @@ public class Automate {
 		}
 		return false;
 	}
-
-	public Etat fermeture(Etat e ){ //etat à fusionner avec e
+ */
+	
+ public Etat fermeture(Etat e ){ //etat à fusionner avec e
 		Etat copie = e.copie();
-
 		while (copie.contient_epsilon()) { //remplacer par sa transition epsilon tant qu'il y a epsilon	
 			int trans = transition_a_supprimer(copie);
-			if (!copie.getTransition().get(trans).etatDejaPresent()) {
+			if (!copie.getTransition().get(trans).estPresent()) {
 				copie.fusion(etat_a_fusioner(copie));
 				copie.removeTransition(trans);
 				triNomEtat(copie);
@@ -931,20 +931,36 @@ public class Automate {
 				copie.removeTransition(trans);
 			}
 		}
-
+		
 		//à verifer si cela marche à chaque fois !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-------VOIR--------!!!!!!!!!!!!!!!!!
 		//regle de 5b6*4 -> 5b4
-		for (Transition transition : copie.getTransition()){
+		/* for (Transition transition : copie.getTransition()){
 			for (Etat etat : etats) {
-				if (transition.getEtatSortie().equals(etat.getNomEtat())) {
+				if (transition.getEtatSortie().equals(etat.getNomEtat())) { //QUAND TU TROUVE ETAT DE SORTIE DE TA TRANSITION
 					for (Transition transEtat : etat.getTransition()) {
 						if (transEtat.getLettre() == '*' && !transEtat.etatDejaPresent()) {
 							copie.ajoutTransition(copie.getNomEtat(), transition.getLettre(), transEtat.getEtatSortie());
-						}	
+						}
 					}	
 				}		
 			}
+			transition.affichageTransition();
+		} */
+		//copie.affichageEtat();
+		//2a3 2b1
+		for (int i = 0; i < 5/* copie.getNbrTrans() */; i++) { //pour 2b1
+			for (int j = 0; j < nbrEtats; j++) {
+				if (copie.getTransition().get(i).getEtatSortie().equals(etats.get(j).getNomEtat())) {
+					for (int j2 = 0; j2 < etats.get(j).getNbrTrans(); j2++) { //transition de 1
+						if (etats.get(j).getTransition().get(j2).getLettre() == '*' && !etats.get(j).getTransition().get(j2).etatDejaPresent(copie)) { //transition 1*3
+							copie.ajoutTransition(copie.getNomEtat(), copie.getTransition().get(i).getLettre(), etats.get(j).getTransition().get(j2).getEtatSortie());
+							copie.affichageEtat();
+						}
+					}
+				}
+			}
 		}
+		
 
 		//supprimer les doublons
 		for (int i = 0; i < copie.getTransition().size(); i++) {
@@ -955,11 +971,12 @@ public class Automate {
 			}
 		}
 
-		//Si notre nouvel etat va dans un etat compose de plusieurs etat alors on creer ce nouvel etat ex: 0a01 ->0a0,1
+		//Si notre nouvel etat va dans un etat compose de plusieurs etat alors on creer ce nouvel etat ex: 0a1 0a2 ->0a1,2
 
+		
 		for (int i = 0; i < copie.getTransition().size(); i++) {
 			ArrayList<Integer> nouvNom = new ArrayList<Integer>(copie.getTransition().get(i).getEtatSortie());
-			//System.out.println("premier i = "+i);
+			
 			for (int j = copie.getTransition().size()-1; j > i; j--) {
 				if (copie.getTransition().get(i).getLettre() == copie.getTransition().get(j).getLettre()) {
 					nouvNom.addAll(copie.getTransition().get(j).getEtatSortie());
@@ -970,6 +987,7 @@ public class Automate {
 				}
 			}
 		}
+		
 		return copie;
 	}
 
@@ -1024,26 +1042,16 @@ public class Automate {
 				ArrayList<Integer> nom = new ArrayList<Integer>(a.etats.get(j).getTransition().get(k).getEtatSortie());
 				//si l'état n'est pas dans l'automate alors on le créer on fait sa fermeture epsilon et on l'ajoute a l'automate
 				if (!a.estDansAutomate(nom)) {
-					//System.out.println(nom.toString());
 					//on fusionne d'abbord tous les etats composant nouv dans un nouvel etat
 					Etat nouvEtat = new Etat();
 					for (int i = 0; i < nom.size(); i++) {
 						nouvEtat.fusion(etats.get(nom.get(i)));
 					}
-	
 					//on réalise la fermeture epsilon de nouv
 					nouvEtat = fermeture(nouvEtat);
-					nouvEtat.affichageEtat();
-					System.out.println(fermable(nouvEtat));
-
-					if(fermable(nouvEtat)) {
-						nouvEtat = fermeture(nouvEtat);
-					}
 					
-					nouvEtat.affichageEtat();
 					a.nbrEtats++;
 					a.etats.add(nouvEtat);
-					
 					
 					
 					
