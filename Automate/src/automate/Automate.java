@@ -1031,15 +1031,14 @@ public class Automate {
 
 	//METHODE QUI PERMET A L UTILISATEUR DE SAISIR UN MOT
 	//ET QUI VERIFIE SI LE MOT EST VALIDE
-	public String lire_mot() {
-		
+	public String lire_mot(Scanner s) {
+	
 		//On recupere le mot saisi par l'utilisateur
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Veuillez saisir un mot ('*' reprÃƒÂ©sente le mot vide) :");
-		String mot = scan.nextLine();
+		System.out.println("Veuillez saisir un mot ('*' represente le mot vide) :");
+		String mot = s.nextLine();
 		System.out.println("Vous avez saisi : " + mot);
 		
-		//On vÃƒÂ©rifie si le mot est valide
+		//On verifie si le mot est valide
 		boolean test = true;
 		do {
 			test = true;
@@ -1051,15 +1050,14 @@ public class Automate {
 			}
 			if (test == false) {
 				System.out.println("Le mot n'est pas valide !");
-				System.out.println("Veuillez saisir un mot ('*' reprÃƒÂ©sente le mot vide) :");
-				mot = scan.nextLine();
+				System.out.println("Veuillez saisir un mot ('*' represente le mot vide) :");
+				mot = s.nextLine();
 				System.out.println("Vous avez saisi : " + mot);
 			}
 			else if (test == true) {
 				System.out.println("Le mot est valide");
 			}
 		}while(test == false);
-		scan.close();
 		return mot;
 	}
 	
@@ -1089,28 +1087,40 @@ public class Automate {
 		return trans;
 	}
 	
+	
 	//METHODE QUI DETERMINE SI UN MOT EST RECONNU OU NON PAR UN AUTOMMATE DETERMINISTE COMPLET
 	public boolean reconnaitre_mot(String mot){
-		int compteur = 1;
-		Etat etat_courant = etatCorrespondant(etatInit.get(0));
-		char symbole_courant = mot.charAt(0);
-		Transition trans = etat_courant.getTransition().get(0);
 		
-		//On parcourt l'automate dÃƒÂ©terministe complet en prenant les lettres du mot une ÃƒÂ  une 
-		while (compteur != mot.length()) {
+		if (mot.equals("*")) {
+			for(int i=0 ; i<etatTerm.size() ; i++) {
+				if(comparaisonEtat(etatInit.get(0),etatTerm.get(i))) {
+					return true;
+				}
+			}
+			return false;
+		}
+		else {
+			int compteur = 1;
+			Etat etat_courant = etatCorrespondant(etatInit.get(0));
+			char symbole_courant = mot.charAt(0);
+			Transition trans = etat_courant.getTransition().get(0);
+			
+			//On parcourt l'automate deterministe complet en prenant les lettres du mot une a une 
+			while (compteur != mot.length()) {
+				trans = getTransitionExistante(etat_courant, symbole_courant);
+				etat_courant = etatCorrespondant(trans.getEtatSortie());
+				symbole_courant = mot.charAt(compteur);
+				compteur ++;
+			}
 			trans = getTransitionExistante(etat_courant, symbole_courant);
 			etat_courant = etatCorrespondant(trans.getEtatSortie());
-			symbole_courant = mot.charAt(compteur);
-			compteur ++;
-		}
-		trans = getTransitionExistante(etat_courant, symbole_courant);
-		etat_courant = etatCorrespondant(trans.getEtatSortie());
-		
-		//On vÃƒÂ©rifie si l'ÃƒÂ©tat final sur lequel on est arrivÃƒÂ© est termianl ou non
-		//Si oui, le mot est reconnu
-		//Sinon, le mot n'est pas reconnu
-		if (estTerminal(etat_courant)) {
-			return true;
+			
+			//On verifie si l'etat final sur lequel on est arrive est termianl ou non
+			//Si oui, le mot est reconnu
+			//Sinon, le mot n'est pas reconnu
+			if (estTerminal(etat_courant)) {
+				return true;
+			}
 		}
 		return false;
 	}
