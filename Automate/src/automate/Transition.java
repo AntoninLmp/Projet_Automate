@@ -3,11 +3,16 @@ package automate;
 import java.util.*;
 
 public class Transition implements Comparable<Transition>{
+	
+	/*----------------------------------------------------------------------------------*/
+	/*****                       DEFINITION DE LA CLASSE TRANSITION                 *****/
+	/*----------------------------------------------------------------------------------*/
+	
 	private ArrayList<Integer> etatDepart; 
 	private char lettre; 
 	private ArrayList<Integer> etatSortie; 
 	
-	// Constructeurs
+	//CONSTRUCTEURS
 	public Transition(final ArrayList<Integer> eD, char let, final ArrayList<Integer> eS) {
 		etatDepart = new ArrayList<Integer>(); 
 		etatSortie = new ArrayList<Integer>();
@@ -15,6 +20,7 @@ public class Transition implements Comparable<Transition>{
 		etatDepart.addAll(eD); 
 		etatSortie.addAll(eS);
 	}
+	
 	public Transition(final int eD, char let, final int eS) {
 		etatDepart = new ArrayList<Integer>(); 
 		etatSortie = new ArrayList<Integer>();
@@ -33,7 +39,7 @@ public class Transition implements Comparable<Transition>{
 		return new Transition(etatDepart,lettre, etatSortie);
 	}
 
-	//Getters et setters
+	//GETTER ET SETTER
 	public ArrayList<Integer> getEtatDepart() { return etatDepart; }
 	public char getLettre() { return lettre; }
 	public ArrayList<Integer> getEtatSortie() { return etatSortie; }
@@ -46,6 +52,8 @@ public class Transition implements Comparable<Transition>{
 		this.etatSortie = copieArraylist(etatS); 
 	}
 	
+	
+	//RETOURNE UNE COPIE D UN ETAT
 	public ArrayList<Integer> copieArraylist(ArrayList<Integer> etat){
 		ArrayList<Integer> copie = new ArrayList<>(); 
 		for (int i = 0; i < etat.size(); i++) {
@@ -55,6 +63,7 @@ public class Transition implements Comparable<Transition>{
 	}
 	
 	
+	//AFFICHAGE
 	public void afficherTransition() {
 		System.out.print(this.toString());
 	}
@@ -64,22 +73,23 @@ public class Transition implements Comparable<Transition>{
 		return "(" + etatDepart + lettre + etatSortie + ")"; 
 	}
 	
-	
-	
+	//COMPARAISON
 	@Override
 	public int compareTo(Transition t) {
 		return this.lettre - t.lettre; 
 	}
 	
 	
-	// AFFICHAGE
-	
+	//AFFICHAGE
 	public void afficherEtatDepart() {
 		afficherArrayListNom(etatDepart);
 	}
+	
+	
 	public void afficherEtatSortie() {
 		afficherArrayListNom(etatSortie);
 	}
+	
 	
 	public void afficherArrayListNom(final ArrayList<Integer> etat) {
 		if(this != null) {
@@ -95,6 +105,8 @@ public class Transition implements Comparable<Transition>{
 			}
 		}
 	}
+	
+	
 	public void affichageTransition() {
 		afficherArrayListNom(etatDepart);
 		System.out.print(lettre);

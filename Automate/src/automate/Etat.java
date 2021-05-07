@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Etat extends Automate {
+	
+	/*----------------------------------------------------------------------------------*/
+	/*****                       DEFINITION DE LA CLASSE ETAT                       *****/
+	/*----------------------------------------------------------------------------------*/
+	
 	private ArrayList<Integer> numeroEtat; // Contient le numero de l'etat
 	private ArrayList<Transition> transition; // Contiendra les transitions ex : 1a1 ou 2c8...
 	private int nbrTrans;
 	
-	// CONSTRUCTEUR 
+	//CONSTRUCTEURS 
 	public Etat(final int nom, final ArrayList<Transition> transition, final int nbrTrans) {
 		this.numeroEtat = new ArrayList<>(); 
 		this.numeroEtat.add(nom); 
@@ -43,7 +48,7 @@ public class Etat extends Automate {
 		this.nbrTrans = 0;
 	}
 	
-	//constructeur de copie
+	//CONSTRUCTEURS DE COPIE
 	public Etat(final Etat e){
 		this(e.numeroEtat, e.transition, e.nbrTrans);
 	}
@@ -61,7 +66,7 @@ public class Etat extends Automate {
 		return "Etat [numeroEtat=" + numeroEtat + ", transition=" + transition + ", nbrTrans=" + nbrTrans + "]";
 	}
 	
-	// getter et setter
+	//GETTER ET SETTER
 	public void setNomEtat(ArrayList<Integer> num) { 
 		numeroEtat.clear();
 		numeroEtat.addAll(num);  
@@ -83,20 +88,18 @@ public class Etat extends Automate {
 	}
 	
 	
-	
 	public ArrayList<Integer> getNomEtat() { 	return numeroEtat; }
 	public int getNbrTrans() { 	return nbrTrans; }
 	public ArrayList<Transition> geTransitions() { return transition; }
 	public ArrayList<Integer> getEtatDepart(final int index) {  	return transition.get(index).getEtatDepart(); }
 	public char getLettre(final int index) { 		return transition.get(index).getLettre(); }
 	public ArrayList<Integer> getEtatFinal(final int index) {		return transition.get(index).getEtatSortie(); }
-	
 	public ArrayList<Transition> getTransition() {
 		return copie().transition;
 	}
 	
 	
-	// AJOUT TRANSITION
+	//AJOUT TRANSITION
 	public void ajoutTransition( final ArrayList<Integer> eD, final char lettre, final ArrayList<Integer> eS) {
 		transition.add( new Transition(eD, lettre, eS));
 		nbrTrans++;
@@ -107,18 +110,21 @@ public class Etat extends Automate {
 		Collections.sort(transition);
 	}
 	
-	//supprimer une transition 
+	//SUPPRIMER UNE TRANSITION 
 	public void removeTransition(final Transition t) {
 		transition.remove(t) ; 
 	}
 	
-	// AFFICHAGE NOM ETAT
+	//AFFICHAGES 
 	public void afficherEtatDepart(int i) {
 		transition.get(i).afficherEtatDepart();
 	}
+	
+	
 	public void afficherEtatSortie(int i) {
 		transition.get(i).afficherEtatSortie();
 	}
+	
 	
 	public void affichageNomEtat() {
 		if (numeroEtat != null) {
@@ -131,7 +137,8 @@ public class Etat extends Automate {
 		}
 	}
   
-  public void affichageEtat() {
+	
+	public void affichageEtat() {
 		if (this != null) {
 			System.out.print("Le nom est " + numeroEtat + " avec "+ nbrTrans +" transitions : ");
 			for (int i = 0; i < transition.size(); i++) {
@@ -142,6 +149,8 @@ public class Etat extends Automate {
 		}
 	}
 
+	
+	//AJOUT D UN ETAT
 	public void fusion(final Etat e){
         // nom
         numeroEtat.addAll(e.getNomEtat());
@@ -151,6 +160,7 @@ public class Etat extends Automate {
         nbrTrans = transition.size();
     }
 
+	//TEST S IL Y A UNE TRANSITION EPSILON
 	public Boolean contient_epsilon(){
 		for (Transition t : transition) {
 			if(t.getLettre() == '*'){

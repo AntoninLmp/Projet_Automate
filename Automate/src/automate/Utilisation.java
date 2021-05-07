@@ -6,20 +6,19 @@ public class Utilisation {
 	
 
 	public static void main(String[] args) {
-
 		int choix = 0; 
 		boolean premiereVisite = true; 
 		Automate automate = new Automate();
 		String nomFichier;
 		Scanner scan = new Scanner(System.in);
+		
+		// AFFICHAGE DU MENU
 		while ( choix != -1) {
-			
-			// AFFICHAGE DU MENU
 			if (premiereVisite) {
 				// ╠ ╣ ═ ╚ ╝ ╬ ╦ ╩ ║ ╔ ╗
-				System.out.println("\t\t ╔══════════════════════════╗");
-				System.out.println("\t\t ║ Bonjour, Bienvenue à toi ║");
-				System.out.println("\t\t ╚══════════════════════════╝\n");
+				System.out.println("\t\t ╔═══════════════════════════╗");
+				System.out.println("\t\t ║ Bonjour, Bienvenue à vous ║");
+				System.out.println("\t\t ╚═══════════════════════════╝\n");
 				premiereVisite = false; 
 			}
 			System.out.println("Veuillez choisir ce que vous desirez faire : ");
@@ -38,15 +37,13 @@ public class Utilisation {
 			System.out.println("\t ╠═════╬═══════════════════════════════╣");
 			System.out.println("\t ║ -1  ║ QUITTER                       ║");
 			System.out.println("\t ╚═════╩═══════════════════════════════╝");
-			
 			System.out.print("Entrer votre choix : ");			
 			choix = scan.nextInt();
 			scan.nextLine();
 			
-			//Automate AFDC = new Automate(); 
-			//Automate AFDCM = new Automate();
-			
 			switch (choix) {
+			
+				//LECTURE AUTOMATE ET AFFICHAGE
 				case 1:
 					boolean existe; 
 					do {
@@ -60,6 +57,8 @@ public class Utilisation {
 					automate.afficherAutomate();
 					System.out.println("\n\n");
 					break;
+					
+				//DETERMINISATION ET COMPLETION
 				case 2:
 					
 					if (automate.est_un_automate_asynchrone()) {
@@ -83,15 +82,19 @@ public class Utilisation {
 					}
 					automate.afficherAutomate();
 					break;
+					
+				//MINIMISATION
 				case 3:
 					if (automate.est_minimal()) {
-						System.out.println("\t--> L'Automate est deja minimal ");
+						System.out.println("\t L'Automate est deja minimal ");
 					}else {
 						automate.minimisation(true);
 					}
 					System.out.println("\n\n");
 					automate.afficherAutomate();
 					break;
+					
+				//RECONNAISSANCE DE MOT
 				case 4:
 					System.out.println("Combien de mot voulez-vous tester?");
 					String reponse = scan.nextLine();
@@ -109,28 +112,32 @@ public class Utilisation {
 						compteur ++;
 					}
 					break;
+				
+				//LANGAGE COMPLEMENTAIRE
 				case 5:
 					automate.automate_complementaire();
 					automate.afficherAutomate();
 					break;
+					
+				//STANDARDISATION
 				case 6:
 					automate.automate_standard();
 					automate.afficherAutomate();
 					break;
 					
+				//QUITTER
 				case -1: 
 					System.out.println("\t Au revoir, a bientot ! ツ");
 					break; 
+					
 				default:
 					break;
 			}
 		}
 		scan.close();
 		
-			
-		
+		//TESTS
 		/*
-		
 		Automate a1 = new Automate();	
 		Automate a2 = new Automate();
 		a1.lire_automate_fichier("src/Fichier/A6-3.txt");
@@ -179,8 +186,6 @@ public class Utilisation {
 		//a1.determinisation();
 		//a3.afficherAutomate();
 		a1.determinisation_et_completion() ; 
-		 
-		 
-		 * */
+		*/
 	}
 }

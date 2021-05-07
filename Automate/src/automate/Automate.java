@@ -8,12 +8,16 @@ import java.util.*;
 import java.util.Collections; 
 
 public class Automate {
+	/*----------------------------------------------------------------------------------*/
+	/*****                          DEFINITION DE LA CLASSE AUTOMATE                *****/
+	/*----------------------------------------------------------------------------------*/
+	
 	static public final int MAX = 26; // On acte qu'un etat ne peut pas avoir plus de 26 transition
-	// Les attributs
+	
+	//ATTRIBUTS
 	private char[] alphabet; // L'alphabet ne changera pas
 	private ArrayList<Etat> etats;
 	private int nbrEtats;
-
 	private ArrayList<ArrayList<Integer>> etatInit;
 	private ArrayList<ArrayList<Integer>> etatTerm;
 
@@ -21,12 +25,12 @@ public class Automate {
 	public Automate() {
 	}
 
+	//AUTRES CONSTRUCTEURS
 	public Automate(final int nbrEtat) {
 		etats = new ArrayList<Etat>();
 		this.nbrEtats = nbrEtat;
 	}
 	
-
 	public Automate(final Automate a){
 		alphabet = a.alphabet;
 		etats = new ArrayList<Etat>(a.etats);
@@ -42,9 +46,10 @@ public class Automate {
 		this.etatTerm = new ArrayList<ArrayList<Integer>>(etatTerm);
 	}
 	
-	
+	//GETTER
 	public ArrayList<Etat> getEtats(){ return etats; } 
 
+	//METHODE QUI TRANSFORME UNE LISTE D ETATS EN UNE DOUBLE ARRAYLIST
 	public ArrayList<ArrayList<Integer>> copieDoubleArrayList (ArrayList<ArrayList<Integer>> etat){
 		if (etat != null) {
 			ArrayList<ArrayList<Integer>> copieEtatInit = new ArrayList<>();
@@ -58,14 +63,12 @@ public class Automate {
 		}
 		return null; 		 
 	}
+
 	
-
-
+	
 	/*----------------------------------------------------------------------------------*/
 	/*****                          AFFICHAGE D'UN AUTOMATE                         *****/
 	/*----------------------------------------------------------------------------------*/
-
-
 
 	/* Affichage comprend :			FONCTION UTILISEE
 	 * - etats qu'il contient 	-> afficherAutomate(), affichertabSimpleArray()
@@ -74,6 +77,8 @@ public class Automate {
 	 * - table de transition 	-> tableTransitionAutomate(), ligneSepration()
 	 */
 
+	
+	//METHODE QUI AFFICHE UN AUTOMATE
 	public void afficherAutomate() {
 		System.out.println("\t\t -- AUTOMATE -- ");
 		System.out.print("\t  - Alphabet { ");
@@ -87,7 +92,6 @@ public class Automate {
 			if (i != etats.size()-1) {System.out.print(", ");}
 		}
 		System.out.println(" }");
-
 		System.out.print("\t  - Etats I = { ");
 		affichertabDoubleArray(etatInit);
 		System.out.println(" }");
@@ -97,7 +101,8 @@ public class Automate {
 		tableTransitionAutomate(etats);
 	}
 
-	// Fonction pour afficher les ArrayLists d'entiers
+	
+	//METHODE POUR AFFICHER LES ARRAYLIST DOUBLES D ETATS
 	public void affichertabDoubleArray(final ArrayList<ArrayList<Integer>> tab) {
 		if (tab != null) {
 			for(int i=0; i<tab.size(); i++) {
@@ -112,6 +117,9 @@ public class Automate {
 			}
 		}
 	}
+	
+	
+	//METHODE POUR AFFICHER LES ARRAYLIST SIMPLES D ETATS
 	public void affichertabSimpleArray(final ArrayList<Integer> tab) {
 		if (tab != null) {
 			for(int i=0; i<tab.size(); i++) {
@@ -125,7 +133,8 @@ public class Automate {
 		}
 	}
 
-	//Fonction pour afficher une tableau de transition
+	
+	//FONCTION QUI AFFICHE LE TABLEAU DE TRANSITION
 	public void tableTransitionAutomate(ArrayList<Etat> etats) {
 		if (etats != null) {
 			
@@ -142,7 +151,7 @@ public class Automate {
 				for(int i=0; i<nbrEtats; i++) { System.out.print(" ");}
 				System.out.print("|");
 			}
-			// Une COLONNE POUR VISUALISER LE MOT VIDE
+			// Une colonne pour visualiser le mot vide
 			for(int i=0; i<nbrEtats-1; i++) { System.out.print(" ");}
 			System.out.print("*");
 			for(int i=0; i<nbrEtats; i++) { System.out.print(" ");}
@@ -158,12 +167,14 @@ public class Automate {
 				System.out.print("\t"); 
 				boolean init = false, term = false;
 				for (int k = 0; k < etatInit.size(); k++) {
+					//Si l'état est initial, on affiche E
 					if (comparaisonEtat(etatInit.get(k), etats.get(i).getNomEtat())) {
 						System.out.print("E");
 						init= true; 
 					}
 				}
 				for (int k = 0; k < etatTerm.size(); k++) {
+					//Si l'état est terminal, on affiche S
 					if (comparaisonEtat(etatTerm.get(k), etats.get(i).getNomEtat())) {
 						System.out.print("S");
 						term = true; 
@@ -255,7 +266,8 @@ public class Automate {
 		}
 	}
 		
-	// Fonction pour afficher une separation dans la table de transition
+	
+	//METHODE POUR AFFICHER UNE SEPARATION DANS LA TABLE DE TRANSITION
 	public void ligneSepration() {
 		System.out.print("\t---------|");
 		for (int i = 0; i < alphabet.length +1 ; i++) {
@@ -266,8 +278,8 @@ public class Automate {
 		}
 		System.out.println();
 	}
-
-
+	
+	
 	
 	/*----------------------------------------------------------------------------------*/
 	/*****                         LECTURE AUTOMATE FICHIER                         *****/
@@ -454,14 +466,19 @@ public class Automate {
 		return true;
 	}
 	
+	
+	
 	/*----------------------------------------------------------------------------------*/
 	/*****                           AUTOMATE ASYNCHRONE                            *****/
 	/*----------------------------------------------------------------------------------*/
 	
+	
+	
+	//METHODE QUI VEIRFIE SI UN AUTOMATE EST ASYNCHRONE
 	public boolean est_un_automate_asynchrone() {
 		for(int i=0 ; i < etats.size() ; i++) {
 				for(int j=0 ; j < etats.get(i).getNbrTrans() ; j++) {
-					if(etats.get(i).getTransition().get(j) != null) { //if there is transition
+					if(etats.get(i).getTransition().get(j) != null) { //s'il y a des transition
 						if(etats.get(i).getTransition().get(j).getLettre() == '*') {
 							etats.get(i).getTransition().get(j).afficherTransition();
 							return true;
@@ -471,14 +488,18 @@ public class Automate {
 			}
 		return false;
 	}
+	
+	
 
 	/*----------------------------------------------------------------------------------*/
-	/*****                         	   DETERMINISATION                              *****/
+	/*****                         DETERMINISATION SYNCHRONE                        *****/
 	/*----------------------------------------------------------------------------------*/
 
+	
+	
+	//METHODE QUI VERIFIE SI UN AUTOMATE EST DETERMINISTE
 	public boolean est_un_automate_deterministe() {  
 		//Vérifier si l’automate synchrone AF est déterministe ou non. Le résultat du test est affiché.
-
 		if(this.est_un_automate_asynchrone()) {
 			System.out.println("L'automate n'est pas deterministe car il est asynchrone"); 
 			return false; 
@@ -493,7 +514,6 @@ public class Automate {
 			for(int i=0 ; i<this.etats.size();i++){
 				//System.out.println("TEST ETAT = " + this.etats.get(i).getNomEtat()); 
 				//System.out.println("TEST TRANSITION  = " +  this.etats.get(i).getNbrTrans()) ; 
-
 				for(int j=0 ; j <this.etats.get(i).getNbrTrans() ; j++ ) {
 					Transition trans1 =  this.etats.get(i).getTransition().get(j);
 					//System.out.println("\nTEST TRANS1 = " + trans1 + "\n") ;
@@ -513,6 +533,7 @@ public class Automate {
 	}
 
 
+	//METHODE QUI DETERMINISE UN AUTOMATE
 	public Automate determinisation() {
 		if(this.est_un_automate_deterministe()==false) {
 			System.out.println("\n\nDETERMINISATION \n") ; 
@@ -635,17 +656,22 @@ public class Automate {
 		}
 	}
 
+	
+	
 	/*----------------------------------------------------------------------------------*/
 	/*****                         		  COMPLETION                                *****/
 	/*----------------------------------------------------------------------------------*/
 
 	
+	
+	//METHODE QUI TEST SI L AUTOMATE EST COMPLET
 	public boolean est_un_automate_complet() {
 		// Verif synchrone et deterministe
 		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
 			boolean bool = true; 
 			for (int a = 0; a < nbrEtats; a++) {
 				int indexTransition =0;
+				//On test a chaque fois si chaque état possède autant de transitions que de lettres dans l'alphabet
 				if(etats.get(a).getNbrTrans() != alphabet.length) {
 					System.out.println("L'Automate n'est pas complet car : ");
 					System.out.print("	Etat "+ etats.get(a).getNomEtat()+" :");
@@ -670,7 +696,8 @@ public class Automate {
 		return false; 
 	}
 	
-	// Completion d'un Automate Finis Complet et Deterministe
+	
+	//COMPLETION D UN AUTOMATE FINI DETERMINISTE
 	public void completion() {
 		// Verification que l'automate est bien synchrone et deterministe pour pouvoir le completer
 		if(this.est_un_automate_deterministe() && !this.est_un_automate_asynchrone()) {
@@ -697,18 +724,26 @@ public class Automate {
 					etats.get(nbrEtats-1).ajoutTransition(-1, alphabet[i], -1);
 				}
 			}
+			else {
+				System.out.println("L'automate est déjà complet!");
+			}
 		}
 	}
 
+	
+	
 	/*----------------------------------------------------------------------------------*/
-	/*****         DETERMINISATION ET COMPLETION SYNCHRONE ET ASYNCHRONE            *****/
+	/*****              DETERMINISATION ET COMPLETION ASYNCHRONE                    *****/
 	/*----------------------------------------------------------------------------------*/
+	
+	
 	
 	public void determinisation_et_completion_synchrone() {
 		this.determinisation() ; 
 		this.completion() ; 
 	}
 
+	
 	public void determinisation_et_completion_asynchrone(){
 		//si plusieurs entree -> fusion des entrees
 		fusion_entree();
@@ -718,6 +753,8 @@ public class Automate {
 		
 	}
 
+	
+	//METHODE QUI FUSIONNE LES ETATS INITIAUX
 	public void fusion_entree(){
 		if (etatInit.size() > 1) {
 			int i=0;
@@ -731,7 +768,8 @@ public class Automate {
 		}
 	}
 
-	//savoir si un etats doit etre remplacer par sa fermeture epsilon
+	
+	//METHODE QUI PERMET DE SAVOIR SI UN ETAT DOIT ETRE REMPLACER PAR SA FERMETURE EPSILON
 	public Boolean test_fermeture_epsilon(Etat e1){ 
 		for (Etat e : etats) {
 			for (Transition t : e.getTransition()) {
@@ -744,6 +782,7 @@ public class Automate {
 	}
 
 
+	//METHODE QUI SUPPRIME UN ETAT DANS TOUTES LES LISTES
 	public void remove_etat(Etat e){
 		ArrayList<Integer> etat = e.getNomEtat();
 		if(etatInit.contains(etat)){
@@ -755,7 +794,9 @@ public class Automate {
 		etats.remove(e);
 		nbrEtats--;
 	}
+	
 
+	
 	public Etat etat_a_fusioner(Etat e){ //etat ÃƒÂ  fusionner avec e
 		for (Transition t : e.getTransition()) {
 			if(t.getLettre() == '*'){
@@ -766,6 +807,8 @@ public class Automate {
 		return null;
 	}
 
+	
+	
 	public Etat fermeture(Etat e) { //permet d'ÃƒÂ©viter de faire sa propre copie de l'automate
 		Etat copie = new Etat(e);
 		while (copie.contient_epsilon()) { //remplacer par sa transition epsilon tant qu'il y a epsilon
@@ -774,6 +817,8 @@ public class Automate {
 		}
 		return e;
 	}
+	
+	
 	public void elimination_epsilon(){
 		for (int i = 0; i < nbrEtats; i++) {
 			if (test_fermeture_epsilon(etats.get(i))) {
@@ -785,6 +830,7 @@ public class Automate {
 		}
 	}
 	
+	//METHODE QUI PERMET DE COMPARER DEUX ETATS ET INDIQUE S IL SONT EGAUX
 	public boolean comparaisonEtat(final ArrayList<Integer> etatAutomate, final ArrayList<Integer> etatComparer) {
 		if(etatComparer != null && etatAutomate != null && etatAutomate.size() == etatComparer.size()) {
 			for (int i = 0; i < etatAutomate.size(); i++) {
@@ -798,7 +844,7 @@ public class Automate {
 	}
 	
 	
-	//METHODE QUI VERIFIE SI UN ETAT EST TERMINAL 
+	//METHODES QUI VERIFIENT SI UN ETAT EST TERMINAL 
 	public boolean estTerminal(final ArrayList<Integer> nomEtat) {
 		if (nomEtat != null) {
 			for (int k2 = 0; k2 < etatTerm.size(); k2++) {
@@ -821,11 +867,13 @@ public class Automate {
 		return false;
 	}
 	
+	
 
 	/*----------------------------------------------------------------------------------*/
 	/*****                         		MINIMISATION                                *****/
 	/*----------------------------------------------------------------------------------*/
 
+	
 	
 	// METHODE QUI VERIFIE QUE L'AUTOMATE N'EST PAS DEJA MINIMAL
 	public boolean est_minimal () {
@@ -836,6 +884,7 @@ public class Automate {
 			ArrayList<ArrayList<Integer>> copieEtatInit = copieDoubleArrayList(etatInit);
 			ArrayList<ArrayList<Integer>> copieEtatTerm = copieDoubleArrayList(etatTerm);
 			
+			//On vérifie si l'automate minimal à le même nombre d'état que l'automate d'origine
 			minimisation(false);
 			if (nbrEtats == save_nbrEtat) {
 				return true; 
@@ -846,10 +895,10 @@ public class Automate {
 		}		
 		return false; 
 	}
+	
 		
-	//Minimisation d'un automate 
+	//METHODE QUI MINIMISE UN AUTOMATE
 	public void minimisation(boolean affichage) {
-		
 		// Pour minimiser un automate il doit etre deterministe et complet
 		if(this.est_un_automate_complet() && this.est_un_automate_deterministe()) {
 			if(affichage) {	System.out.println("\n   - MINIMISATION -"); }
@@ -1011,6 +1060,7 @@ public class Automate {
 		}
 	}
 	
+	
 
 	/*----------------------------------------------------------------------------------*/
 	/*****                       RECONNAISSANCE DE MOTS                             *****/
@@ -1039,7 +1089,7 @@ public class Automate {
 		String mot = scan.nextLine();
 		System.out.println("Vous avez saisi : " + mot);
 		
-		//On vÃƒÂ©rifie si le mot est valide
+		//On verifie si le mot est valide
 		boolean test = true;
 		do {
 			test = true;
@@ -1064,9 +1114,8 @@ public class Automate {
 	}
 	
 	
-	/* METHODE QUI A PARTIR D UNE ARRAYLIST (etatInit et etatTerm) 
-	 * PERMET D OBTENIR L ETAT CORRESPONDANT DANS LA LISTE DE TOUS LES ETATS
-	 */
+	//METHODE QUI A PARTIR D UNE ARRAYLIST (etatInit et etatTerm) 
+	//PERMET D OBTENIR L ETAT CORRESPONDANT DANS LA LISTE DE TOUS LES ETATS
 	public Etat etatCorrespondant(ArrayList<Integer> e){
 		Etat etat_corres = etats.get(0);
 		for(int i=0 ; i<etats.size(); i++) {
@@ -1096,7 +1145,7 @@ public class Automate {
 		char symbole_courant = mot.charAt(0);
 		Transition trans = etat_courant.getTransition().get(0);
 		
-		//On parcourt l'automate dÃƒÂ©terministe complet en prenant les lettres du mot une ÃƒÂ  une 
+		//On parcourt l'automate deterministe complet en prenant les lettres du mot une a une 
 		while (compteur != mot.length()) {
 			trans = getTransitionExistante(etat_courant, symbole_courant);
 			etat_courant = etatCorrespondant(trans.getEtatSortie());
@@ -1106,7 +1155,7 @@ public class Automate {
 		trans = getTransitionExistante(etat_courant, symbole_courant);
 		etat_courant = etatCorrespondant(trans.getEtatSortie());
 		
-		//On vÃƒÂ©rifie si l'ÃƒÂ©tat final sur lequel on est arrivÃƒÂ© est termianl ou non
+		//On verifie si l'etat final sur lequel on est arrive est terminal ou non
 		//Si oui, le mot est reconnu
 		//Sinon, le mot n'est pas reconnu
 		if (estTerminal(etat_courant)) {
@@ -1122,7 +1171,7 @@ public class Automate {
 	/*----------------------------------------------------------------------------------*/
 
   
-  
+	//METHODE QUI PERMET D OBTENIR L AUTOMATE COMPLEMENTAIRE
 	public void automate_complementaire(){
 		if (this != null){
 			if (!this.est_un_automate_deterministe() || !this.est_un_automate_complet()){
@@ -1159,10 +1208,14 @@ public class Automate {
 		}
 	}
 	
+	
+	
 	/*----------------------------------------------------------------------------------*/
 	/*****                             STANDARDISATION                              *****/
 	/*----------------------------------------------------------------------------------*/
 
+	
+	
 	public void automate_standard(){
 		if(this != null){
 			boolean standard = true; 
@@ -1310,6 +1363,6 @@ public class Automate {
 			}
 		}
 	}
-
+	
 		
 }
