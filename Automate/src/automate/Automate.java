@@ -902,6 +902,21 @@ public class Automate {
 		return false;
 	}
 
+	public boolean fermable(Etat e){
+		for (Transition t  : e.getTransition()) {
+			for (int i = 0; i < t.getEtatSortie().size(); i++) {
+				for (int j = 0; j < nbrEtats; j++) {
+					if (etats.get(j).getNomEtat().contains(t.getEtatSortie().get(i))) {
+						if (etats.get(j).contient_epsilon() && !t.etatDejaPresent()) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	public Etat fermeture(Etat e ){ //etat à fusionner avec e
 		Etat copie = e.copie();
 
@@ -931,6 +946,7 @@ public class Automate {
 			}
 		}
 
+		//supprimer les doublons
 		for (int i = 0; i < copie.getTransition().size(); i++) {
 			for (int j = copie.getTransition().size()-1; j > i; j--) {
 				if (copie.getTransition().get(i).getLettre() == copie.getTransition().get(j).getLettre() && copie.getTransition().get(i).getEtatSortie().equals(copie.getTransition().get(j).getEtatSortie())) {
@@ -995,16 +1011,15 @@ public class Automate {
 			for (int i = 0; i < this.etatInit.size(); i++) {
 				if (e.getNomEtat().equals(this.etatInit.get(i))) {
 					a.etats.add(e);
-					a.etatInit.add(e.getNomEtat());
 					a.nbrEtats++;
 					a.etats.set(i, fermeture(etats.get(i)));
+					a.etatInit.add(a.etats.get(0).getNomEtat());
 				}
 			}
 		}
 		
 		
 		for (int j = 0; j < a.nbrEtats; j++) {
-			System.out.println("LE NOMBRE ETAT EST :"+a.nbrEtats + j);
 			for (int k = 0; k < a.etats.get(j).getTransition().size(); k++) {
 				ArrayList<Integer> nom = new ArrayList<Integer>(a.etats.get(j).getTransition().get(k).getEtatSortie());
 				//si l'état n'est pas dans l'automate alors on le créer on fait sa fermeture epsilon et on l'ajoute a l'automate
@@ -1015,83 +1030,43 @@ public class Automate {
 					for (int i = 0; i < nom.size(); i++) {
 						nouvEtat.fusion(etats.get(nom.get(i)));
 					}
-					//enleve les transition inutiles 
-					//nouvEtat.affichageEtat();
-					
-
+	
 					//on réalise la fermeture epsilon de nouv
+					nouvEtat = fermeture(nouvEtat);
+					nouvEtat.affichageEtat();
+					System.out.println(fermable(nouvEtat));
+
+					if(fermable(nouvEtat)) {
+						nouvEtat = fermeture(nouvEtat);
+					}
+					
+					nouvEtat.affichageEtat();
 					a.nbrEtats++;
-					a.etats.add(fermeture(nouvEtat));
+					a.etats.add(nouvEtat);
 					
-				}
-				System.out.println("LE NOMBRE ETAT EST :"+a.nbrEtats + j);
-				a.afficherAutomate();
-			}
-		}
-
-
-
-		
-		/* //regle de 5b6*4 -> 5b4
-		for (Etat etatActuel : etats) {
-			for (Transition transition : etatActuel.getTransition()){
-				for (Etat etat : etatCopie) {
-					if (transition.getEtatSortie().equals(etat.getNomEtat())) {
-						for (Transition trans : etat.getTransition()) {
-							if (trans.getLettre() == '*') {
-								etatActuel.ajoutTransition(etatActuel.getNomEtat(), transition.getLettre(), trans.getEtatSortie());
-								
-							}
-						}
-					}
+					
+					
 					
 				}
 			}
-		}*/
-
-		/* //supprimer les états non-necessaire
-		for (int i = 0; i < etats.size(); i++) {
-			for (int j = 0; j < sup.size(); j++) {
-				if (etats.get(i).equals(sup.get(j))) {
-					if (etatTerm.contains(etats.get(i).getNomEtat())) {
-						etatTerm.remove(etats.get(i).getNomEtat());
-					}
-					if (etatInit.contains(etats.get(i).getNomEtat())) {
-						etatInit.remove(etats.get(i).getNomEtat());
-					}
-					etats.remove(etats.get(i));
-					nbrEtats--;
-				}
-			}
 		}
-		sup.clear(); */
 
-		/* //mettre les états terminaux et initiaux
+	
+
+		//mettre les états terminaux
 		//remise à zero
-		a.etatInit.clear();
 		a.etatTerm.clear();
-		//initiaux
-		for (int i = 0; i < a.etats.size(); i++) {
-			for (int j = 0; j < a.etats.get(i).getNomEtat().size() ; j++) {
-				for (int j2 = 0; j2 < etatInit.size(); j2++) {
-					if (etatInit.get(j2).contains(a.etats.get(i).getNomEtat().get(j))) {
-						a.etatInit.add(a.etats.get(i).getNomEtat());
-					}
-				}
-			}
-		}
-
-		//terminaux
-		for (int i = 0; i < a.etats.size(); i++) {
-			for (int j = 0; j < a.etats.get(i).getNomEtat().size() ; j++) {
-				for (int j2 = 0; j2 < etatTerm.size(); j2++) {
-					if (etatTerm.get(j2).contains(a.etats.get(i).getNomEtat().get(j))) {
+		for (int i = 0; i < a.nbrEtats; i++) {
+			for (int k = 0; k < etatTerm.size(); k++) {
+				for (int j = 0; j < etatTerm.get(k).size(); j++) {
+					if (a.etats.get(i).getNomEtat().contains(etatTerm.get(k).get(j))) {
 						a.etatTerm.add(a.etats.get(i).getNomEtat());
 					}
 				}
 			}
-		} */
+		}
 		
+		a.afficherAutomate();
 
 	}
 	
