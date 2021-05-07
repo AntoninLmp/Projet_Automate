@@ -525,8 +525,7 @@ public class Automate {
 		return true ;
 	}
 	
-	public void determinisation_bis() {
-		System.out.println("\n\n\t ** DETERMINISATION **\n") ; 
+	public void determinisation_bis() {  
 		Automate automateADeterminiser = new Automate(this) ; //on copie l'automate initiale
 		
 		// ETAPE 1 : Fusion des entrees pour en avoir plus qu'une seule si plus d'une entree
@@ -540,7 +539,7 @@ public class Automate {
 			//Creation nouvel etat
 			boolean terminal=false; 
 			ArrayList<Integer> nouvelEtat = new ArrayList<>();
-			lettre = 'a';
+			char lettre = 'a';
 			for (int j = 0; j < alphabet.length; j++) {
 				terminal= false;
 				// On compte le nombre de transition egale a la lettre 
@@ -600,7 +599,7 @@ public class Automate {
 		for (int indiceEtat = 0; indiceEtat < automateADeterminiser.etats.size(); indiceEtat++) {
 			
 			ArrayList<Integer> fusion = new ArrayList<>() ;
-			lettre = 'a';
+			char lettre = 'a';
 			
 			for (int nbrLettre = 0; nbrLettre < alphabet.length; nbrLettre++) {
 				// Creation nouveau nom
@@ -1591,6 +1590,7 @@ public class Automate {
   
 	public void automate_complementaire(){
 		if (this != null){
+			System.out.println("\n\n\t\t----------COMPLEMENTARISATION---------\n") ; 
 			if (!this.est_un_automate_deterministe() || !this.est_un_automate_complet()){
 				System.out.println("\n\n\t ** ERREUR **  : l'automate n'est pas complet et/ou deterministe, le complementaire n'est pas possible\n\n");
 				return; 
