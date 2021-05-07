@@ -51,8 +51,18 @@ public class Automate {
 			for (int i = 0; i < etat.size(); i++) {
 				copieEtatInit.add(new ArrayList<>()); 
 				for (int j = 0; j < etat.get(i).size(); j++) {
-					copieEtatInit.get(i).add(etatInit.get(i).get(j)); 
+					copieEtatInit.get(i).add(etat.get(i).get(j)); 
 				}
+			}
+			return copieEtatInit;
+		}
+		return null; 
+	}
+	public ArrayList<Integer> copieSimpleArrayList (ArrayList<Integer> etat){
+		if (etat != null) {
+			ArrayList<Integer> copieEtatInit = new ArrayList<>();
+			for (int i = 0; i < etat.size(); i++) {
+					copieEtatInit.add(etat.get(i)); 
 			}
 			return copieEtatInit;
 		}
@@ -518,7 +528,7 @@ public class Automate {
 	}
 	
 	public void determinisation_bis() {
-		System.out.println("\n\nDETERMINISATION \n") ; 
+		System.out.println("\n\n\t ** DETERMINISATION **\n") ; 
 		Automate automateADeterminiser = new Automate(this) ; //on copie l'automate initiale
 		
 		// ETAPE 1 : Fusion des entrees pour en avoir plus qu'une seule si plus d'une entree
@@ -529,39 +539,32 @@ public class Automate {
 		int compteur = 0; 
 		for (int i = 0; i < automateADeterminiser.etats.size(); i++) {
 			//Creation nouvel etat
-			boolean terminal=false, initial = false; 
+			boolean terminal=false; 
 			ArrayList<Integer> nouvelEtat = new ArrayList<>();
 			char lettre = 'a';
 			for (int j = 0; j < alphabet.length; j++) {
 				terminal= false;
-				initial = false;
 				// On compte le nombre de transition egale a la lettre 
 				for (int j2 = 0; j2 <automateADeterminiser.etats.get(i).getNbrTrans(); j2++) {
 					if (automateADeterminiser.etats.get(i).getLettre(j2) == lettre) {
 						for (int k = 0; k < automateADeterminiser.etats.get(i).getEtatFinal(j2).size(); k++) {
 							nouvelEtat.add(automateADeterminiser.etats.get(i).getEtatFinal(j2).get(k));
-							System.out.println(automateADeterminiser.etats.get(i).getEtatFinal(j2));
-							if (automateADeterminiser.etatInit.contains(automateADeterminiser.etats.get(i).getEtatFinal(j2))) {
-								System.out.println("INITIAL");
-								initial = true;
-							}if (automateADeterminiser.etatTerm.contains(automateADeterminiser.etats.get(i).getEtatFinal(j2))) {
-								System.out.println("TERMINAL");
+							if (automateADeterminiser.etatTerm.contains(automateADeterminiser.etats.get(i).getEtatFinal(j2))) {
 								terminal = true;
 							}
 						}
+						
+						compteur++; 
 						Collections.sort(nouvelEtat);
 						//Suppression des etats identiques
 						for (int indice = 1; indice < nouvelEtat.size(); indice++) {
 							if (nouvelEtat.get(indice-1) == nouvelEtat.get(indice)) {
 								nouvelEtat.remove(indice);
+								compteur--;
 							}
-						}
-						if (nouvelEtat.size() > 1) {
-							compteur++; 
 						}
 					}
 				}
-				System.out.println(nouvelEtat + "est terminal " + terminal + " ou est initial "+ initial);
 				
 				// Si plusieurs transition vers cette lettre
 				if (compteur > 1) {
@@ -579,10 +582,6 @@ public class Automate {
 					automateADeterminiser.etats.get(i).ajoutTransition(automateADeterminiser.etats.get(i).getNomEtat(), lettre, nouvelEtat);
 					automateADeterminiser.etats.add(new Etat(nouvelEtat));
 					automateADeterminiser.nbrEtats++; 
-					if (initial && !automateADeterminiser.etatInit.contains(nouvelEtat)) {
-						automateADeterminiser.etatInit.add(new ArrayList<>(nouvelEtat));
-					}
-					System.out.println(automateADeterminiser.etatTerm.contains(nouvelEtat));
 					if (terminal && !automateADeterminiser.etatTerm.contains(nouvelEtat)) {
 						automateADeterminiser.etatTerm.add(new ArrayList<>(nouvelEtat));
 					}
@@ -633,15 +632,51 @@ public class Automate {
 					automateADeterminiser.etats.get(indiceEtat).ajoutTransition(automateADeterminiser.etats.get(indiceEtat).getNomEtat(), lettre, fusion);
 					// Apparition d'un nouvel etat donc ajout a l'automate  
 					if (x == automateADeterminiser.etats.size()) {
+						System.out.println(automateADeterminiser.etatTerm);
 						automateADeterminiser.etats.add(new Etat(fusion));
 						automateADeterminiser.nbrEtats++;
 						recuperation_ancienne_transition(automateADeterminiser,automateADeterminiser.etats.size()-1, this);
+						boolean trouve = false;
+						for(int a = 0; a < fusion.size(); a++){
+							ArrayList<Integer> nArrayList = new ArrayList<>();
+							for (int b = 0; b < fusion.size()-a; b++) {
+								nArrayList.add(fusion.get(b));
+								for (int c = 0; c < automateADeterminiser.etats.size(); c++) {
+									if (comparaisonEtat(nArrayList, automateADeterminiser.etats.get(c).getNomEtat()) && estTerminal(automateADeterminiser.etats.get(c).getNomEtat())) {
+										automateADeterminiser.etatTerm.add(copieSimpleArrayList(fusion));
+										trouve = true; 
+										break;
+									}
+								}
+								nArrayList.clear();
+								if (trouve) {
+									break;
+								}
+								
+							}
+							if (trouve) {
+								break; 
+							}else {
+								for (int i = a; i < fusion.size(); i++) {
+									nArrayList.add(fusion.get(i));
+								}
+								for (int c = 0; c < automateADeterminiser.etats.size(); c++) {
+									if (comparaisonEtat(nArrayList, automateADeterminiser.etats.get(c).getNomEtat()) && estTerminal(automateADeterminiser.etats.get(c).getNomEtat())) {
+										automateADeterminiser.etatTerm.add(copieSimpleArrayList(fusion));
+										trouve = true;
+										break;
+									}
+								}
+								nArrayList.clear();
+							}
+						}
 					}
 				}
 				fusion.clear();
 				lettre++;
 			}
 		}
+		
 		// ETAPE 5 : Suppresion des etats identiques 
 		for (int i = 0; i < automateADeterminiser.etats.size(); i++) {
 			for (int j = i + 1; j <  automateADeterminiser.etats.size(); j++) {
@@ -651,6 +686,7 @@ public class Automate {
 				}
 			}
 		}
+		
 		//Suppression des etats inutiles 
 		for (int i = 0; i < automateADeterminiser.etats.size(); i++) {
 			boolean present = false; 
@@ -673,6 +709,23 @@ public class Automate {
 				i--;
 			}					
 		}
+		// Suppression des etats terminaux supprimer
+		for (int k = 0; k < automateADeterminiser.etatTerm.size(); k++) {
+			boolean existe = false; 
+			for (int k2 = 0; k2 < automateADeterminiser.etats.size(); k2++) {
+				if(comparaisonEtat(automateADeterminiser.etatTerm.get(k), automateADeterminiser.etats.get(k2).getNomEtat())) {
+					existe = true; 
+					break; 
+				}
+			}
+			if (!existe) {
+				automateADeterminiser.etatTerm.remove(k);
+				k--;
+			}
+		}
+		SuppressionDouble(automateADeterminiser.etatInit);
+		SuppressionDouble(automateADeterminiser.etatTerm);
+		
 		this.etatInit = automateADeterminiser.etatInit;
 		this.etatTerm = automateADeterminiser.etatTerm;
 		this.nbrEtats = automateADeterminiser.nbrEtats;
@@ -711,125 +764,7 @@ public class Automate {
 		}
 	}
 	
-	/* A SUPP
-	public Automate determinisation() {
-		
-		if(this.est_un_automate_deterministe()==false) {
-			
-			System.out.println("\n\nDETERMINISATION \n") ; 
-			Automate automateInit = new Automate(this) ; //on copie l'automate initiale
-			
-			// ETAPE 1 : FUSION DES ETATS D'ENTREE 
-			//this.fusion_entree2(); 
-
-			System.out.println("\n--------------- AFFICHER AUTOMATE INITIAL APRES FUSION--------------\n") ; 
-			this.afficherAutomate() ; 
-
-			//liste de tous les nouveaux etat + ajout de l'etat entree 
-			ArrayList<Etat> tabEtat = new ArrayList<>() ;     
-			int b = 0 ; 
-			while (!comparaisonEtat(this.etats.get(b).getNomEtat(), this.etatInit.get(0)) ) {
-				b++ ; 
-			}
-			tabEtat.add(this.etats.get(b)); 
-			
-			
-			System.out.println("\n--------------- AFFICHER Etat initial --------------\n") ; 
-			System.out.println(this.etats.get(b)) ; 
-
-			int i = 0 ; 
-			while ( i != tabEtat.size() ) { // i regarde si on a traite tous les etats de la liste 
-				for ( char lettre : this.alphabet) {   
-					//lui c'est que le nom de l'etat
-					ArrayList<Integer> nvEtat = new ArrayList<>() ;    
-
-					// Creation d'un nouvel etat si 
-					for  ( int j=0 ; j<tabEtat.get(i).getNbrTrans(); j++ ){    
-						//on prend toutes les transitions passant par une lettre 
-						if(tabEtat.get(i).getTransition().get(j).getLettre() == lettre ) {
-							for(int k=0 ; k<tabEtat.get(i).getTransition().get(j).getEtatSortie().size() ; k++ ) {    //on sauvegarde l'etat de sortie
-								// CREATION DU NOUVEAU NOM
-								nvEtat.add(tabEtat.get(i).getTransition().get(j).getEtatSortie().get(k)) ;
-								Collections.sort(nvEtat);	  //trier le tableau 
-								supp_repetition_tab(nvEtat) ; //on supprime les numeros redondants
-							}
-						}
-					}	
-					
-					if(nvEtat.size()>=1) {
-						System.out.println("LE NOUVEAU ETAT EST " + nvEtat) ; 
-						//fusion des etats de sortie
-						Etat new_etat = new Etat() ; 
-						for (int n : nvEtat) {
-							//System.out.println("JE CHERCHE L'ETAT " + n + " Dans l'automate initial") ;
-							for(int l = 0 ; l< automateInit.nbrEtats ; l++ ) {
-								if( n == automateInit.etats.get(l).getNomEtat().get(0)) {  //dans l'automate initiale, les etats sont constitue d'un seul nombre
-									Etat etat_int = new Etat(automateInit.etats.get(l));
-									//System.out.println("TROUVE ETAT" + automateInit.etats.get(l)) ; 
-									new_etat.fusion(etat_int);
-								}
-							}
-						}
-						triTransitions(new_etat) ;
-
-						if(nvEtat.size()>1) {
-							Transition t = new Transition(tabEtat.get(i).getNomEtat(), lettre, nvEtat) ; 
-							tabEtat.get(i).ajoutTransition(t.getEtatDepart() , t.getLettre(), t.getEtatSortie());    //ajoute la nouvelle transition qui fusionne les etatTerm
-							for( int j=0 ; j<nvEtat.size(); j++ ) {          //supprime les transitions constituees des etatTerm
-								for (int k =0 ; k<tabEtat.get(i).getTransition().size() ; k++ ) {
-									if (tabEtat.get(i).getTransition().get(k).getEtatSortie().size() == 1 ) {
-										if(nvEtat.get(j) == tabEtat.get(i).getTransition().get(k).getEtatSortie().get(0) && tabEtat.get(i).getTransition().get(k).getLettre() == lettre ){
-											tabEtat.get(i).removeTransition(tabEtat.get(i).getTransition().get(k));
-											tabEtat.get(i).setnbrTrans(tabEtat.get(i).getNbrTrans() - 1 );
-										}
-									}
-								}
-							}
-						}
-
-						//on regarde si le nouveau etat est dans la liste des etats tabEtat, sinon on l'ajoute
-						boolean test = false ; 
-						for ( Etat e : tabEtat) {
-							if (comparaisonEtat(nvEtat, e.getNomEtat())) {
-								test = true ; 
-							}
-						}
-						if (test == false ) {
-							tabEtat.add(new_etat); 
-						}
-					}
-
-				}
-				i++ ; 
-			}
-			System.out.println("\n------------------------------------------------------------ \n") ; 
-			//On redefinit les etats sorties et d'entree
-			this.etatTerm.clear() ; 
-			for(int n = 0 ; n<automateInit.etatTerm.size() ; n ++) {
-				int t = automateInit.etatTerm.get(n).get(0) ; 
-					for (Etat x : tabEtat ) {
-						if (x.getNomEtat().contains(t) && !etatTerm.contains(x.getNomEtat()) ) {
-							this.etatTerm.add(x.getNomEtat()) ; 
-						}
-					}
-			}
-			this.etats.clear() ; 
-			this.etats.addAll(tabEtat) ; 
-			this.nbrEtats = tabEtat.size(); 
-
-			System.out.println("\n-------------------------------AFFICHAGE----------------------------- \n") ; 
-			this.afficherAutomate() ;
-			System.out.println("\n------------------------------FIN DETERMINISATION------------------------------ \n") ; 
-			return this ; 
-		}
-		/*
-		else {
-			System.out.println("L'automate est deterministe") ; 
-			 
-		}
-		return this ;
-	}
-*/
+	
 	public void fusion_entree2 (Automate automate) { 
 		if (automate.etatInit.size() > 1) {	
 			// CREATION NOUVEL ETAT 
@@ -1068,7 +1003,8 @@ public class Automate {
 		
 		// Pour minimiser un automate il doit etre deterministe et complet
 		if(this.est_un_automate_complet() && this.est_un_automate_deterministe()) {
-			if(affichage) {	System.out.println("\n   - MINIMISATION -"); }
+			if(affichage) {	System.out.println("\n\t\t\t- MINIMISATION -"); }
+			
 			// ETAPE 0 : Creation d'une COPIE du tableau d'etats qui pourra etre modifier sans impacter le tableau etats
 			ArrayList<Etat> autoMinimiser = new ArrayList<>(); 
 			for (int i = 0; i < etats.size(); i++) {
@@ -1089,18 +1025,25 @@ public class Automate {
 					}
 				}
 			}
-			
+			if (affichage) {
+				System.out.println("\n\t Transitions vers un etat terminal (1) et non terminal(0)");
+				tableTransitionAutomate(autoMinimiser);
+			}
+						
 			// ETAPE 2: RASSEMBLEMENT DES ETATS SI NECCESSAIRE
 			// Boucle pour autant de fois qu'on foit regrouper le tableau
 			for (int j = 0; j < autoMinimiser.size(); j++) {
 				
 				ArrayList<ArrayList<Integer>> tabEtatEtudier = new ArrayList<>();
+				ArrayList<ArrayList<ArrayList<Integer>>> saveFusion = new ArrayList<>();
 				// Boucle pour parcourir chaque etat. On compare par rapport aux autres etats
 				for (int k = 0; k < autoMinimiser.size() ; k++) {	
 					
-					// Creation du nouveau Nom et ajout du premoer etat 
+					// Creation du nouveau Nom et ajout du premier etat 
 					ArrayList<Integer> newNomArrayList = new ArrayList<>();
+					ArrayList<ArrayList<Integer>> etatsFusion = new ArrayList<>();
 					for (int a = 0; a < autoMinimiser.get(k).getNomEtat().size(); a++) {newNomArrayList.add(autoMinimiser.get(k).getNomEtat().get(a)); }
+					etatsFusion.add(copieSimpleArrayList(newNomArrayList));
 					
 					boolean identique = false, dejaEtudier = false;
 					for (int x = 0; x < tabEtatEtudier.size(); x++) {
@@ -1110,7 +1053,7 @@ public class Automate {
 								break; 
 							}
 						}
-					}
+					}									
 					if (!dejaEtudier) {
 						// On regroupe les etats identiques 
 						boolean isole = true;
@@ -1120,7 +1063,7 @@ public class Automate {
 								// Boucle pour verifier que les etats sont bien identiques
 								for (int i = 0; i < alphabet.length; i++) {
 									if (comparaisonEtat(autoMinimiser.get(k).getEtatFinal(i), autoMinimiser.get(l).getEtatFinal(i)) == false) {
-										break; // Si les 2 transitions ne sont pas identiques ils ne sont identiques
+										break; // Si les 2 transitions ne sont pas identiques 
 									}
 									nombreEtatIdentique++; 
 								}
@@ -1130,41 +1073,130 @@ public class Automate {
 									isole = false;
 									// On ajouter l'etat au nom du nouvel etat
 									for (int a = 0; a < autoMinimiser.get(k).getNomEtat().size(); a++) {newNomArrayList.add(autoMinimiser.get(l).getNomEtat().get(a)); }
+									etatsFusion.add(autoMinimiser.get(l).getNomEtat());
+									// Trie pour avoir le noveau nom dans l'ordre
+									Collections.sort(newNomArrayList);
+									//Suppression des etats identiques
+									for (int i2 = 1; i2 < newNomArrayList.size(); i2++) {
+										if (newNomArrayList.get(i2-1) == newNomArrayList.get(i2)) {
+											newNomArrayList.remove(i2);
+										}
+									}
 								}
 							}
-							if (tabEtatEtudier.contains(newNomArrayList) == false) {
+							boolean etatDejaExistant = false; 
+							for (int i = 0; i < autoMinimiser.size(); i++) {
+								if (comparaisonEtat(autoMinimiser.get(i).getNomEtat(), newNomArrayList)) {
+									etatDejaExistant = true; 
+									break;
+								}
+							}
+							if (tabEtatEtudier.contains(newNomArrayList) == false && etatDejaExistant == false ) {
 								tabEtatEtudier.add(newNomArrayList);
 							}
 						}
 						if (identique || isole) {
 							// Remplacement des etats par le nom
-							for (int i = 0; i < autoMinimiser.size(); i++) {
-								for (int m = 0; m < alphabet.length; m++) {
-									boolean ajout = false; 
-									// Remplacement partout oe il y avait des les anciens etats
-									for (int m2 = 0; m2 < etats.get(i).getEtatFinal(m).size(); m2++) {
-										for (int m3 = 0; m3 < newNomArrayList.size(); m3++) {
-											if (etats.get(i).getEtatFinal(m).get(m2) == newNomArrayList.get(m3)) {
-												autoMinimiser.get(i).setEtatFinal(m,newNomArrayList);
-												ajout = true; 
-											}
-											if(ajout) {
-												break; 
-											}
-										} 
+							saveFusion.add(copieDoubleArrayList(etatsFusion));
+							for (int n = 0; n < etatsFusion.size(); n++) {
+								for (int n2 = 0; n2 < etats.size(); n2++) {
+									for (int o = 0; o < alphabet.length; o++) {
+										if(comparaisonEtat(etatsFusion.get(n), etats.get(n2).getEtatFinal(o))) {
+											autoMinimiser.get(n2).setEtatFinal(o,newNomArrayList);
+										}
 									}
-								} 
+								}
 							}
 						}				
 					}
+					etatsFusion.clear();
 				}
-				// Si on se retrouve e la fin des tours on FUSION les etats identiques
+				// Si on se retrouve a la fin des tours on FUSION les etats identiques
 				if (j == autoMinimiser.size()-1) {
 					// ETAPE 3 : FUSION 	
+					System.out.println(saveFusion);
+					for (int i = 0; i < saveFusion.size(); i++) {
+						// Si < 1 alors plusieurs etats a fusioner
+						if (saveFusion.get(i).size() > 1) {
+							ArrayList<Integer> nomEtatArrayList = new ArrayList<>();
+							for (int k = 0; k < saveFusion.get(i).size(); k++) {
+								for (int k2 = 0; k2 < saveFusion.get(i).get(k).size(); k2++) {
+									nomEtatArrayList.add(saveFusion.get(i).get(k).get(k2));
+									
+								}
+							}
+							// Trie pour avoir le noveau nom dans l'ordre
+							Collections.sort(nomEtatArrayList);
+							//Suppression des etats identiques
+							for (int i2 = 1; i2 < nomEtatArrayList.size(); i2++) {
+								if (nomEtatArrayList.get(i2-1) == nomEtatArrayList.get(i2)) {
+									nomEtatArrayList.remove(i2);
+									i2--;
+								}
+							}
+							boolean present = false;
+							// REMPLACEMENT des etats Initiaux par le nouvel etat
+							for (int k = 0; k < etatInit.size(); k++) {
+								for (int k2 = 0; k2 < saveFusion.get(i).size(); k2++) {
+									System.out.println(etatInit.get(k)+ " " + saveFusion.get(i).get(k2));
+									if(comparaisonEtat(etatInit.get(k), saveFusion.get(i).get(k2))) {
+										etatInit.remove(k);	
+										break;
+									}
+								}if (!present) {
+									etatInit.add(new ArrayList<>(nomEtatArrayList));
+									present = true; 
+								}
+							}
+							
+							present = false;
+							// REMPLACEMENT des etats terminaux par le nouvel etat
+							for (int k = 0; k < etatTerm.size(); k++) {
+								for (int k2 = 0; k2 < saveFusion.get(i).size(); k2++) {
+									if(comparaisonEtat(etatTerm.get(k), saveFusion.get(i).get(k2))) {
+										etatTerm.remove(k);
+										break;
+									}
+								}
+								if (!present) {
+									etatTerm.add(copieSimpleArrayList(nomEtatArrayList));
+									present = true; 
+								}
+							}
+
+							
+							// SUPPRESSION DES ETATS IDENTIQUES
+							for (int k = 0; k < autoMinimiser.size(); k++) {
+								if(comparaisonEtat(autoMinimiser.get(k).getNomEtat(),saveFusion.get(i).get(0))) {
+									// Changement du nom de l etat
+									autoMinimiser.get(k).setNomEtat(nomEtatArrayList);
+									// Changement des noms des etats de depart
+									for (int k2 = 0; k2 < autoMinimiser.get(k).getNbrTrans(); k2++) {
+										autoMinimiser.get(k).setEtatDepart(k2,nomEtatArrayList);
+									}
+									// Suppression des etats identiques
+									for (int k2 = k+1; k2 < autoMinimiser.size(); k2++) {
+										for (int l = 1; l < saveFusion.get(i).size(); l++) {
+											if (comparaisonEtat(autoMinimiser.get(k2).getNomEtat(),saveFusion.get(i).get(l))) {
+												autoMinimiser.remove(k2); 
+												nbrEtats--;
+												k2--; 
+											}	
+										}
+									}
+									tableTransitionAutomate(autoMinimiser);
+								}
+							}
+						}
+					}
+					
+					
+					/*
 					for (int i = 0; i < tabEtatEtudier.size(); i++) {
 						// Fusion des nom d'etats
 						int l = 0, m = 0; // l : indice ligne, m : indice de case
 						// Recherche du premier etat 
+						
 						while ( l < autoMinimiser.size() && autoMinimiser.get(l).getNomEtat().get(m) != tabEtatEtudier.get(i).get(0)) {
 							m++; 
 							if(m == autoMinimiser.get(l).getNomEtat().size()) {
@@ -1172,33 +1204,44 @@ public class Automate {
 								m = 0; 
 							}							
 						}
-						if ( comparaisonEtat(autoMinimiser.get(l).getNomEtat(), tabEtatEtudier.get(i)) == false) {
+						if (comparaisonEtat(autoMinimiser.get(l).getNomEtat(), tabEtatEtudier.get(i)) == false) {
 							// REMPLACEMENT des etats Initiaux par le nouvel etat
-							if (etatInit.contains(autoMinimiser.get(l).getNomEtat())) {
-								etatInit.add(tabEtatEtudier.get(i));
-								for (int m2 = 0; m2 < tabEtatEtudier.get(i).size(); m2++) {
-									ArrayList<Integer> nom = new ArrayList<>(); 
-									nom.add(tabEtatEtudier.get(i).get(m2)); 
-									for (int n = 0; n < etatInit.size(); n++) {
-										if (comparaisonEtat(etatInit.get(n), nom)) {
-											etatInit.remove(n); 
+							for (int k = 0; k < tabEtatEtudier.get(i).size(); k++) {
+								ArrayList<Integer> etatfusionner = new ArrayList<>();
+								etatfusionner.add(tabEtatEtudier.get(i).get(k));
+								if (etatInit.contains(etatfusionner)) {
+									etatInit.add(tabEtatEtudier.get(i));
+									for (int m2 = 0; m2 < tabEtatEtudier.get(i).size(); m2++) {
+										ArrayList<Integer> nom = new ArrayList<>(); 
+										nom.add(tabEtatEtudier.get(i).get(m2)); 
+										for (int n = 0; n < etatInit.size(); n++) {
+											if (comparaisonEtat(etatInit.get(n), nom)) {
+												etatInit.remove(n);
+											}
 										}
 									}
-								}
+								}	
 							}
+							
+							
 							// REMPLACEMENT des etats Terminaux par le nouvel etat
-							if (etatTerm.contains(autoMinimiser.get(l).getNomEtat())) {
-								etatTerm.add(tabEtatEtudier.get(i));
-								for (int m2 = 0; m2 < tabEtatEtudier.get(i).size(); m2++) {
-									ArrayList<Integer> nom = new ArrayList<>(); 
-									nom.add(tabEtatEtudier.get(i).get(m2)); 
-									for (int n = 0; n < etatTerm.size(); n++) {
-										if (comparaisonEtat(etatTerm.get(n), nom)) {
-											etatTerm.remove(n); 
+							for (int k = 0; k < tabEtatEtudier.get(i).size(); k++) {
+								ArrayList<Integer> etatfusionner = new ArrayList<>();
+								etatfusionner.add(tabEtatEtudier.get(i).get(k));
+								if (etatTerm.contains(etatfusionner)) {
+									etatTerm.add(tabEtatEtudier.get(i));
+									for (int m2 = 0; m2 < tabEtatEtudier.get(i).size(); m2++) {
+										ArrayList<Integer> nom = new ArrayList<>(); 
+										nom.add(tabEtatEtudier.get(i).get(m2)); 
+										for (int n = 0; n < etatTerm.size(); n++) {
+											if (comparaisonEtat(etatTerm.get(n), nom)) {
+												etatTerm.remove(n); 
+											}
 										}
 									}
 								}
 							}
+							
 							autoMinimiser.get(l).setNomEtat(tabEtatEtudier.get(i));
 						}				
 						// SUPPRESSION DES ETATS IDENTIQUES
@@ -1223,13 +1266,12 @@ public class Automate {
 							}
 							autoMinimiser.remove(l);
 							nbrEtats --; 
-						}
+						}*/
 					}					
 				}
 				if (affichage) {
 					tableTransitionAutomate(autoMinimiser);
 				}
-			}
 			etats = autoMinimiser;
 		}
 		else {	
@@ -1257,11 +1299,12 @@ public class Automate {
 
 	//METHODE QUI PERMET A L UTILISATEUR DE SAISIR UN MOT
 	//ET QUI VERIFIE SI LE MOT EST VALIDE
+	/*
 	public String lire_mot() {
 		
 		//On recupere le mot saisi par l'utilisateur
 		Scanner scan = new Scanner(System.in);
-		System.out.println("Veuillez saisir un mot ('*' reprÃƒÂ©sente le mot vide) :");
+		System.out.println("Veuillez saisir un mot ('*' represente le mot vide) :");
 		String mot = scan.nextLine();
 		System.out.println("Vous avez saisi : " + mot);
 		
@@ -1287,6 +1330,26 @@ public class Automate {
 		}while(test == false);
 		scan.close();
 		return mot;
+	}*/
+	public void lire_mot(String mot) {
+		
+		//On verifie si le mot est valide
+		boolean test = true;
+		do {
+			test = true;
+			for (int i=0 ; i<mot.length(); i++) {
+				char carac = mot.charAt(i);
+				if (contains(this.alphabet, carac) == false && carac != '*'){
+					test = false;
+				}
+			}
+			if (test == false) {
+				System.out.println("Le mot n'est pas valide !");
+							}
+			else if (test == true) {
+				System.out.println("Le mot est valide");
+			}
+		}while(test == false);
 	}
 	
 	
@@ -1513,7 +1576,18 @@ public class Automate {
 	}
 	
 
-
+	public void SuppressionDouble (ArrayList<ArrayList<Integer>> list) {
+		if (list != null) {
+			for(int a = 0; a < list.size(); a++){
+				for(int b = a+1; b < list.size(); b++){
+					if (comparaisonEtat(list.get(a),  list.get(b))){
+						list.remove(a);
+						a--; 
+					}
+				}
+			}
+		}
+	}
 
 
 	/*

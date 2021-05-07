@@ -11,7 +11,8 @@ public class Utilisation {
 		int choix = 0; 
 		boolean premiereVisite = true; 
 		Automate automate = new Automate();
-		String nomFichier, numeroFichier ="";
+		String nomFichier, numeroFichier ="", reponse="", mot =""; 
+		int compteur = 0, nb_mot = 0;
 		Scanner scan = new Scanner(System.in);
 		while ( choix != -1) {
 			
@@ -45,6 +46,18 @@ public class Utilisation {
 			scan.nextLine();
 			
 			
+			
+			if (choix == 4) {
+				compteur=0;
+				System.out.println("Combien de mot voulez-vous tester?");
+				reponse = scan.nextLine();
+				nb_mot = Integer.parseInt(reponse);
+				//On recupere le mot saisi par l'utilisateur
+				System.out.println("Veuillez saisir un mot ('*' represente le mot vide) :");
+				mot = scan.nextLine();
+				System.out.println("Vous avez saisi : " + mot);
+			}
+			
 			switch (choix) {
 				case 1:
 					boolean existe; 
@@ -72,6 +85,7 @@ public class Utilisation {
 									// Deja determinisite et complet
 									System.out.println(" et complet !");
 								}else {
+									System.out.println("");
 									automate.completion();
 								}
 							}else {
@@ -94,13 +108,9 @@ public class Utilisation {
 					automate.afficherAutomate();
 					break;
 				case 4:
-					System.out.println("Combien de mot voulez-vous tester?");
-					String reponse = scan.nextLine();
-					int nb_mot = Integer.parseInt(reponse);
-					int compteur = 0;
-					
+										
 					while (compteur != nb_mot) {
-						String mot = automate.lire_mot();
+						automate.lire_mot(mot);
 						if (automate.reconnaitre_mot(mot)) {
 							System.out.println("Le mot est reconnu");
 						}
