@@ -67,6 +67,11 @@ public class Etat extends Automate {
 		numeroEtat.addAll(num);  
 	}
 	public void setNomEtat(int num) { 	numeroEtat.set(0, num); }
+
+	public void setNomEtat(int indice, int nom) { 
+		numeroEtat.set(indice, nom); 
+	}
+
 	public void setnbrTrans(int num) { 	nbrTrans = num; }
 	public void setLettre(final int index, final char lettre) {	transition.get(index).setLettre(lettre); }
 	public void setEtatDepart(final int index,final ArrayList<Integer> nom) { 	transition.get(index).setEtatDepart(nom); }
@@ -94,6 +99,10 @@ public class Etat extends Automate {
 	public ArrayList<Transition> getTransition() {
 		return copie().transition;
 	}
+
+	public void setTransition(int i, Transition t){
+		transition.set(i, t.copie());
+	}
 	
 	
 	// AJOUT TRANSITION
@@ -106,10 +115,21 @@ public class Etat extends Automate {
 		nbrTrans++;
 		Collections.sort(transition);
 	}
+
+	public void ajoutTransition( Transition t) {
+		transition.add(new Transition(t));
+		nbrTrans++;
+		Collections.sort(transition);
+	}
 	
 	//supprimer une transition 
 	public void removeTransition(final Transition t) {
 		transition.remove(t) ; 
+		nbrTrans--;
+	}
+	public void removeTransition(final int t) {
+		transition.remove(t) ; 
+		nbrTrans--;
 	}
 	
 	// AFFICHAGE NOM ETAT
@@ -143,12 +163,20 @@ public class Etat extends Automate {
 	}
 
 	public void fusion(final Etat e){
-        // nom
+		// nom
         numeroEtat.addAll(e.getNomEtat());
         // transitions
         transition.addAll(e.getTransition());
         // nombre de transition
         nbrTrans = transition.size();
+		
+		triNomEtat(this);
+		//si une transition mene vers lui meme en epsilon elle est inutile
+		//renommer les transitions
+		for (Transition t : transition) {
+			t.setEtatDepart(numeroEtat);
+		}
+		
     }
 
 	public Boolean contient_epsilon(){
@@ -159,5 +187,26 @@ public class Etat extends Automate {
 		}
 		return false;
 	}
+
+	public int nbrEpsilon(){
+		int nbr = 0;
+		for (Transition t : transition) {
+			if (t.getLettre() == '*') {
+				nbr++;
+			}
+		}
+		return nbr;
+	}
+
+	public boolean estPresent(ArrayList<Integer> nomDeSortie, char lettre){
+		for (Transition t : transition) {
+			if (t.getEtatSortie().equals(nomDeSortie) && lettre == t.getLettre()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 }
 
