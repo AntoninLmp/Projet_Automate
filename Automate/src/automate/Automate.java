@@ -922,7 +922,7 @@ public class Automate {
 		Etat copie = e.copie();
 		while (copie.contient_epsilon()) { //remplacer par sa transition epsilon tant qu'il y a epsilon	
 			int trans = transition_a_supprimer(copie);
-			if (!copie.getTransition().get(trans).estPresent()) {
+			if (!copie.getTransition().get(trans).estIdentique()) {
 				copie.fusion(etat_a_fusioner(copie));
 				copie.removeTransition(trans);
 				triNomEtat(copie);
@@ -946,21 +946,45 @@ public class Automate {
 			}
 			transition.affichageTransition();
 		} */
-		//copie.affichageEtat();
-		//2a3 2b1
-		for (int i = 0; i < 5/* copie.getNbrTrans() */; i++) { //pour 2b1
+		
+		/* for (int i = 0; i < copie.getNbrTrans(); i++) { 
 			for (int j = 0; j < nbrEtats; j++) {
 				if (copie.getTransition().get(i).getEtatSortie().equals(etats.get(j).getNomEtat())) {
-					for (int j2 = 0; j2 < etats.get(j).getNbrTrans(); j2++) { //transition de 1
-						if (etats.get(j).getTransition().get(j2).getLettre() == '*' && !etats.get(j).getTransition().get(j2).etatDejaPresent(copie)) { //transition 1*3
+					for (int j2 = 0; j2 < etats.get(j).getNbrTrans(); j2++) { 
+						System.out.println("pour cet etat : ");
+						copie.affichageEtat();
+						new Transition(copie.getNomEtat(), copie.getTransition().get(i).getLettre(), etats.get(j).getTransition().get(j2).getEtatSortie()).affichageTransition();
+						if (etats.get(j).getTransition().get(j2).getLettre() == '*' && !etats.get(j).getTransition().get(j2).etatDejaPresent(copie) && !copie.getTransition().contains(new Transition(copie.getNomEtat(), copie.getTransition().get(i).getLettre(), etats.get(j).getTransition().get(j2).getEtatSortie()))) { 
+							System.out.println("il faut ajouter cette transition :"+copie.getTransition().get(i).getLettre()+etats.get(j).getTransition().get(j2).getEtatSortie());
 							copie.ajoutTransition(copie.getNomEtat(), copie.getTransition().get(i).getLettre(), etats.get(j).getTransition().get(j2).getEtatSortie());
-							copie.affichageEtat();
+							
+						}
+						
+					}
+				}
+			}
+		} */
+
+		//pour chaque transition de l'état
+		for (int i = 0; i < copie.getNbrTrans(); i++) {
+			//on va voir dans l'automate si l'état de sortie de cette transition mene quelques part en epsilon
+			//cette lettre 
+			for (int j = 0; j < etats.size(); j++) {
+				if (etats.get(j).getNomEtat().equals(copie.getTransition().get(i).getEtatSortie())) {
+					//alons voir si dans l'etat de sortie on trouve une transition epsilon
+					for (int j2 = 0; j2 < etats.get(j).getTransition().size(); j2++) {
+						copie.affichageEtat();
+						System.out.println(etats.get(j).getTransition().get(j2));
+						if (etats.get(j).getTransition().get(j2).getLettre() == '*' && !copie.estPresent(etats.get(j).getTransition().get(j2).getEtatSortie(),copie.getTransition().get(i).getLettre())) {
+							copie.ajoutTransition(copie.getNomEtat(), copie.getTransition().get(i).getLettre(), etats.get(j).getTransition().get(j2).getEtatSortie());
 						}
 					}
 				}
 			}
+
+			
 		}
-		
+		//copie.affichageEtat();
 
 		//supprimer les doublons
 		for (int i = 0; i < copie.getTransition().size(); i++) {
@@ -1052,7 +1076,6 @@ public class Automate {
 					
 					a.nbrEtats++;
 					a.etats.add(nouvEtat);
-					
 					
 					
 				}

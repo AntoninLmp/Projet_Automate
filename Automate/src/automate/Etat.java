@@ -198,6 +198,15 @@ public class Etat extends Automate {
 		return nbr;
 	}
 
+	public boolean estPresent(ArrayList<Integer> nomDeSortie, char lettre){
+		for (Transition t : transition) {
+			if (t.getEtatSortie().equals(nomDeSortie) && lettre == t.getLettre()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 }
 
