@@ -105,7 +105,7 @@ public class Transition implements Comparable<Transition>{
 		afficherArrayListNom(etatSortie);
 	}
 
-	//1.2b2 et 2a2 retourne vrai (il ne sert a rien de les fusionner)
+	//indique si la sortie de la transition est presente dans l etat passe en parametre
 	public boolean etatDejaPresent(Etat e){
 		for (Transition t : e.getTransition()) {
 			if (t.getEtatSortie().equals(etatSortie) && t.getLettre()==lettre ) {
@@ -116,6 +116,7 @@ public class Transition implements Comparable<Transition>{
 		return false;
 	}
 
+	//ex : aba 
 	public boolean estIdentique(){
 		for (int i = 0; i < etatDepart.size(); i++) {
 			for (int j = 0; j < etatSortie.size(); j++) {
