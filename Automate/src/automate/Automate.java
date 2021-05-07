@@ -540,7 +540,7 @@ public class Automate {
 			//Creation nouvel etat
 			boolean terminal=false; 
 			ArrayList<Integer> nouvelEtat = new ArrayList<>();
-			lettre = 'a';
+			char lettre = 'a';
 			for (int j = 0; j < alphabet.length; j++) {
 				terminal= false;
 				// On compte le nombre de transition egale a la lettre 
@@ -600,7 +600,7 @@ public class Automate {
 		for (int indiceEtat = 0; indiceEtat < automateADeterminiser.etats.size(); indiceEtat++) {
 			
 			ArrayList<Integer> fusion = new ArrayList<>() ;
-			lettre = 'a';
+			char lettre = 'a';
 			
 			for (int nbrLettre = 0; nbrLettre < alphabet.length; nbrLettre++) {
 				// Creation nouveau nom
