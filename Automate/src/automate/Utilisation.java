@@ -99,13 +99,13 @@ public class Utilisation {
 					int compteur = 0;
 					
 					while (compteur != nb_mot) {
-						String mot = automate.lire_mot();
-						if (automate.reconnaitre_mot(mot)) {
-							System.out.println("Le mot est reconnu");
-						}
-						else {
-							System.out.println("Le mot n'est pas reconnu");
-						}
+						String mot = automate.lire_mot(scan);
+							if (automate.reconnaitre_mot(mot)) {
+								System.out.println("Le mot est reconnu");
+							}
+							else {
+								System.out.println("Le mot n'est pas reconnu");
+							}
 						compteur ++;
 					}
 					break;
