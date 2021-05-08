@@ -1438,7 +1438,7 @@ public class Automate {
 									identique = true;
 									isole = false;
 									// On ajouter l'etat au nom du nouvel etat
-									for (int a = 0; a < autoMinimiser.get(k).getNomEtat().size(); a++) {newNomArrayList.add(autoMinimiser.get(l).getNomEtat().get(a)); }
+									for (int a = 0; a < autoMinimiser.get(l).getNomEtat().size(); a++) {newNomArrayList.add(autoMinimiser.get(l).getNomEtat().get(a)); }
 									etatsFusion.add(autoMinimiser.get(l).getNomEtat());
 									// Trie pour avoir le noveau nom dans l'ordre
 									Collections.sort(newNomArrayList);
@@ -1511,7 +1511,6 @@ public class Automate {
 							boolean ajout = false;
 							// REMPLACEMENT des etats Initiaux par le nouvel etat
 							for (int k = 0; k < etatInit.size(); k++) {
-								System.out.println(etatInit); 
 								for (int k2 = 0; k2 < saveFusion.get(i).size(); k2++) {
 									if(comparaisonEtat(etatInit.get(k), saveFusion.get(i).get(k2))) {
 										etatInit.remove(k);

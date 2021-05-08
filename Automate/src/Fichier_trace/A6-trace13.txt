@@ -1,3 +1,26 @@
+		 ╔══════════════════════════╗
+		 ║ Bonjour, Bienvenue à toi ║
+		 ╚══════════════════════════╝
+
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 1
+	 Quel automate voulez vous utilisez ?
+13
 		 -- AUTOMATE -- 
 	  - Alphabet { a }
 	  - Etats Q = { 0 , 1 , 2 , 3 , 4 , 5 , 6 , 7  }
@@ -29,6 +52,23 @@
 
 
 
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 2
 
 
 		------DETERMINISATION ET COMPLETION--------
@@ -67,7 +107,23 @@
 	---------|----------------|----------------|
 
 
-
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 3
 
 			- MINIMISATION -
 
@@ -95,7 +151,6 @@
 	---------|----------------|----------------|
 	S      7 | 1              |                |
 	---------|----------------|----------------|
-[[1]]
 
 		╔══════════════════════════╗ 
 		║    TABLE DE TRANSITION   ║
@@ -116,7 +171,7 @@
 	  - Alphabet { a }
 	  - Etats Q = { 0.3.4.5.6.7 , 1 , 2  }
 	  - Etats I = { 1 }
-	  - Etats T = { 4, 6, 0, 0.3.4.5.6.7 }
+	  - Etats T = { 0, 0.3.4.5.6.7 }
 
 		╔══════════════════════════╗ 
 		║    TABLE DE TRANSITION   ║
@@ -130,8 +185,92 @@
 	---------|------|------|
 	       2 | 0.3.4.5.6.7|      |
 	---------|------|------|
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 4
+Combien de mot voulez-vous tester?
+2
+Veuillez saisir un mot ('*' represente le mot vide) :
+aa
+Vous avez saisi : aa
+Le mot est valide
+Le mot est reconnu
+Veuillez saisir un mot ('*' represente le mot vide) :
+aaa
+Vous avez saisi : aaa
+Le mot est valide
+Le mot est reconnu
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 6
 
 
+	 ** RESULTAT ** L'automate est deja standard !
+
+
+		 -- AUTOMATE -- 
+	  - Alphabet { a }
+	  - Etats Q = { 0.3.4.5.6.7 , 1 , 2  }
+	  - Etats I = { 1 }
+	  - Etats T = { 0, 0.3.4.5.6.7 }
+
+		╔══════════════════════════╗ 
+		║    TABLE DE TRANSITION   ║
+		╚══════════════════════════╝   
+
+	         |  a   |  *   |
+	---------|------|------|
+	S0.3.4.5.6.7 | 0.3.4.5.6.7|      |
+	---------|------|------|
+	E      1 | 2    |      |
+	---------|------|------|
+	       2 | 0.3.4.5.6.7|      |
+	---------|------|------|
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 5
 
 
 		----------COMPLEMENTARISATION---------
@@ -160,11 +299,3 @@
 	---------|------|------|
 	S      2 | 0.3.4.5.6.7|      |
 	---------|------|------|
-	
-	
-	
-	
-	
-	
-	
-	
