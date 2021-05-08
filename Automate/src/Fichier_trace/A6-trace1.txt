@@ -1,0 +1,243 @@
+		 ╔══════════════════════════╗
+		 ║ Bonjour, Bienvenue à toi ║
+		 ╚══════════════════════════╝
+
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 1
+	 Quel automate voulez vous utilisez ?
+1
+		 -- AUTOMATE -- 
+	  - Alphabet { a }
+	  - Etats Q = { 0  }
+	  - Etats I = { 0 }
+	  - Etats T = { 0 }
+
+		╔══════════════════════════╗ 
+		║    TABLE DE TRANSITION   ║
+		╚══════════════════════════╝   
+
+	         |a |* |
+	---------|--|--|
+	ES     0 |  |  |
+	---------|--|--|
+
+
+****************************************************************
+****************************************************************
+
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 2
+
+
+	 ==> L'automate est synchrone , deterministe. L'automate n'est pas complet car : 
+	Etat [0] : en a
+
+
+
+		 -- AUTOMATE -- 
+	  - Alphabet { a }
+	  - Etats Q = { 0 , P  }
+	  - Etats I = { 0 }
+	  - Etats T = { 0 }
+
+		╔══════════════════════════╗ 
+		║    TABLE DE TRANSITION   ║
+		╚══════════════════════════╝   
+
+	         | a  | *  |
+	---------|----|----|
+	ES     0 | P  |    |
+	---------|----|----|
+	       P | P  |    |
+	---------|----|----|
+
+****************************************************************
+****************************************************************
+
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 3
+
+
+	--> L'Automate est deja minimal 
+
+
+
+		 -- AUTOMATE -- 
+	  - Alphabet { a }
+	  - Etats Q = { 0 , P  }
+	  - Etats I = { 0 }
+	  - Etats T = { 0 }
+
+		╔══════════════════════════╗ 
+		║    TABLE DE TRANSITION   ║
+		╚══════════════════════════╝   
+
+	         | a  | *  |
+	---------|----|----|
+	ES     0 | P  |    |
+	---------|----|----|
+	       P | P  |    |
+	---------|----|----|
+	
+****************************************************************
+****************************************************************
+
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 4
+Combien de mot voulez-vous tester?
+2
+Veuillez saisir un mot ('*' represente le mot vide) :
+*
+Vous avez saisi : *
+Le mot est valide
+Le mot est reconnu
+Veuillez saisir un mot ('*' represente le mot vide) :
+a
+Vous avez saisi : a
+Le mot est valide
+Le mot n'est pas reconnu
+
+****************************************************************
+****************************************************************
+
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 6
+
+
+	 ** RESULTAT ** L'automate est deja standard !
+
+
+		 -- AUTOMATE -- 
+	  - Alphabet { a }
+	  - Etats Q = { 0 , P  }
+	  - Etats I = { 0 }
+	  - Etats T = { 0 }
+
+		╔══════════════════════════╗ 
+		║    TABLE DE TRANSITION   ║
+		╚══════════════════════════╝   
+
+	         | a  | *  |
+	---------|----|----|
+	ES     0 | P  |    |
+	---------|----|----|
+	       P | P  |    |
+	---------|----|----|
+	
+****************************************************************
+****************************************************************
+
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 5
+
+
+	 Le complementaire est obtenu a partir d'un automate deterministe, complet et minimal (AFDCM)
+
+
+	Les etats P deviennent terminaux !
+		 -- AUTOMATE -- 
+	  - Alphabet { a }
+	  - Etats Q = { 0 , P  }
+	  - Etats I = { 0 }
+	  - Etats T = { P }
+
+		╔══════════════════════════╗ 
+		║    TABLE DE TRANSITION   ║
+		╚══════════════════════════╝   
+
+	         | a  | *  |
+	---------|----|----|
+	E      0 | P  |    |
+	---------|----|----|
+	S      P | P  |    |
+	---------|----|----|

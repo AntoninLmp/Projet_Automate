@@ -3,6 +3,7 @@ package automate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 public class Utilisation {
 	
 
@@ -11,7 +12,8 @@ public class Utilisation {
 		int choix = 0; 
 		boolean premiereVisite = true; 
 		Automate automate = new Automate();
-		String nomFichier;
+		String nomFichier, numeroFichier ="", reponse="", mot =""; 
+		int compteur = 0, nb_mot = 0;
 		Scanner scan = new Scanner(System.in);
 		while ( choix != -1) {
 			
@@ -44,8 +46,18 @@ public class Utilisation {
 			choix = scan.nextInt();
 			scan.nextLine();
 			
-			//Automate AFDC = new Automate(); 
-			//Automate AFDCM = new Automate();
+			
+			
+			if (choix == 4) {
+				compteur=0;
+				System.out.println("Combien de mot voulez-vous tester?");
+				reponse = scan.nextLine();
+				nb_mot = Integer.parseInt(reponse);
+				//On recupere le mot saisi par l'utilisateur
+				System.out.println("Veuillez saisir un mot ('*' represente le mot vide) :");
+				mot = scan.nextLine();
+				System.out.println("Vous avez saisi : " + mot);
+			}
 			
 			switch (choix) {
 				case 1:
@@ -53,7 +65,7 @@ public class Utilisation {
 					do {
 						nomFichier = "A6-";
 						System.out.println("\t Quel automate voulez vous utilisez ?");
-						String numeroFichier = scan.nextLine();
+						numeroFichier = scan.nextLine();
 						nomFichier += numeroFichier + ".txt";
 						automate = new Automate();
 					 	existe = automate.lire_automate_fichier("src/Fichier/"+nomFichier);
@@ -62,30 +74,35 @@ public class Utilisation {
 					System.out.println("\n\n");
 					break;
 				case 2:
-					
-					if (automate.est_un_automate_asynchrone()) {
-						System.out.println("Determinisons-le !");
-						automate.determinisation_et_completion_asynchrone();
-					}else {
-						System.out.println("L'automate est synchrone !");
-						if (automate.est_un_automate_deterministe()) {
-							if (automate.est_un_automate_complet()) {
-								// Deja determinisite et complet
-								System.out.println("\t L'automate est synchrone, deterministe et complet!");
-								//AFDC = automate.clone(); 
-							}else {
-								System.out.println("L'automate n'est pas complet!");
-								automate.completion();
-							}
+					if ( automate != null) {
+						if (automate.est_un_automate_asynchrone()) {
+							System.out.println("\n\n\t ==> L'automate est asynchrone !");
+							automate.determinisation_et_completion_asynchrone();
 						}else {
-							automate.determinisation_et_completion_synchrone(); 
+							System.out.print("\n\n\t ==> L'automate est synchrone ");
+							if (automate.est_un_automate_deterministe()) {
+								System.out.print(", deterministe ");
+								if (automate.est_un_automate_complet()) {
+									// Deja determinisite et complet
+									System.out.println(" et complet !");
+								}else {
+									System.out.println("");
+									automate.completion();
+								}
+
+							}else {
+								automate.determinisation_et_completion_synchrone(); 
+							}
 						}
+						System.out.println("\n");
+						automate.afficherAutomate();
+						System.out.println("\n");
 					}
-					automate.afficherAutomate();
+					
 					break;
 				case 3:
 					if (automate.est_minimal()) {
-						System.out.println("\t--> L'Automate est deja minimal ");
+						System.out.println("\n\n\t--> L'Automate est deja minimal ");
 					}else {
 						automate.minimisation(true);
 					}
@@ -93,19 +110,15 @@ public class Utilisation {
 					automate.afficherAutomate();
 					break;
 				case 4:
-					System.out.println("Combien de mot voulez-vous tester?");
-					String reponse = scan.nextLine();
-					int nb_mot = Integer.parseInt(reponse);
-					int compteur = 0;
-					
+										
 					while (compteur != nb_mot) {
-						String mot = automate.lire_mot(scan);
-							if (automate.reconnaitre_mot(mot)) {
-								System.out.println("Le mot est reconnu");
-							}
-							else {
-								System.out.println("Le mot n'est pas reconnu");
-							}
+						automate.lire_mot(mot);
+						if (automate.reconnaitre_mot(mot)) {
+							System.out.println("Le mot est reconnu");
+						}
+						else {
+							System.out.println("Le mot n'est pas reconnu");
+						}
 						compteur ++;
 					}
 					break;
@@ -117,7 +130,6 @@ public class Utilisation {
 					automate.automate_standard();
 					automate.afficherAutomate();
 					break;
-					
 				case -1: 
 					System.out.println("\t Au revoir, a bientot ! ツ");
 					break; 

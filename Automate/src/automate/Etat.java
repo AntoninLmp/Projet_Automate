@@ -104,6 +104,9 @@ public class Etat extends Automate {
 		transition.set(i, t.copie());
 	}
 	
+	public void setTransition(int i, Transition t){
+		transition.set(i, t.copie());
+	}
 	
 	// AJOUT TRANSITION
 	public void ajoutTransition( final ArrayList<Integer> eD, final char lettre, final ArrayList<Integer> eS) {
@@ -122,6 +125,7 @@ public class Etat extends Automate {
 		Collections.sort(transition);
 	}
 	
+	
 	//supprimer une transition 
 	public void removeTransition(final Transition t) {
 		transition.remove(t) ; 
@@ -130,6 +134,11 @@ public class Etat extends Automate {
 	public void removeTransition(final int t) {
 		transition.remove(t) ; 
 		nbrTrans--;
+	}
+	
+	public void removeTransition(final int entier) {
+		transition.remove(entier) ; 
+		nbrTrans--; 
 	}
 	
 	// AFFICHAGE NOM ETAT
@@ -141,12 +150,16 @@ public class Etat extends Automate {
 	}
 	
 	public void affichageNomEtat() {
-		if (numeroEtat != null) {
-			for(int i=0; i< numeroEtat.size(); i++) {
-				if(i > 0) {
+		if(this != null) {
+			for (int i = 0; i < numeroEtat.size(); i++) {
+				if (numeroEtat.get(i) == -1) {
+					System.out.print("P");
+				}else {
+					System.out.print(numeroEtat.get(i));
+				}				
+				if (numeroEtat.size() > 1 && i < numeroEtat.size()-1) {
 					System.out.print(".");
 				}
-				System.out.print(numeroEtat.get(i));
 			}
 		}
 	}
@@ -171,7 +184,7 @@ public class Etat extends Automate {
         nbrTrans = transition.size();
 		
 		triNomEtat(this);
-		//si une transition mene vers lui meme en epsilon elle est inutile
+    
 		//renommer les transitions
 		for (Transition t : transition) {
 			t.setEtatDepart(numeroEtat);
@@ -206,7 +219,5 @@ public class Etat extends Automate {
 		}
 		return false;
 	}
-	
-	
 }
 
