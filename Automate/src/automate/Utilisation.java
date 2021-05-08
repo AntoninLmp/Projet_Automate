@@ -1,5 +1,6 @@
 package automate;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -88,6 +89,7 @@ public class Utilisation {
 									System.out.println("");
 									automate.completion();
 								}
+
 							}else {
 								automate.determinisation_et_completion_synchrone(); 
 							}

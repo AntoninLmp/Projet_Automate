@@ -27,6 +27,10 @@ public class Transition implements Comparable<Transition>{
 		etatDepart = new ArrayList<Integer>(); 
 		etatSortie = new ArrayList<Integer>();  
 	}
+
+	public Transition(Transition t) {
+		this(t.getEtatDepart(), t.getLettre(), t.getEtatSortie());
+	}
 	
 	
 	public Transition copie() {
@@ -100,7 +104,7 @@ public class Transition implements Comparable<Transition>{
 		System.out.print(lettre);
 		afficherArrayListNom(etatSortie);
 	}
-	
+
 	//indique si la sortie de la transition est presente dans l etat passe en parametre
 	public boolean etatDejaPresent(Etat e){
 		for (Transition t : e.getTransition()) {
