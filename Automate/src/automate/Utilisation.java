@@ -64,7 +64,7 @@ public class Utilisation {
 				case 2:
 					
 					if (automate.est_un_automate_asynchrone()) {
-						System.out.println("Determinisons-le !");
+						System.out.println("Déterminisons-le !");
 						automate.determinisation_et_completion_asynchrone();
 					}else {
 						System.out.println("L'automate est synchrone !");
