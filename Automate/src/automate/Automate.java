@@ -1355,9 +1355,12 @@ public class Automate {
 							break; 
 						}
 					}
-					for (int j2 = 0; j2 < automate.etats.get(i).getNbrTrans(); j2++) {
-						etatUtile.add(copieSimpleArrayList(automate.etats.get(i).getEtatFinal(j2))); 
+					if ( i < automate.etats.size()) {
+						for (int j2 = 0; j2 < automate.etats.get(i).getNbrTrans(); j2++) {
+							etatUtile.add(copieSimpleArrayList(automate.etats.get(i).getEtatFinal(j2))); 
+						}
 					}
+					i = 0; 
 				}
 				compteur++;
 			}
