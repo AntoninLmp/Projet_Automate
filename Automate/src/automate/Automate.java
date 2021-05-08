@@ -1036,9 +1036,7 @@ public class Automate {
 		}
 	}
 	
-	
-	
-	
+
 	/*----------------------------------------------------------------------------------*/
 	/*****                         		  COMPLETION                                *****/
 	/*----------------------------------------------------------------------------------*/
@@ -1180,6 +1178,7 @@ public class Automate {
 		}
 		return e;
 	}
+	
 	public void elimination_epsilon(){
 		for (int i = 0; i < nbrEtats; i++) {
 			if (test_fermeture_epsilon(etats.get(i))) {
