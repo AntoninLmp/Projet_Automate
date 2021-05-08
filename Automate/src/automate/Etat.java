@@ -95,6 +95,9 @@ public class Etat extends Automate {
 		return copie().transition;
 	}
 	
+	public void setTransition(int i, Transition t){
+		transition.set(i, t.copie());
+	}
 	
 	// AJOUT TRANSITION
 	public void ajoutTransition( final ArrayList<Integer> eD, final char lettre, final ArrayList<Integer> eS) {
@@ -106,6 +109,7 @@ public class Etat extends Automate {
 		nbrTrans++;
 		Collections.sort(transition);
 	}
+	
 	
 	//supprimer une transition 
 	public void removeTransition(final Transition t) {
@@ -152,15 +156,20 @@ public class Etat extends Automate {
 	}
 
 	public void fusion(final Etat e){
-        // nom
+		// nom
         numeroEtat.addAll(e.getNomEtat());
         // transitions
         transition.addAll(e.getTransition());
-        for (int i = 0; i < transition.size(); i++) {
-			transition.get(i).setEtatDepart(numeroEtat);
-		}
         // nombre de transition
         nbrTrans = transition.size();
+		
+		triNomEtat(this);
+
+		//renommer les transitions
+		for (Transition t : transition) {
+			t.setEtatDepart(numeroEtat);
+		}
+		
     }
 
 	public Boolean contient_epsilon(){
@@ -171,5 +180,25 @@ public class Etat extends Automate {
 		}
 		return false;
 	}
+
+	public int nbrEpsilon(){
+		int nbr = 0;
+		for (Transition t : transition) {
+			if (t.getLettre() == '*') {
+				nbr++;
+			}
+		}
+		return nbr;
+	}
+
+	public boolean estPresent(ArrayList<Integer> nomDeSortie, char lettre){
+		for (Transition t : transition) {
+			if (t.getEtatSortie().equals(nomDeSortie) && lettre == t.getLettre()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }
 
