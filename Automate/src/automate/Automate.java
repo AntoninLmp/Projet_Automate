@@ -456,24 +456,6 @@ public class Automate {
 	}
 	
 	/*----------------------------------------------------------------------------------*/
-	/*****                           AUTOMATE ASYNCHRONE                            *****/
-	/*----------------------------------------------------------------------------------*/
-	
-	public boolean est_un_automate_asynchrone() {
-		for(int i=0 ; i < etats.size() ; i++) {
-				for(int j=0 ; j < etats.get(i).getNbrTrans() ; j++) {
-					if(etats.get(i).getTransition().get(j) != null) { //if there is transition
-						if(etats.get(i).getTransition().get(j).getLettre() == '*') {
-							etats.get(i).getTransition().get(j).afficherTransition();
-							return true;
-						}
-					}
-				}
-			}
-		return false;
-	}
-
-	/*----------------------------------------------------------------------------------*/
 	/*****                        DETERMINISATION SYNCHRONE                         *****/
 	/*----------------------------------------------------------------------------------*/
 
@@ -638,6 +620,20 @@ public class Automate {
 	/*----------------------------------------------------------------------------------*/
 	/*****                        DETERMINISATION ASYNCHRONE                        *****/
 	/*----------------------------------------------------------------------------------*/
+
+	public boolean est_un_automate_asynchrone() {
+		for(int i=0 ; i < etats.size() ; i++) {
+				for(int j=0 ; j < etats.get(i).getNbrTrans() ; j++) {
+					if(etats.get(i).getTransition().get(j) != null) { //if there is transition
+						if(etats.get(i).getTransition().get(j).getLettre() == '*') {
+							System.out.println("L'automate est asynchrone car il possède :"+etats.get(i).getTransition().get(j).toString());
+							return true;
+						}
+					}
+				}
+			}
+		return false;
+	}
 
 	public void fusion_entree(){
 		if (etatInit.size() > 1) {
@@ -909,23 +905,6 @@ public class Automate {
 		determinisation_asynchrone();
 		completion();
 	}
-
-	public void determinisation_et_completion(){
-		if (est_un_automate_asynchrone()) {
-			determinisation_et_completion_asynchrone();
-		}
-		else{
-			if (est_un_automate_deterministe()) {
-				if (!est_un_automate_complet()) {
-					completion();
-				}
-			}
-			else{
-				determinisation_et_completion_synchrone();
-			}
-		}
-	}
-
 
 	//savoir si un etats doit etre remplacer par sa fermeture epsilon
 	public Boolean test_fermeture_epsilon(Etat e1){ 
