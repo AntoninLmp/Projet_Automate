@@ -104,10 +104,6 @@ public class Etat extends Automate {
 		transition.set(i, t.copie());
 	}
 	
-	public void setTransition(int i, Transition t){
-		transition.set(i, t.copie());
-	}
-	
 	// AJOUT TRANSITION
 	public void ajoutTransition( final ArrayList<Integer> eD, final char lettre, final ArrayList<Integer> eS) {
 		transition.add( new Transition(eD, lettre, eS));
@@ -131,7 +127,8 @@ public class Etat extends Automate {
 		transition.remove(t) ; 
 		nbrTrans--;
 	}
-	public void removeTransition(final int t) {
+	
+	public void removeTransition1(final int t) {
 		transition.remove(t) ; 
 		nbrTrans--;
 	}

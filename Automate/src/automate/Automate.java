@@ -1579,136 +1579,112 @@ public class Automate {
 	/*****                       RECONNAISSANCE DE MOTS                             *****/
 	/*----------------------------------------------------------------------------------*/
 
-	//METHODE POUR VERIFIER SI UN CARACTERE FAIT PARTIE DE L ALPHABET
-	public boolean contains(char[] alpha, char carac) {
-		for(int i=0 ; i<alpha.length ; i++) {
-			if (alpha[i] == carac) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-
-	//METHODE QUI PERMET A L UTILISATEUR DE SAISIR UN MOT
-	//ET QUI VERIFIE SI LE MOT EST VALIDE
-
-	public String lire_mot(Scanner s) {
-	
-		//On recupere le mot saisi par l'utilisateur
-		System.out.println("Veuillez saisir un mot ('*' represente le mot vide) :");
-		String mot = s.nextLine();
-
-		System.out.println("Vous avez saisi : " + mot);
-		
-		//On verifie si le mot est valide
-		boolean test = true;
-		do {
-			test = true;
-			for (int i=0 ; i<mot.length(); i++) {
-				char carac = mot.charAt(i);
-				if (contains(this.alphabet, carac) == false && carac != '*'){
-					test = false;
+		//METHODE POUR VERIFIER SI UN CARACTERE FAIT PARTIE DE L ALPHABET
+		public boolean contains(char[] alpha, char carac) {
+			for(int i=0 ; i<alpha.length ; i++) {
+				if (alpha[i] == carac) {
+					return true;
 				}
 			}
-			if (test == false) {
-				System.out.println("Le mot n'est pas valide !");
-				System.out.println("Veuillez saisir un mot ('*' represente le mot vide) :");
-				mot = s.nextLine();
-				System.out.println("Vous avez saisi : " + mot);
-			}
-			else if (test == true) {
-				System.out.println("Le mot est valide");
-			}
-		}while(test == false);
-		return mot;
-	}*/
-	public void lire_mot(String mot) {
+			return false;
+		}
 		
-		//On verifie si le mot est valide
-		boolean test = true;
-		do {
-			test = true;
-			for (int i=0 ; i<mot.length(); i++) {
-				char carac = mot.charAt(i);
-				if (contains(this.alphabet, carac) == false && carac != '*'){
-					test = false;
+
+		//METHODE QUI PERMET A L UTILISATEUR DE SAISIR UN MOT
+		//ET QUI VERIFIE SI LE MOT EST VALIDE
+		public String lire_mot(Scanner s) {
+		
+			//On recupere le mot saisi par l'utilisateur
+			System.out.println("Veuillez saisir un mot ('*' represente le mot vide) :");
+			String mot = s.nextLine();
+			System.out.println("Vous avez saisi : " + mot);
+			
+			//On verifie si le mot est valide
+			boolean test = true;
+			do {
+				test = true;
+				for (int i=0 ; i<mot.length(); i++) {
+					char carac = mot.charAt(i);
+					if (contains(this.alphabet, carac) == false && carac != '*'){
+						test = false;
+					}
+				}
+				if (test == false) {
+					System.out.println("Le mot n'est pas valide !");
+					System.out.println("Veuillez saisir un mot ('*' represente le mot vide) :");
+					mot = s.nextLine();
+					System.out.println("Vous avez saisi : " + mot);
+				}
+				else if (test == true) {
+					System.out.println("Le mot est valide");
+				}
+			}while(test == false);
+			return mot;
+		}
+		
+		
+		/* METHODE QUI A PARTIR D UNE ARRAYLIST (etatInit et etatTerm) 
+		 * PERMET D OBTENIR L ETAT CORRESPONDANT DANS LA LISTE DE TOUS LES ETATS
+		 */
+		public Etat etatCorrespondant(ArrayList<Integer> e){
+			Etat etat_corres = etats.get(0);
+			for(int i=0 ; i<etats.size(); i++) {
+				if(comparaisonEtat(e, etats.get(i).getNomEtat())){
+					etat_corres = etats.get(i);
 				}
 			}
-			if (test == false) {
-				System.out.println("Le mot n'est pas valide !");
-							}
-			else if (test == true) {
-				System.out.println("Le mot est valide");
+			return etat_corres;
+		}	
+			
+		//METHODE QUI A PARTIR D UN ETAT DONNE ET D UNE LETTRE
+		//RETOURNE LA TRANSITION PARTANT DE CETTE ETAT ET PASSANT PAR CETTE LETTRE
+		public Transition getTransitionExistante(Etat e, char symbole) {
+			Transition trans = e.getTransition().get(0);
+			for(int i=0 ; i<e.getTransition().size(); i++) {
+				if (e.getTransition().get(i).getLettre() == symbole) {
+					trans = e.getTransition().get(i);
+				}
 			}
-		}while(test == false);
-	}
-	
-	
-	/* METHODE QUI A PARTIR D UNE ARRAYLIST (etatInit et etatTerm) 
-	 * PERMET D OBTENIR L ETAT CORRESPONDANT DANS LA LISTE DE TOUS LES ETATS
-	 */
-	public Etat etatCorrespondant(ArrayList<Integer> e){
-		Etat etat_corres = etats.get(0);
-		for(int i=0 ; i<etats.size(); i++) {
-			if(comparaisonEtat(e, etats.get(i).getNomEtat())){
-				etat_corres = etats.get(i);
-			}
+			return trans;
 		}
-		return etat_corres;
-	}	
 		
-	//METHODE QUI A PARTIR D UN ETAT DONNE ET D UNE LETTRE
-	//RETOURNE LA TRANSITION PARTANT DE CETTE ETAT ET PASSANT PAR CETTE LETTRE
-	public Transition getTransitionExistante(Etat e, char symbole) {
-		Transition trans = e.getTransition().get(0);
-		for(int i=0 ; i<e.getTransition().size(); i++) {
-			if (e.getTransition().get(i).getLettre() == symbole) {
-				trans = e.getTransition().get(i);
+		
+		//METHODE QUI DETERMINE SI UN MOT EST RECONNU OU NON PAR UN AUTOMMATE DETERMINISTE COMPLET
+		public boolean reconnaitre_mot(String mot){
+			
+			if (mot.equals("*")) {
+				for(int i=0 ; i<etatTerm.size() ; i++) {
+					if(comparaisonEtat(etatInit.get(0),etatTerm.get(i))) {
+						return true;
+					}
+				}
+				return false;
 			}
+			else {
+				int compteur = 1;
+				Etat etat_courant = etatCorrespondant(etatInit.get(0));
+				char symbole_courant = mot.charAt(0);
+				Transition trans = etat_courant.getTransition().get(0);
+				
+				//On parcourt l'automate deterministe complet en prenant les lettres du mot une a une 
+				while (compteur != mot.length()) {
+					trans = getTransitionExistante(etat_courant, symbole_courant);
+					etat_courant = etatCorrespondant(trans.getEtatSortie());
+					symbole_courant = mot.charAt(compteur);
+					compteur ++;
+				}
+				trans = getTransitionExistante(etat_courant, symbole_courant);
+				etat_courant = etatCorrespondant(trans.getEtatSortie());
+				
+				//On verifie si l'etat final sur lequel on est arrive est termianl ou non
+				//Si oui, le mot est reconnu
+				//Sinon, le mot n'est pas reconnu
+				if (estTerminal(etat_courant)) {
+					return true;
+				}
+			}
+			return false;
 		}
-		return trans;
-	}
-	
-	
-	//METHODE QUI DETERMINE SI UN MOT EST RECONNU OU NON PAR UN AUTOMMATE DETERMINISTE COMPLET
-	public boolean reconnaitre_mot(String mot){
-		
-
-
-      if (mot.equals("*")) {
-        for(int i=0 ; i<etatTerm.size() ; i++) {
-          if(comparaisonEtat(etatInit.get(0),etatTerm.get(i))) {
-            return true;
-          }
-        }
-        return false;
-      }
-      else {
-        int compteur = 1;
-        Etat etat_courant = etatCorrespondant(etatInit.get(0));
-        char symbole_courant = mot.charAt(0);
-        Transition trans = etat_courant.getTransition().get(0);
-
-        //On parcourt l'automate deterministe complet en prenant les lettres du mot une a une 
-        while (compteur != mot.length()) {
-          trans = getTransitionExistante(etat_courant, symbole_courant);
-          etat_courant = etatCorrespondant(trans.getEtatSortie());
-          symbole_courant = mot.charAt(compteur);
-          compteur ++;
-        }
-        trans = getTransitionExistante(etat_courant, symbole_courant);
-        etat_courant = etatCorrespondant(trans.getEtatSortie());
-
-        //On verifie si l'etat final sur lequel on est arrive est termianl ou non
-        //Si oui, le mot est reconnu
-        //Sinon, le mot n'est pas reconnu
-        if (estTerminal(etat_courant)) {
-          return true;
-        }
-      }
-      return false;
-    }
 
   
 	/*----------------------------------------------------------------------------------*/
