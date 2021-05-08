@@ -1380,7 +1380,7 @@ public class Automate {
 									
 								}
 							}
-							// Trie pour avoir le noveau nom dans l'ordre
+							// Trie pour avoir le nouveau nom dans l'ordre
 							Collections.sort(nomEtatArrayList);
 							//Suppression des etats identiques
 							for (int i2 = 1; i2 < nomEtatArrayList.size(); i2++) {
@@ -1389,6 +1389,7 @@ public class Automate {
 									i2--;
 								}
 							}
+							
 							boolean ajout = false;
 							// REMPLACEMENT des etats Initiaux par le nouvel etat
 							for (int k = 0; k < etatInit.size(); k++) {
@@ -1408,13 +1409,14 @@ public class Automate {
 							// REMPLACEMENT des etats terminaux par le nouvel etat
 							for (int k = 0; k < etatTerm.size(); k++) {
 								for (int k2 = 0; k2 < saveFusion.get(i).size(); k2++) {
-									if(comparaisonEtat(etatTerm.get(k), saveFusion.get(i).get(k2))) {
+									if(comparaisonEtat(etatTerm.get(k), saveFusion.get(i).get(k2))) { 
 										etatTerm.remove(k);
 										ajout = true; 
-										break;
+										//break;
 									}
 								}
 							}
+							
 							if (ajout) {
 								etatTerm.add(new ArrayList<>(nomEtatArrayList));
 							}
