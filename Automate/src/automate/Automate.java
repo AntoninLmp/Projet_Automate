@@ -506,8 +506,7 @@ public class Automate {
 		return true ;
 	}
 	
-	public void determinisation_bis() {
-		System.out.println("\n\n\t ** DETERMINISATION **\n") ; 
+	public void determinisation_bis() {  
 		Automate automateADeterminiser = new Automate(this) ; //on copie l'automate initiale
 		
 		// ETAPE 1 : Fusion des entrees pour en avoir plus qu'une seule si plus d'une entree
@@ -1499,7 +1498,7 @@ public class Automate {
 									
 								}
 							}
-							// Trie pour avoir le noveau nom dans l'ordre
+							// Trie pour avoir le nouveau nom dans l'ordre
 							Collections.sort(nomEtatArrayList);
 							//Suppression des etats identiques
 							for (int i2 = 1; i2 < nomEtatArrayList.size(); i2++) {
@@ -1508,6 +1507,7 @@ public class Automate {
 									i2--;
 								}
 							}
+							
 							boolean ajout = false;
 							// REMPLACEMENT des etats Initiaux par le nouvel etat
 							for (int k = 0; k < etatInit.size(); k++) {
@@ -1527,13 +1527,14 @@ public class Automate {
 							// REMPLACEMENT des etats terminaux par le nouvel etat
 							for (int k = 0; k < etatTerm.size(); k++) {
 								for (int k2 = 0; k2 < saveFusion.get(i).size(); k2++) {
-									if(comparaisonEtat(etatTerm.get(k), saveFusion.get(i).get(k2))) {
+									if(comparaisonEtat(etatTerm.get(k), saveFusion.get(i).get(k2))) { 
 										etatTerm.remove(k);
 										ajout = true; 
-										break;
+										//break;
 									}
 								}
 							}
+							
 							if (ajout) {
 								etatTerm.add(new ArrayList<>(nomEtatArrayList));
 							}
@@ -1717,6 +1718,7 @@ public class Automate {
   
 	public void automate_complementaire(){
 		if (this != null){
+			System.out.println("\n\n\t\t----------COMPLEMENTARISATION---------\n") ; 
 			if (!this.est_un_automate_deterministe() || !this.est_un_automate_complet()){
 				System.out.println("\n\n\t ** ERREUR **  : l'automate n'est pas complet et/ou deterministe, le complementaire n'est pas possible\n\n");
 				return; 

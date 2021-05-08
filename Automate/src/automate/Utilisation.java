@@ -61,6 +61,7 @@ public class Utilisation {
 					break;
 				case 2:
 					if ( automate != null) {
+						System.out.println("\n\n\t\t------DETERMINISATION ET COMPLETION--------") ; 
 						if (automate.est_un_automate_asynchrone()) {
 							System.out.println("\n\n\t ==> L'automate est asynchrone !");
 							automate.determinisation_et_completion_asynchrone();
