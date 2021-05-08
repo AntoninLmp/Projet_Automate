@@ -203,57 +203,32 @@ Veuillez choisir ce que vous desirez faire :
 	 ╚═════╩═══════════════════════════════╝
 Entrer votre choix : 4
 Combien de mot voulez-vous tester?
-2
+5
 Veuillez saisir un mot ('*' represente le mot vide) :
 aa
 Vous avez saisi : aa
 Le mot est valide
 Le mot est reconnu
 Veuillez saisir un mot ('*' represente le mot vide) :
-aaa
-Vous avez saisi : aaa
+*
+Vous avez saisi : *
+Le mot est valide
+Le mot n'est pas reconnu
+Veuillez saisir un mot ('*' represente le mot vide) :
+aaaaa
+Vous avez saisi : aaaaa
 Le mot est valide
 Le mot est reconnu
-Veuillez choisir ce que vous desirez faire : 
-	 ╔═════╦═══════════════════════════════╗
-	 ║  1  ║ Lecture Automate et Affichage ║
-	 ╠═════╬═══════════════════════════════╣
-	 ║  2  ║ Determinisation et Completion ║
-	 ╠═════╬═══════════════════════════════╣
-	 ║  3  ║ Minimisation                  ║
-	 ╠═════╬═══════════════════════════════╣
-	 ║  4  ║ Reconnaissance de mots        ║
-	 ╠═════╬═══════════════════════════════╣
-	 ║  5  ║ Language complementaire       ║
-	 ╠═════╬═══════════════════════════════╣
-	 ║  6  ║ Standarsisation               ║
-	 ╠═════╬═══════════════════════════════╣
-	 ║ -1  ║ QUITTER                       ║
-	 ╚═════╩═══════════════════════════════╝
-Entrer votre choix : 6
-
-
-	 ** RESULTAT ** L'automate est deja standard !
-
-
-		 -- AUTOMATE -- 
-	  - Alphabet { a }
-	  - Etats Q = { 0.3.4.5.6.7 , 1 , 2  }
-	  - Etats I = { 1 }
-	  - Etats T = { 0, 0.3.4.5.6.7 }
-
-		╔══════════════════════════╗ 
-		║    TABLE DE TRANSITION   ║
-		╚══════════════════════════╝   
-
-	         |  a   |  *   |
-	---------|------|------|
-	S0.3.4.5.6.7 | 0.3.4.5.6.7|      |
-	---------|------|------|
-	E      1 | 2    |      |
-	---------|------|------|
-	       2 | 0.3.4.5.6.7|      |
-	---------|------|------|
+Veuillez saisir un mot ('*' represente le mot vide) :
+aa
+Vous avez saisi : aa
+Le mot est valide
+Le mot est reconnu
+Veuillez saisir un mot ('*' represente le mot vide) :
+aa
+Vous avez saisi : aa
+Le mot est valide
+Le mot est reconnu
 Veuillez choisir ce que vous desirez faire : 
 	 ╔═════╦═══════════════════════════════╗
 	 ║  1  ║ Lecture Automate et Affichage ║
@@ -299,3 +274,60 @@ Entrer votre choix : 5
 	---------|------|------|
 	S      2 | 0.3.4.5.6.7|      |
 	---------|------|------|
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 6
+
+
+	 ** RESULTAT ** L'automate est deja standard !
+
+
+		 -- AUTOMATE -- 
+	  - Alphabet { a }
+	  - Etats Q = { 0.3.4.5.6.7 , 1 , 2  }
+	  - Etats I = { 1 }
+	  - Etats T = { 1, 2 }
+
+		╔══════════════════════════╗ 
+		║    TABLE DE TRANSITION   ║
+		╚══════════════════════════╝   
+
+	         |  a   |  *   |
+	---------|------|------|
+	0.3.4.5.6.7 | 0.3.4.5.6.7|      |
+	---------|------|------|
+	ES     1 | 2    |      |
+	---------|------|------|
+	S      2 | 0.3.4.5.6.7|      |
+	---------|------|------|
+Veuillez choisir ce que vous desirez faire : 
+	 ╔═════╦═══════════════════════════════╗
+	 ║  1  ║ Lecture Automate et Affichage ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  2  ║ Determinisation et Completion ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  3  ║ Minimisation                  ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  4  ║ Reconnaissance de mots        ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  5  ║ Language complementaire       ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║  6  ║ Standarsisation               ║
+	 ╠═════╬═══════════════════════════════╣
+	 ║ -1  ║ QUITTER                       ║
+	 ╚═════╩═══════════════════════════════╝
+Entrer votre choix : 
